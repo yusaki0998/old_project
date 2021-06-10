@@ -1,38 +1,38 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const morgan = require('morgan');
 const mongoose = require('mongoose');
+//const db = require('./config/db');
+const morgan = require('morgan');
 
+//Declare routes
+const userRoute = require('./routes/user-route');
+
+//Database connect
 const uri = "mongodb+srv://huytq:"
     + process.env.MONGO_ATLAS_PW +
-    "@capstonecluster.e4xd9.mongodb.net/cinedb?retryWrites=true&w=majority"
+    "@capstonecluster.e4xd9.mongodb.net/ot-bm?retryWrites=true&w=majority"
 
 mongoose.connect(uri,
     {
         useCreateIndex: true,
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }
-);
+    })
+    .then(() => {
+        console.log("OK!");
+    })
+    .catch(err => {
+        console.log(err);
+    })
 
 //middleware section
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-        return res.status(200).json({});
-    }
-    next();
-});
-
 //routes
+app.use('/api/v1/users', userRoute);
 
 //error handling
 app.use((req, res, next) => {

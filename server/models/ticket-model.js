@@ -11,6 +11,8 @@ const ticketSchema = mongoose.Schema({
 
     seat: { type: mongoose.Schema.Types.ObjectId, ref: 'Seat' },
     //=> seat type, price
+
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = mongoose.model('Ticket', ticketSchema);
