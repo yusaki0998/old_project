@@ -5,6 +5,8 @@ const userSchema = mongoose.Schema({
 
     fullname: { type: String, required: true },
 
+    gender: { type: String, enum: ['male', 'female', 'other'], default: 'other' },
+
     email: {
         type: String,
         required: true,
@@ -18,12 +20,13 @@ const userSchema = mongoose.Schema({
 
     dob: { type: Date, required: true },
 
-    avatar: { type: String },
+    avatar: { type: String, default: `../uploads/sample.png` },
 
-    //0:admin, 1:manager, 2:ticket seller, 3:customer
+    //0:admin, 1:manager, 2:staff, 3:customer
+    //access enum values user.schema.path('values').enumValues
     role: {
         type: String,
-        enum: ['admin', 'manager', 'ticket seller', 'customer'],
+        enum: ['admin', 'manager', 'staff', 'customer'],
         default: 'customer'
     }
 });

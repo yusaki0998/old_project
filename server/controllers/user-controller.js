@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
     try {
-        const { fullname, email, phone, password, retype, dob } = req.body;
+        const { fullname, gender, email, phone, password, retype, dob } = req.body;
 
         const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -16,7 +16,7 @@ const register = async (req, res) => {
             });
         }
 
-        if(!regexp.test(email)){
+        if (!regexp.test(email)) {
             return res.status(301).json({
                 message: "Email is in invalid format"
             });
@@ -55,6 +55,7 @@ const register = async (req, res) => {
         const user = new User({
             _id: new mongoose.Types.ObjectId(),
             fullname: fullname,
+            gender: gender,
             email: email,
             phone: phone,
             password: hashedPassword,
@@ -83,7 +84,7 @@ const login = async (req, res) => {
 
         const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-        if(!regexp.test(email)){
+        if (!regexp.test(email)) {
             return res.status(401).json({
                 message: "Email is invalid",
                 data: null
@@ -133,7 +134,7 @@ const login = async (req, res) => {
                 user: user
             }
         });
-        
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
@@ -147,10 +148,10 @@ const profile = async (req, res) => {
     try {
         const id = req.userData._id;
         const user = await User
-        .findById(id)
-        .exec();
+            .findById(id)
+            .exec();
 
-        if(!user){
+        if (!user) {
             return res.status(401).json({
                 message: "Failed to retrieve user info"
             });
@@ -169,10 +170,320 @@ const profile = async (req, res) => {
     }
 }
 
+const updateProfile = async (req, res) => {
+    try {
+        const id = req.userData._id;
 
+        const { fullname, gender, email, phone, /*dob,*/ oldpassword, newpassword, retype } = req.body;
+
+        const user = await User.findOne({
+            _id: id
+        })
+            .exec()
+
+        if (req.file) {
+            user.avatar = req.file.originalname;
+        }
+
+        if (fullname) {
+            user.fullname = fullname;
+        }
+
+        if (email) {
+            user.email = email;
+        }
+
+        if (phone) {
+            user.phone = phone;
+        }
+
+        if (gender) {
+            user.gender = gender;
+        }
+
+        // if(dob) {
+        //     user.dob = dob;
+        // }
+
+        if (oldpassword) {
+            let validPassword = await bcrypt.compare(oldpassword, user.password);
+
+            if (validPassword && newpassword === retype) {
+                const hashedPassword = await bcrypt.hash(newpassword, 10);
+                user.password = hashedPassword
+            }
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "User profile updated",
+            data: user
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const addAccount = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const { fullname, gender, email, phone, password, retype, dob, role } = req.body;
+
+        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (!email || !password || !fullname || !dob || !phone) {
+            return res.status(301).json({
+                message: "Missing information required to register"
+            });
+        }
+
+        if (!regexp.test(email)) {
+            return res.status(301).json({
+                message: "Email is in invalid format"
+            });
+        }
+
+        if (phone.length < 10) {
+            return res.status(301).json({
+                message: "Your phone number is invalid"
+            });
+        }
+
+        if (!moment(dob).isValid()) {
+            return res.status(301).json({
+                message: "Date of birth is in invalid format"
+            });
+        }
+
+        if (password !== retype) {
+            return res.status(301).json({
+                message: "Your password is not match"
+            });
+        }
+
+        const findUser = await User.findOne({
+            email: email
+        });
+
+        if (findUser) {
+            return res.status(409).json({
+                message: "Email existed"
+            })
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = new User({
+            _id: new mongoose.Types.ObjectId(),
+            fullname: fullname,
+            gender: gender,
+            email: email,
+            phone: phone,
+            password: hashedPassword,
+            dob: dob,
+            role: role
+        });
+
+        await user.save();
+
+        return res.status(201).json({
+            message: "Account created",
+            data: user
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getStaffs = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const findStaffs = await User.find({
+            role: 'staff'
+        }).exec();
+
+        return res.status(200).json({
+            message: "All staffs found",
+            data: findStaffs
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getStaff = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const id = req.params.staffId;
+
+        console.log(id);
+
+        const findStaff = await User.findOne({
+            _id: id,
+            role: 'staff'
+        }).exec();
+
+        return res.status(200).json({
+            message: "Staff information found",
+            data: findStaff
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getManagers = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const findManagers = await User.find({
+            role: 'manager'
+        }).exec();
+
+        return res.status(200).json({
+            message: "All managers found",
+            data: findManagers
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getManager = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const id = req.params.managerId;
+
+        const findManager = await User.findOne({
+            _id: id,
+            role: 'manager'
+        }).exec();
+
+        return res.status(200).json({
+            message: "Manager information found",
+            data: findManager
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const deleteAccount = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const id = req.params.accountId;
+
+        const deleteAccount = await User.remove({
+            _id: id,
+        }).exec();
+
+        return res.status(200).json({
+            message: "Account deleted",
+            data: deleteAccount
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
 
 module.exports = {
     register,
     login,
-    profile
+    profile,
+    updateProfile,
+    addAccount,
+    getStaffs,
+    getStaff,
+    getManagers,
+    getManager,
+    deleteAccount
 }
