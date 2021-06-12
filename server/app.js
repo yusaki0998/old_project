@@ -9,7 +9,7 @@ const morgan = require('morgan');
 const userRoute = require('./routes/user-route');
 
 //Database connect
-const uri = "mongodb+srv://huytq:"
+const uri = "mongodb+srv://" + process.env.MONGO_ATLAS_USER + ":"
     + process.env.MONGO_ATLAS_PW +
     "@capstonecluster.e4xd9.mongodb.net/ot-bm?retryWrites=true&w=majority"
 

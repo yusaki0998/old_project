@@ -475,6 +475,100 @@ const deleteAccount = async (req, res) => {
     }
 }
 
+const editAccount = async (req, res) => {
+    try {
+        const id = req.params.accountId;
+
+        const { fullname, gender, email, dob, phone, password, role } = req.body;
+
+        const user = await User.findOne({
+            _id: id
+        })
+            .exec()
+
+        if (fullname) {
+            user.fullname = fullname;
+        }
+
+        if (email) {
+            user.email = email;
+        }
+
+        if (dob) {
+            user.dob = dob;
+        }
+
+        if (phone) {
+            user.phone = phone;
+        }
+
+        if (gender) {
+            user.gender = gender;
+        }
+
+        if (role) {
+            user.role = role;
+        }
+
+        if (password) {
+            let validPassword = await bcrypt.compare(password, user.password);
+
+            if (validPassword) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                user.password = hashedPassword
+            }
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "Account updated",
+            data: user
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const search = async (req, res) => {
+    try {
+        const input = req.body.input;
+
+        const findUsers = await User.find({
+            $and: [
+                {
+                    $or: [
+                        {fullname: new RegExp(input, 'i')}
+                    ]
+                },
+                {
+                    _id: {$ne: req.userData._id.toString()}
+                }
+            ]
+        }).limit(10).exec();
+
+        if (!findUsers || findUsers.length === 0) {
+            return res.json([]);
+        }
+
+        return res.status(200).json({
+            message: "Users found",
+            data: findUsers
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 module.exports = {
     register,
     login,
@@ -485,5 +579,7 @@ module.exports = {
     getStaff,
     getManagers,
     getManager,
-    deleteAccount
+    deleteAccount,
+    editAccount,
+    search
 }
