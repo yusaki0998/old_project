@@ -50,6 +50,12 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req, res) => {
+  return res.json({
+    msg: "Api is ready",
+  });
+});
+
 //error handling
 app.use((req, res, next) => {
   const error = new Error("Not found");
