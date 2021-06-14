@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import "../../template/styles/main/index.css";
 import { Link, useHistory } from "react-router-dom";
@@ -86,7 +88,11 @@ const Header = () => {
                   </ul>
                 </li>
               </ul>
-              <div className="header__auth d-flex justify-content-end">
+              <div
+                className={`header__auth d-flex justify-content-end ${
+                  loginData?.data?.role === "admin" ? "isAdmin" : ""
+                }`}
+              >
                 {/* <form action="#" className="header__search">
                   <input
                     className="header__search-input"
@@ -104,9 +110,16 @@ const Header = () => {
                 <button className="header__search-btn" type="button">
                   <i className="icon ion-ios-search"></i>
                 </button> */}
-
                 {isAuthenticated ? (
                   <>
+                    {loginData?.data?.role === "admin" && (
+                      <button
+                        className="header__nav-link text-white mr-3"
+                        onClick={() => history.push("/admin")}
+                      >
+                        Dashboard
+                      </button>
+                    )}
                     <button
                       className="header__nav-link text-white"
                       onClick={() => history.push("/customer/info")}

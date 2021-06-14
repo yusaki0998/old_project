@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import "../../template/styles/main/index.css";
 import logo from "../../template/styles/main/img/logo.svg";
@@ -13,16 +15,7 @@ const Footer = () => {
               <Link to="/" className="footer__logo">
                 <img src={logo} alt="HotFlix logo" />
               </Link>
-              <span className="footer__copyright">
-                © HOTFLIX, 2019—2021 <br /> Create by{" "}
-                <a
-                  href="https://themeforest.net/user/dmitryvolkov/portfolio"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Dmitry Volkov
-                </a>
-              </span>
+              <span className="footer__copyright">© HOTFLIX, 2019—2021</span>
 
               <nav className="footer__nav">
                 <Link to="/about">About Us</Link>

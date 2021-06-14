@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import "../styles/sidebar.css";
@@ -7,9 +9,12 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 
 const Sidebar = ({ userInfo }) => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const query = new URLSearchParams(search);
+  const roleField = query.get("role");
 
   return (
     <div className="sidebar">
@@ -23,7 +28,7 @@ const Sidebar = ({ userInfo }) => {
 
         <div className="sidebar__user-title">
           <span>Admin</span>
-          <p>{userInfo?.fullname}</p>
+          <p className="sidebar__user-name">{userInfo?.fullname}</p>
         </div>
 
         <button
@@ -40,6 +45,56 @@ const Sidebar = ({ userInfo }) => {
       <div className="sidebar__nav-wrap">
         <ul className="sidebar__nav">
           <li className="sidebar__nav-item">
+            <Link
+              to="/admin"
+              className={`sidebar__nav-link ${
+                pathname === "/admin" ? "sidebar__nav-link--active" : ""
+              }`}
+            >
+              <i className="icon ion-ios-keypad"></i>
+              <span>Dashboard</span>
+            </Link>
+          </li>
+          <li className="sidebar__nav-item">
+            <Link
+              to="/admin/employees"
+              className={`sidebar__nav-link ${
+                pathname.includes("/employees") ||
+                (roleField === "staff" && pathname.includes("/edit-account"))
+                  ? "sidebar__nav-link--active"
+                  : ""
+              }`}
+            >
+              <i className="icon ion-ios-contacts"></i> <span>Nhân viên</span>
+            </Link>
+          </li>
+          <li className="sidebar__nav-item">
+            <Link
+              to="/admin/managers"
+              className={`sidebar__nav-link ${
+                pathname.includes("/managers") ||
+                (roleField === "manager" && pathname.includes("/edit-account"))
+                  ? "sidebar__nav-link--active"
+                  : ""
+              }`}
+            >
+              <i className="icon ion-ios-contacts"></i> <span>Quản lý</span>
+            </Link>
+          </li>
+          <li className="sidebar__nav-item">
+            <Link
+              to="/admin/create-account"
+              className={`sidebar__nav-link ${
+                pathname.includes("/create-account")
+                  ? "sidebar__nav-link--active"
+                  : ""
+              }`}
+            >
+              <i className="icon ion-ios-create"></i>
+              <span>Tạo tài khoản</span>
+            </Link>
+          </li>
+          {/* <li className="sidebar__nav-item">
             <Link
               to="/admin"
               className="sidebar__nav-link sidebar__nav-link--active"
@@ -101,20 +156,10 @@ const Sidebar = ({ userInfo }) => {
               <i className="icon ion-ios-star-half"></i>
               <span>Reviews</span>
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
-      <div className="sidebar__copyright">
-        © HOTFLIX, 2019—2021. <br />
-        Create by{" "}
-        <a
-          href="https://themeforest.net/user/dmitryvolkov/portfolio"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Dmitry Volkov
-        </a>
-      </div>
+      <div className="sidebar__copyright">© HOTFLIX, 2021.</div>
     </div>
   );
 };

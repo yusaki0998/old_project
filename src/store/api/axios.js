@@ -1,13 +1,19 @@
+/** @format */
+
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://pure-beyond-32158.herokuapp.com/api/v1/",
+  baseURL:
+    // process.env.NODE_ENV === "development"
+    //   ? "http://localhost:8080/api/v1/"
+    //   :
+    "https://pure-beyond-32158.herokuapp.com/api/v1/",
 });
 
 if (localStorage.getItem("customerAuthToken")) {
-  axiosInstance.defaults.headers.common[
-    "Authorization"
-  ] = `Bearer ${localStorage.getItem("customerAuthToken")}`;
+  axiosInstance.defaults.headers.common["token"] = `${localStorage.getItem(
+    "customerAuthToken"
+  )}`;
 }
 
 // Add a response interceptor

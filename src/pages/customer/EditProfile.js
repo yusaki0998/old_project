@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +11,7 @@ import { editUserProfile } from "../../store/actions/userActions";
 
 const EditProfile = () => {
   const { loginData } = useSelector((state) => state.auth);
+  const { isLoading } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
@@ -176,10 +179,12 @@ const EditProfile = () => {
               <div className="sign__col">
                 <p className="sign__label unvisible">Button label</p>
                 <button
-                  className="btn__outline-orange btn__block"
+                  className={`btn__outline-orange btn__block ${
+                    isLoading ? "divDisable" : ""
+                  }`}
                   type="submit"
                 >
-                  Lưu thay đổi
+                  {isLoading ? "Đang lưu" : "Lưu thay đổi"}
                 </button>
               </div>
             </div>

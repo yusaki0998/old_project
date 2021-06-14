@@ -1,3 +1,5 @@
+/** @format */
+
 @media (max-width: 768px) {
   .info__detail .info__row .label {
     flex: 0.45;
@@ -21,5 +23,8 @@
   .customer__nav-menu ul a {
     margin-right: 0.8rem;
     font-weight: 500;
+  }
+  .admin__create-account__wrapper {
+    max-width: 98%;
   }
 }

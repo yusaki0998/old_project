@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,7 +11,7 @@ const options = {
   autoClose: 5000,
   hideProgressBar: false,
   position: toast.POSITION.TOP_CENTER,
-  pauseOnHover: true,
+  pauseOnHover: false,
   progress: 0.2,
 };
 

@@ -1,10 +1,15 @@
-/*----------------------------------------
-[Master Stylesheet]
+/**
+ * /*----------------------------------------
+ * [Master Stylesheet]
+ * 
+ * Project:	HotFlix
+ * Version:	2.1
+ * Primary use:	HotFlix Template
+ * ----------------------------------------
+ *
+ * @format
+ */
 
-Project:	HotFlix
-Version:	2.1
-Primary use:	HotFlix Template
-----------------------------------------*/
 /*----------------------------------------
 [Table of contents]
 
@@ -611,6 +616,9 @@ ul {
     justify-content: space-between;
     width: 250px;
   }
+  .header__auth.isAdmin {
+    width: 350px;
+  }
   .header__dropdown-menu {
     margin-top: -10px;
   }
@@ -648,6 +656,9 @@ ul {
 @media (min-width: 1440px) {
   .header__auth {
     width: 250px;
+  }
+  .header__auth.isAdmin {
+    width: 350px;
   }
   .header__nav-item {
     margin: 0 45px 0 0;

@@ -1,3 +1,5 @@
+/** @format */
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -136,9 +138,6 @@
 .sidebar__nav-link--active,
 .sidebar__nav-link[aria-expanded="true"] {
   color: #f9ab00;
-}
-.sidebar__nav-link--active {
-  cursor: default;
 }
 .sidebar__nav-item {
   width: 100%;

@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   SIGN_UP_FAILED,
   SIGN_UP_START,
@@ -9,6 +11,7 @@ import {
   GET_USER_PROFILE_START,
   GET_USER_PROFILE_SUCCESS,
   GET_USER_PROFILE_FAILED,
+  EDIT_USER_PROFILE_SUCCESS,
 } from "../actions/types";
 
 const initialState = {
@@ -141,6 +144,16 @@ const reducer = (state = initialState, { type, payload }) => {
           ...state.loginData,
           isLoading: false,
           error: payload,
+        },
+      };
+    case EDIT_USER_PROFILE_SUCCESS:
+      return {
+        ...state,
+        loginData: {
+          ...state.loginData,
+          isLoading: false,
+          error: null,
+          data: payload.data,
         },
       };
     default:

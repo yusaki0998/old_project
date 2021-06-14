@@ -1,3 +1,5 @@
+/** @format */
+
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600");
 html {
   -webkit-text-size-adjust: 100%;
@@ -443,8 +445,9 @@ ul {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding: 15px;
+  padding: 4px 10px;
   background-color: #222028;
+  max-width: 110px;
 }
 .main__table-btn {
   display: flex;

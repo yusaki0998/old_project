@@ -53,7 +53,7 @@ function App() {
           <Route path="/about">
             <PublicLayout>
               <About />
-            </PublicLayout>
+            </PublicLayout>w
           </Route>
           <Route path="/contacts">
             <PublicLayout>

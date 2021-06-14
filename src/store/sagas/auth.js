@@ -1,3 +1,5 @@
+/** @format */
+
 import { takeLatest } from "@redux-saga/core/effects";
 import { put, delay } from "redux-saga/effects";
 import {
@@ -14,7 +16,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { addNotification, removeNotification } from "../actions/uiActions";
 import axiosInstance from "../api/axios";
 
-function* signupWoker(action) {
+function* signupWorker(action) {
   yield put(signupStart());
   try {
     const { data } = yield signupRequest(action.data);
@@ -29,23 +31,31 @@ function* signupWoker(action) {
     yield delay(5000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
+    const newNoti = {
+      id: uuid_v4(),
+      type: "error",
+      message:
+        error?.response?.data?.message ||
+        "Đăng ký thất bại! Vui lòng kiểm tra lại",
+    };
+    yield put(addNotification(newNoti));
+    yield delay(5000);
+    yield put(removeNotification(newNoti.id));
     yield put(signupFailed(error));
   }
 }
 
-function* loginWoker(action) {
+function* loginWorker(action) {
   yield put(loginStart());
   try {
     const { data } = yield loginRequest(action.data);
     yield put(loginSuccess(data.data));
-    yield localStorage.setItem("customerAuthToken", data.data.accessToken);
+    yield localStorage.setItem("customerAuthToken", data.data.refreshToken);
     yield localStorage.setItem(
       "customerAuthData",
       JSON.stringify(data.data.user)
     );
-    axiosInstance.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${data.data.accessToken}`;
+    axiosInstance.defaults.headers.common["token"] = `${data.data.accessToken}`;
     if (data?.data?.user?.role === "admin") {
       action.history.push("/admin");
     } else {
@@ -63,7 +73,9 @@ function* loginWoker(action) {
     const newNoti = {
       id: uuid_v4(),
       type: "error",
-      message: error.message || "Đăng nhập thất bại! Vui lòng kiểm tra lại",
+      message:
+        error?.response?.data?.message ||
+        "Đăng nhập thất bại! Vui lòng kiểm tra lại",
     };
     yield put(addNotification(newNoti));
     yield delay(5000);
@@ -73,8 +85,8 @@ function* loginWoker(action) {
 }
 
 function* authWatcher() {
-  yield takeLatest(SIGN_UP, signupWoker);
-  yield takeLatest(LOGIN, loginWoker);
+  yield takeLatest(SIGN_UP, signupWorker);
+  yield takeLatest(LOGIN, loginWorker);
 }
 
 export default authWatcher;
