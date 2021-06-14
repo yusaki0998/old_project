@@ -15,20 +15,16 @@ const movieSchema = mongoose.Schema({
 
     ageRating: { type: String },
 
-    amountOfTime: { type: String, required: true },
+    amountOfTime: { type: String },
 
-    price: { type: Number, required: true },
+    showtimes: { type: Date },
 
     description: { type: String },
 
-    coverImage: { type: String },
-
-    trailerUrl: { type: String },
+    coverImage: { type: String, default: `../uploads/coversample.jpg` },
 
     //0: phim sap chieu, 1: phim dang chieu
-    status: { type: Number, required: true, default: 0 },
-
-    slot: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Slot' }]
+    status: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model('Movie', movieSchema);

@@ -1,3 +1,5 @@
+/** @format */
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -8,6 +10,7 @@ const cors = require("cors");
 
 //Declare routes
 const userRoute = require("./routes/user-route");
+const movieRoute = require("./routes/movie-route");
 
 //Database connect
 const uri =
@@ -37,7 +40,6 @@ app.use(express.json());
 app.use(cors());
 
 //routes
-app.use("/api/v1/users", userRoute);
 
 // cors middleware
 app.use((req, res, next) => {
@@ -55,6 +57,8 @@ app.get("/", (req, res) => {
     msg: "Api is ready",
   });
 });
+app.use("/api/v1/users", userRoute);
+app.use("/api/v1/movies", movieRoute);
 
 //error handling
 app.use((req, res, next) => {
