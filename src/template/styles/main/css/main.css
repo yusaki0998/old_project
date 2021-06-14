@@ -609,7 +609,7 @@ ul {
   .header__auth {
     margin-left: auto;
     justify-content: space-between;
-    width: 426px;
+    width: 250px;
   }
   .header__dropdown-menu {
     margin-top: -10px;
@@ -647,7 +647,7 @@ ul {
 }
 @media (min-width: 1440px) {
   .header__auth {
-    width: 494px;
+    width: 250px;
   }
   .header__nav-item {
     margin: 0 45px 0 0;

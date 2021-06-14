@@ -16,6 +16,9 @@ import CustomerProfile from "./pages/main/CustomerProfile";
 import ForgotPassword from "./pages/global/ForgotPassword";
 import FAQ from "./pages/global/FAQ";
 import Privacy from "./pages/global/Privacy";
+import ConfirmOTP from "./pages/global/ConfirmOTP";
+import Notification from "./components/ui/Notification";
+import CustomerLayout from "./layout/customerLayout";
 
 function App() {
   return (
@@ -25,6 +28,11 @@ function App() {
           <Route path="/signin">
             <UnAuthLayout>
               <Login />
+            </UnAuthLayout>
+          </Route>
+          <Route path="/confirm-otp">
+            <UnAuthLayout>
+              <ConfirmOTP />
             </UnAuthLayout>
           </Route>
           <Route path="/signup">
@@ -80,6 +88,9 @@ function App() {
           <Route path="/admin">
             <AdminLayout />
           </Route>
+          <Route path="/customer">
+            <CustomerLayout />
+          </Route>
           <Route exact path="/">
             <PublicLayout>
               <HomePage />
@@ -90,6 +101,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
+      <Notification />
     </div>
   );
 }

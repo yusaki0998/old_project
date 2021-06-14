@@ -1,9 +1,15 @@
 import React from "react";
 import "../../template/styles/main/index.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import logo from "../../template/styles/main/img/logo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/actions/authActions";
 
 const Header = () => {
+  const { loginData, isAuthenticated } = useSelector((state) => state.auth);
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   return (
     <header className="header">
       <div className="container">
@@ -80,8 +86,8 @@ const Header = () => {
                   </ul>
                 </li>
               </ul>
-              <div className="header__auth">
-                <form action="#" className="header__search">
+              <div className="header__auth d-flex justify-content-end">
+                {/* <form action="#" className="header__search">
                   <input
                     className="header__search-input"
                     type="text"
@@ -97,39 +103,32 @@ const Header = () => {
 
                 <button className="header__search-btn" type="button">
                   <i className="icon ion-ios-search"></i>
-                </button>
+                </button> */}
 
-                <div className="dropdown header__lang">
-                  <button
-                    className="dropdown-toggle header__nav-link"
-                    id="dropdownMenuLang"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    EN <i className="icon ion-ios-arrow-down"></i>
-                  </button>
-
-                  <ul
-                    className="dropdown-menu header__dropdown-menu"
-                    aria-labelledby="dropdownMenuLang"
-                  >
-                    <li>
-                      <Link to="/">English</Link>
-                    </li>
-                    <li>
-                      <Link to="/">Spanish</Link>
-                    </li>
-                    <li>
-                      <Link to="/">Russian</Link>
-                    </li>
-                  </ul>
-                </div>
-
-                <Link to="/signin" className="header__sign-in">
-                  <i className="icon ion-ios-log-in"></i>
-                  <span>sign in</span>
-                </Link>
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      className="header__nav-link text-white"
+                      onClick={() => history.push("/customer/info")}
+                    >
+                      <i className="icon ion-ios-contacts f-22 mr-2"></i>
+                      {loginData?.data?.fullname}
+                    </button>
+                    <Link
+                      to="/signin"
+                      className="header__sign-in"
+                      onClick={() => dispatch(logout())}
+                    >
+                      <i className="icon ion-ios-log-out"></i>
+                      <span>Logout</span>
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/signin" className="header__sign-in">
+                    <i className="icon ion-ios-log-in"></i>
+                    <span>sign in</span>
+                  </Link>
+                )}
               </div>
               <button className="header__btn" type="button">
                 <span></span>

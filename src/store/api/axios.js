@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NODE_ENV ? "http://localhost:5000" : "",
+  baseURL: "https://pure-beyond-32158.herokuapp.com/api/v1/",
 });
 
 if (localStorage.getItem("customerAuthToken")) {
@@ -21,7 +21,8 @@ axiosInstance.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("customerAuthToken");
-      window.location.href = "/login";
+      localStorage.removeItem("customerAuthData");
+      window.location.href = "/signin";
     }
     // Do something with response error
     return Promise.reject(error);
