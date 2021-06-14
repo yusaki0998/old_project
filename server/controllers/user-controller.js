@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/user-model');
-const bcrypt = require('bcrypt');
 const moment = require('moment');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
@@ -358,8 +358,6 @@ const getStaff = async (req, res) => {
         }
 
         const id = req.params.staffId;
-
-        console.log(id);
 
         const findStaff = await User.findOne({
             _id: id,

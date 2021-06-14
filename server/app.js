@@ -7,6 +7,7 @@ const morgan = require('morgan');
 
 //Declare routes
 const userRoute = require('./routes/user-route');
+const movieRoute = require('./routes/movie-route');
 
 //Database connect
 const uri = "mongodb+srv://" + process.env.MONGO_ATLAS_USER + ":"
@@ -33,6 +34,7 @@ app.use(express.json());
 
 //routes
 app.use('/api/v1/users', userRoute);
+app.use('/api/v1/movies', movieRoute);
 
 //error handling
 app.use((req, res, next) => {
