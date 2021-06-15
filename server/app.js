@@ -6,8 +6,9 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 
 //Declare routes
-const userRoute = require('./routes/user-route');
-const movieRoute = require('./routes/movie-route');
+const userRoutes = require('./routes/user-route');
+const movieRoutes = require('./routes/movie-route');
+const roomRoutes = require('./routes/room-route');
 
 //Database connect
 const uri = "mongodb+srv://" + process.env.MONGO_ATLAS_USER + ":"
@@ -33,8 +34,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //routes
-app.use('/api/v1/users', userRoute);
-app.use('/api/v1/movies', movieRoute);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/movies', movieRoutes);
+app.use('/api/v1/rooms', roomRoutes);
 
 //error handling
 app.use((req, res, next) => {

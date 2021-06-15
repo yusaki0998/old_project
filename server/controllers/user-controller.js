@@ -212,6 +212,11 @@ const updateProfile = async (req, res) => {
                 const hashedPassword = await bcrypt.hash(newpassword, 10);
                 user.password = hashedPassword
             }
+            else {
+                return res.status(301).json({
+                    message: "Retype password does not match"
+                });
+            }
         }
 
         await user.save();
@@ -475,14 +480,23 @@ const deleteAccount = async (req, res) => {
 
 const editAccount = async (req, res) => {
     try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+        
         const id = req.params.accountId;
 
         const { fullname, gender, email, dob, phone, password, role } = req.body;
 
         const user = await User.findOne({
             _id: id
-        })
-            .exec()
+        }).exec()
 
         if (fullname) {
             user.fullname = fullname;
@@ -523,6 +537,7 @@ const editAccount = async (req, res) => {
             message: "Account updated",
             data: user
         });
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({

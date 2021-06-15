@@ -34,5 +34,7 @@ router.post('/', checkAuth, upload.single('coverImage'), MovieController.createM
 router.get('/ongoing', MovieController.getOngoingMovies);
 router.get('/comingsoon', MovieController.getComingSoonMovies);
 router.get('/:movieId', MovieController.getMovie);
+router.put('/:movieId', checkAuth, upload.single('coverImage'), MovieController.updateMovie);
+router.delete('/:movieId', checkAuth, MovieController.deleteMovie);
 
 module.exports = router;
