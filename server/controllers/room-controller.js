@@ -143,19 +143,14 @@ const deleteRoom = async (req, res) => {
 
         const id = req.params.roomId;
 
-        const room = await Room.findOne({
-            _id: id
-        }).exec();
+        
+        const deleteRoom = await Room.findByIdAndDelete(id).exec();
 
-        if(!room){
+        if(!deleteRoom){
             return res.status(404).json({
-                message: "Room not found"
+                message: "Id not found cannot delete room"
             });
         }
-
-        const deleteRoom = await Room.remove({
-            _id: id
-        }).exec();
 
         return res.status(200).json({
             message: "Room deleted",

@@ -3,17 +3,17 @@ const User = require('../models/user-model');
 require('dotenv').config();
 
 module.exports = async (req, res, next) => {
-    const token = req.header('token');
-
-    if(!token) {
-        return res.status(401).json({
-            message: "Unauthorized"
-        });
-    }
-
-    const payload = jwt.verify(token, process.env.REFRESH_SECRET);
-
     try {
+        const token = req.header('token');
+
+        if(!token) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            });
+        }
+    
+        const payload = jwt.verify(token, process.env.REFRESH_SECRET);
+        
         const user = await User
         .findById(payload._id)
         .exec();

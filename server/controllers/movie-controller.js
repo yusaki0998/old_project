@@ -224,19 +224,13 @@ const deleteMovie = async (req, res) => {
 
         const id = req.params.movieId;
 
-        const movie = await Movie.findOne({
-            _id: id,
-        }).exec();
+        const deleteMovie = await Movie.findByIdAndDelete(id).exec();
 
-        if (!movie) {
+        if (!deleteMovie) {
             return res.status(404).json({
-                message: "Movie not found"
+                message: "Id not found cannot delete movie"
             });
         }
-
-        const deleteMovie = await Movie.remove({
-            _id: id
-        }).exec();
 
         return res.status(200).json({
             message: "Movie deleted",
@@ -252,12 +246,45 @@ const deleteMovie = async (req, res) => {
     }
 }
 
+const search = async (req, res) => {
+    try {
+        const input = req.body.input;
+
+        const findMovies = await Movie.find({
+            $and: [
+                {
+                    $or: [
+                        { movieName: new RegExp(input, 'i') }
+                    ]
+                }
+            ]
+        }).limit(5).exec();
+
+        if(!findMovies || findMovies.length === 0){
+            return res.json([]);
+        }
+
+        return res.status(200).json({
+            message: "Movies found",
+            data: findMovies
+        });
+        
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 module.exports = {
     createMovie,
     getOngoingMovies,
     getComingSoonMovies,
     getMovie,
     updateMovie,
-    deleteMovie
+    deleteMovie,
+    search
 }
 
