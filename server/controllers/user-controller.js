@@ -24,7 +24,7 @@ const register = async (req, res) => {
 
         if (phone.length < 10) {
             return res.status(301).json({
-                message: "Your phone number is invalid"
+                message: "Your phone number is invalid, phone number must be 10 numbers"
             });
         }
 
@@ -174,12 +174,13 @@ const updateProfile = async (req, res) => {
     try {
         const id = req.userData._id;
 
-        const { fullname, gender, email, phone, /*dob,*/ oldpassword, newpassword, retype } = req.body;
+        const { fullname, gender, email, phone } = req.body;
+
+        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         const user = await User.findOne({
             _id: id
-        })
-            .exec()
+        }).exec()
 
         if (req.file) {
             user.avatar = req.file.originalname;
@@ -190,20 +191,54 @@ const updateProfile = async (req, res) => {
         }
 
         if (email) {
-            user.email = email;
+            if (!regexp.test(email)) {
+                return res.status(301).json({
+                    message: "Email is in invalid format"
+                });
+            } else {
+                user.email = email;
+            }
         }
 
         if (phone) {
-            user.phone = phone;
+            if (phone.length < 10) {
+                return res.status(301).json({
+                    message: "Your phone number is invalid, phone number must be 10 numbers"
+                });
+            } else {
+                user.phone = phone;
+            }
         }
 
         if (gender) {
             user.gender = gender;
         }
 
-        // if(dob) {
-        //     user.dob = dob;
-        // }
+        await user.save();
+
+        return res.status(200).json({
+            message: "User profile updated",
+            data: user
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const changePassword = async (req, res) => {
+    try {
+        const id = req.userData._id;
+
+        const { oldpassword, newpassword, retype } = req.body;
+
+        const user = await User.findOne({
+            _id: id
+        }).exec();
 
         if (oldpassword) {
             let validPassword = await bcrypt.compare(oldpassword, user.password);
@@ -212,12 +247,17 @@ const updateProfile = async (req, res) => {
                 const hashedPassword = await bcrypt.hash(newpassword, 10);
                 user.password = hashedPassword
             }
+            else {
+                return res.status(301).json({
+                    message: "Retype password does not match"
+                });
+            }
         }
 
         await user.save();
 
         return res.status(200).json({
-            message: "User profile updated",
+            message: "User password updated",
             data: user
         });
 
@@ -455,9 +495,13 @@ const deleteAccount = async (req, res) => {
 
         const id = req.params.accountId;
 
-        const deleteAccount = await User.remove({
-            _id: id,
-        }).exec();
+        const deleteAccount = await User.findByIdAndRemove(id).exec();
+
+        if(!deleteAccount) {
+            return res.status(404).json({
+                message: "Id not found cannot delete account"
+            });
+        }
 
         return res.status(200).json({
             message: "Account deleted",
@@ -475,29 +519,58 @@ const deleteAccount = async (req, res) => {
 
 const editAccount = async (req, res) => {
     try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'admin') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
         const id = req.params.accountId;
 
         const { fullname, gender, email, dob, phone, password, role } = req.body;
 
+        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
         const user = await User.findOne({
             _id: id
-        })
-            .exec()
+        }).exec()
 
         if (fullname) {
             user.fullname = fullname;
         }
 
         if (email) {
-            user.email = email;
+            if (!regexp.test(email)) {
+                return res.status(301).json({
+                    message: "Email is in invalid format"
+                });
+            } else {
+                user.email = email;
+            }
         }
 
         if (dob) {
-            user.dob = dob;
+            if (!moment(dob).isValid()) {
+                return res.status(301).json({
+                    message: "Date of birth is in invalid format"
+                });
+            } else {
+                user.dob = dob;
+            }
         }
 
         if (phone) {
-            user.phone = phone;
+            if (phone.length < 10) {
+                return res.status(301).json({
+                    message: "Your phone number is invalid, phone number must be 10 numbers"
+                });
+            } else {
+                user.phone = phone;
+            }
         }
 
         if (gender) {
@@ -511,7 +584,11 @@ const editAccount = async (req, res) => {
         if (password) {
             let validPassword = await bcrypt.compare(password, user.password);
 
-            if (validPassword) {
+            if (!validPassword) {
+                return res.status(301).json({
+                    message: "Password invalid"
+                });
+            } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
                 user.password = hashedPassword
             }
@@ -523,6 +600,7 @@ const editAccount = async (req, res) => {
             message: "Account updated",
             data: user
         });
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
@@ -534,17 +612,17 @@ const editAccount = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.body.input;
+        const input = req.query.input;
 
         const findUsers = await User.find({
             $and: [
                 {
                     $or: [
-                        {fullname: new RegExp(input, 'i')}
+                        { fullname: new RegExp(input, 'i') }
                     ]
                 },
                 {
-                    _id: {$ne: req.userData._id.toString()}
+                    _id: { $ne: req.userData._id.toString() }
                 }
             ]
         }).limit(10).exec();
@@ -572,6 +650,7 @@ module.exports = {
     login,
     profile,
     updateProfile,
+    changePassword,
     addAccount,
     getStaffs,
     getStaff,
