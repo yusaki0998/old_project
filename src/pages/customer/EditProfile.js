@@ -63,7 +63,7 @@ const EditProfile = () => {
                   <p className="input-required">{errors.fullname.message}</p>
                 )}
               </div>
-              {/* <div className="sign__col">
+              <div className="sign__col">
                 <p className="sign__label">Mật khẩu cũ</p>
                 <input
                   type="password"
@@ -80,7 +80,7 @@ const EditProfile = () => {
                 {errors.oldpassword && (
                   <p className="input-required">{errors.oldpassword.message}</p>
                 )}
-              </div> */}
+              </div>
             </div>
             <div className="sign__row mb-3">
               <div className="sign__col mr-3">
@@ -102,7 +102,7 @@ const EditProfile = () => {
                   <p className="input-required">{errors.email.message}</p>
                 )}
               </div>
-              {/* <div className="sign__col">
+              <div className="sign__col">
                 <p className="sign__label">Mật khẩu mới</p>
                 <input
                   type="password"
@@ -119,7 +119,7 @@ const EditProfile = () => {
                 {errors.newpassword && (
                   <p className="input-required">{errors.newpassword.message}</p>
                 )}
-              </div> */}
+              </div>
             </div>
             <div className="sign__row mb-3">
               <div className="sign__col mr-3">
@@ -130,7 +130,7 @@ const EditProfile = () => {
                   className="divDisable"
                 />
               </div>
-              {/* <div className="sign__col">
+              <div className="sign__col">
                 <p className="sign__label">Nhập lại mật khẩu mới</p>
                 <input
                   type="password"
@@ -150,7 +150,7 @@ const EditProfile = () => {
                 {errors.retype && (
                   <p className="input-required">{errors.retype.message}</p>
                 )}
-              </div> */}
+              </div>
             </div>
             <div className="sign__row mb-3">
               <div className="sign__col mr-3">

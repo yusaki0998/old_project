@@ -1,3 +1,5 @@
+/** @format */
+
 import axios from "./axios";
 
 export const signupRequest = async (data) => {

@@ -1,37 +1,52 @@
-import React from "react";
-import { Link } from "react-router-dom";
+/** @format */
 
-const Paginator = () => {
+import React from "react";
+import { MAX_ITEMS_PER_PAGE } from "../../pages/manager/FilmRoom";
+
+const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
+  if (!maxPage || maxPage <= 1) {
+    return null;
+  }
   return (
     <div className="paginator-wrap">
-      <span>10 from 14 452</span>
+      <span>
+        {MAX_ITEMS_PER_PAGE} from {totalItems}
+      </span>
       <ul
         className="paginator c__paginator"
         style={{
           width: "fit-content !important",
         }}
       >
-        <li className="paginator__item paginator__item--prev">
-          <Link to="/">
+        <li
+          className={`paginator__item paginator__item--prev ${
+            curPage === 0 ? "divDisable" : ""
+          }`}
+        >
+          <button onClick={() => setCurPage((prevState) => prevState - 1)}>
             <i className="icon ion-ios-arrow-back"></i>
-          </Link>
+          </button>
         </li>
-        <li className="paginator__item">
-          <Link to="/">1</Link>
-        </li>
-        <li className="paginator__item paginator__item--active">
-          <Link to="/">2</Link>
-        </li>
-        <li className="paginator__item">
-          <Link to="/">3</Link>
-        </li>
-        <li className="paginator__item">
-          <Link to="/">4</Link>
-        </li>
-        <li className="paginator__item paginator__item--next">
-          <Link to="/">
+        {Array(maxPage)
+          .fill(1)
+          .map((_, index) => (
+            <li
+              key={index}
+              className={`paginator__item ${
+                curPage === index ? "paginator__item--active" : ""
+              }`}
+            >
+              <button onClick={() => setCurPage(index)}> {index + 1} </button>
+            </li>
+          ))}
+        <li
+          className={`paginator__item paginator__item--next ${
+            curPage === maxPage - 1 ? "divDisable" : ""
+          }`}
+        >
+          <button onClick={() => setCurPage((prevState) => prevState + 1)}>
             <i className="icon ion-ios-arrow-forward"></i>
-          </Link>
+          </button>
         </li>
       </ul>
     </div>

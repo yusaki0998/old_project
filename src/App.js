@@ -1,3 +1,5 @@
+/** @format */
+
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import UnAuthLayout from "./layout/unAuthLayout";
 import AuthLayout from "./layout/authLayout";
@@ -19,6 +21,7 @@ import Privacy from "./pages/global/Privacy";
 import ConfirmOTP from "./pages/global/ConfirmOTP";
 import Notification from "./components/ui/Notification";
 import CustomerLayout from "./layout/customerLayout";
+import ManagerLayout from "./layout/managerLayout";
 
 function App() {
   return (
@@ -53,7 +56,7 @@ function App() {
           <Route path="/about">
             <PublicLayout>
               <About />
-            </PublicLayout>w
+            </PublicLayout>
           </Route>
           <Route path="/contacts">
             <PublicLayout>
@@ -90,6 +93,9 @@ function App() {
           </Route>
           <Route path="/customer">
             <CustomerLayout />
+          </Route>
+          <Route path="/manager">
+            <ManagerLayout />
           </Route>
           <Route exact path="/">
             <PublicLayout>

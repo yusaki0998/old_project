@@ -7,12 +7,18 @@ import UserListSkeleton from "../../skeleton/UserListSkeleton";
 import DeleteAccount from "../../components/admin/DeleteAccount";
 import { getListManager } from "../../store/actions/adminActions";
 import { useHistory } from "react-router-dom";
+import { getUserBySearchInputRequest } from "../../store/api/admin";
+import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
 
 const ManagerList = () => {
   const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
   const { managers } = useSelector((state) => state.admin);
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedAcc, setSelectedAcc] = useState({});
+  const [isTouched, setIsTouched] = useState(false);
+  const [filteredList, setFilteredList] = useState([]);
+  const [curPage, setCurPage] = useState(0);
   const history = useHistory();
 
   const onOpen = (acc) => {
@@ -22,12 +28,35 @@ const ManagerList = () => {
 
   const onClose = () => {
     setOpenDelete(false);
-    setSelectedAcc({});
+    setTimeout(() => {
+      setSelectedAcc({});
+    }, 1000);
   };
 
   useEffect(() => {
     dispatch(getListManager());
   }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredList(managers.list);
+  }, [managers.list]);
+
+  const onSearchUser = () => {
+    if (isTouched && searchInput.trim()) {
+      getUserBySearchInputRequest(searchInput.trim().toLowerCase())
+        .then(({ data }) => {
+          setFilteredList(
+            data?.data?.filter((user) => user?.role === "manager")
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    if (!searchInput.trim()) {
+      setFilteredList(managers.list);
+    }
+  };
 
   return (
     <main className="main">
@@ -36,17 +65,26 @@ const ManagerList = () => {
           <div className="col-12">
             <div className="admin__manager-list__wrapper text-white mt-5">
               <div className="d-flex justify-content-end mb-3">
-                <form action="#" className="header__search">
+                <form className="table__search">
                   <input
                     className="header__search-input"
                     type="text"
                     placeholder="Tìm kiếm..."
+                    value={searchInput}
+                    onChange={(e) => {
+                      setSearchInput(e.target.value);
+                      setIsTouched(true);
+                      if (!e.target.value.trim()) {
+                        setFilteredList(managers.list);
+                      }
+                    }}
                   />
-                  <button className="header__search-button" type="button">
+                  <button
+                    className="table__search-button"
+                    type="button"
+                    onClick={onSearchUser}
+                  >
                     <i className="icon ion-ios-search"></i>
-                  </button>
-                  <button className="header__search-close" type="button">
-                    <i className="icon ion-md-close"></i>
                   </button>
                 </form>
               </div>
@@ -66,60 +104,70 @@ const ManagerList = () => {
                     <tbody>
                       {managers.isLoading && <UserListSkeleton />}
                       {!managers.isLoading &&
-                        managers.list.map((manager, index) => (
-                          <tr key={manager._id}>
-                            <td>
-                              <div className="main__table-text">
-                                {index + 1}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="main__table-text">
-                                <a href="/"> {manager._id} </a>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="main__table-text">
-                                {manager.email}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="main__table-text">
-                                {manager.fullname}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="main__table-text">
-                                {manager.phone}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="main__table-btns">
-                                <button
-                                  className="main__table-btn main__table-btn--edit"
-                                  onClick={() =>
-                                    history.push(
-                                      `/admin/edit-account?uId=${manager._id}&role=manager`
-                                    )
-                                  }
-                                >
-                                  <i className="icon ion-ios-create"></i>
-                                </button>
-                                <button
-                                  className="main__table-btn main__table-btn--delete"
-                                  onClick={() => onOpen(manager)}
-                                >
-                                  <i className="icon ion-ios-trash"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
+                        filteredList
+                          .slice(
+                            curPage * MAX_ITEMS_PER_PAGE,
+                            (curPage + 1) * MAX_ITEMS_PER_PAGE
+                          )
+                          .map((manager, index) => (
+                            <tr key={manager._id}>
+                              <td>
+                                <div className="main__table-text">
+                                  {index + 1}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  <a href="/"> {manager._id} </a>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {manager.email}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {manager.fullname}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {manager.phone}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-btns">
+                                  <button
+                                    className="main__table-btn main__table-btn--edit"
+                                    onClick={() =>
+                                      history.push(
+                                        `/admin/edit-account?uId=${manager._id}&role=manager`
+                                      )
+                                    }
+                                  >
+                                    <i className="icon ion-ios-create"></i>
+                                  </button>
+                                  <button
+                                    className="main__table-btn main__table-btn--delete"
+                                    onClick={() => onOpen(manager)}
+                                  >
+                                    <i className="icon ion-ios-trash"></i>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
                     </tbody>
                   </table>
                 </div>
               </div>
-              <Paginator />
+              <Paginator
+                maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
+                curPage={curPage}
+                setCurPage={setCurPage}
+                totalItems={filteredList.length}
+              />
               <DeleteAccount
                 open={openDelete}
                 close={onClose}

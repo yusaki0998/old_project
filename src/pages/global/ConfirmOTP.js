@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import "../styles/global.css";
 import { Link, useHistory, useLocation } from "react-router-dom";

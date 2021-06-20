@@ -189,7 +189,7 @@ ul {
   position: relative;
 }
 .admin-header__btn.admin-header__btn-admin {
-  top: 20%;
+  top: 6%;
 }
 .admin-header__btn span {
   display: block;
@@ -872,7 +872,7 @@ ul {
 .paginator__item {
   margin: 0;
 }
-.paginator__item a {
+.paginator__item button {
   font-size: 14px;
   height: 40px;
   width: 40px;
@@ -884,7 +884,7 @@ ul {
   border-radius: 6px;
   border: 2px solid transparent;
 }
-.paginator__item:hover a {
+.paginator__item:hover button {
   color: #f9ab00;
 }
 .paginator__item--prev,
@@ -893,16 +893,16 @@ ul {
   height: 40px;
   transition: 0.4s ease;
 }
-.paginator__item--prev a,
-.paginator__item--next a {
+.paginator__item--prev button,
+.paginator__item--next button {
   font-size: 16px;
 }
-.paginator__item--active a {
+.paginator__item--active button {
   color: #fff;
   cursor: default;
   border-color: #f9ab00;
 }
-.paginator__item--active a:hover {
+.paginator__item--active button:hover {
   color: #fff;
 }
 /*==============================

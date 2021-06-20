@@ -5,11 +5,12 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import "../styles/sidebar.css";
 import logo from "../../template/styles/main/img/logo.svg";
 import userImg from "../../template/styles/main/img/user.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 
 const Sidebar = ({ userInfo }) => {
   const { pathname, search } = useLocation();
+  const { sidebar } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -17,7 +18,7 @@ const Sidebar = ({ userInfo }) => {
   const roleField = query.get("role");
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${sidebar.show ? "show" : ""}`}>
       <a href="/" className="sidebar__logo">
         <img src={logo} alt="Hotflix logo" />
       </a>

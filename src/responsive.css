@@ -1,6 +1,26 @@
 /** @format */
 
+@media (max-width: 1024px) {
+  .nav-tabs.content__tabs li a {
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 54px;
+    color: #fff;
+    position: relative;
+    text-transform: uppercase;
+  }
+  .nav-tabs.content__tabs li a.active {
+    color: #f9ab00;
+  }
+}
+
 @media (max-width: 768px) {
+  .nav-tabs.content__tabs {
+    justify-content: space-between;
+  }
   .info__detail .info__row .label {
     flex: 0.45;
   }
@@ -26,5 +46,8 @@
   }
   .admin__create-account__wrapper {
     max-width: 98%;
+  }
+  .nav-tabs.content__tabs li a {
+    font-size: 11px;
   }
 }

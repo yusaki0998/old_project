@@ -16,6 +16,9 @@
   transition: transform 0.4s ease;
   border-right: 1px solid #222028;
 }
+.sidebar.show {
+  transform: translateX(0);
+}
 .sidebar__logo {
   display: flex;
   flex-direction: row;

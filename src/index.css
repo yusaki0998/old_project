@@ -208,3 +208,32 @@ code {
 .ui__loading-spinner img {
   max-width: 65px;
 }
+.table__search {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  padding: 0;
+  top: auto;
+  right: auto;
+  left: auto;
+  bottom: auto;
+  background-color: transparent;
+  width: 300px;
+  margin-right: 10px;
+}
+.table__search-button {
+  position: absolute;
+  height: 40px;
+  color: #fff;
+  font-size: 22px;
+  top: 50%;
+  margin-top: -20px;
+  right: 15px;
+}
+.border-bottom {
+  border-bottom: 2px solid #fff;
+}
+.sign_textarea {
+  min-height: 120px;
+  padding-top: 10px !important;
+}

@@ -6,8 +6,9 @@ import { Link, useHistory } from "react-router-dom";
 import logo from "../../template/styles/main/img/logo.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/actions/authActions";
+import { checkCondition } from "../../utils/helper";
 
-const Header = () => {
+const Header = ({ hideCenterDiv, isActive }) => {
   const { loginData, isAuthenticated } = useSelector((state) => state.auth);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -21,8 +22,7 @@ const Header = () => {
               <Link to="/" className="header__logo">
                 <img src={logo} alt="Hotflix logo" />
               </Link>
-
-              <ul className="header__nav">
+              <ul className={`header__nav ${hideCenterDiv ? "d-none" : ""}`}>
                 <li className="header__nav-item">
                   <Link className="header__nav-link" to="/">
                     Home
@@ -90,32 +90,27 @@ const Header = () => {
               </ul>
               <div
                 className={`header__auth d-flex justify-content-end ${
-                  loginData?.data?.role === "admin" ? "isAdmin" : ""
+                  loginData?.data?.role === "admin" ||
+                  loginData?.data?.role === "manager" ||
+                  loginData?.data?.role === "staff"
+                    ? "isAdmin"
+                    : ""
                 }`}
               >
-                {/* <form action="#" className="header__search">
-                  <input
-                    className="header__search-input"
-                    type="text"
-                    placeholder="Search..."
-                  />
-                  <button className="header__search-button" type="button">
-                    <i className="icon ion-ios-search"></i>
-                  </button>
-                  <button className="header__search-close" type="button">
-                    <i className="icon ion-md-close"></i>
-                  </button>
-                </form>
-
-                <button className="header__search-btn" type="button">
-                  <i className="icon ion-ios-search"></i>
-                </button> */}
                 {isAuthenticated ? (
                   <>
-                    {loginData?.data?.role === "admin" && (
+                    {(loginData?.data?.role === "admin" ||
+                      loginData?.data?.role === "manager" ||
+                      loginData?.data?.role === "staff") && (
                       <button
-                        className="header__nav-link text-white mr-3"
-                        onClick={() => history.push("/admin")}
+                        className={`header__nav-link text-white mr-3 ${checkCondition(
+                          isActive,
+                          "header__nav-link--active",
+                          ""
+                        )}`}
+                        onClick={() =>
+                          history.push(`/${loginData?.data?.role}`)
+                        }
                       >
                         Dashboard
                       </button>

@@ -474,7 +474,7 @@ ul {
   pointer-events: auto;
 }
 .header__search-input {
-  width: calc(100% - 35px);
+  width: 100%;
   height: 40px;
   border-radius: 6px;
   background-color: #222028;
@@ -502,7 +502,7 @@ ul {
   position: absolute;
   height: 40px;
   color: #fff;
-  font-size: 22px;
+  font-size: 26px;
   top: 50%;
   margin-top: -20px;
   right: 15px;
@@ -597,9 +597,9 @@ ul {
   .header__nav-item:last-child {
     margin: 0;
   }
-  .header__nav-link {
+  /* .header__nav-link {
     line-height: 80px;
-  }
+  } */
   .header__nav-link--active {
     color: #f9ab00;
     cursor: default;
@@ -617,7 +617,7 @@ ul {
     width: 250px;
   }
   .header__auth.isAdmin {
-    width: 350px;
+    width: max-content;
   }
   .header__dropdown-menu {
     margin-top: -10px;
@@ -632,9 +632,6 @@ ul {
   .header__search-btn {
     display: none;
   }
-  .header__search-close {
-    display: none;
-  }
   .header__search {
     position: relative;
     opacity: 1;
@@ -647,7 +644,7 @@ ul {
     background-color: transparent;
   }
   .header__search-input {
-    width: 200px;
+    width: 100%;
   }
   .header__search-button {
     right: 20px;
@@ -658,7 +655,7 @@ ul {
     width: 250px;
   }
   .header__auth.isAdmin {
-    width: 350px;
+    width: max-content;
   }
   .header__nav-item {
     margin: 0 45px 0 0;
@@ -667,7 +664,7 @@ ul {
     margin: 0;
   }
   .header__search-input {
-    width: 232px;
+    width: 100%;
   }
 }
 /*==============================
@@ -1869,7 +1866,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .paginator__item {
   margin-right: 15px;
 }
-.paginator__item a {
+.paginator__item button {
   font-size: 16px;
   height: 36px;
   width: 36px;
@@ -1886,7 +1883,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .paginator__item:last-child {
   margin-right: 0;
 }
-.paginator__item:hover a {
+.paginator__item:hover button {
   color: #f9ab00;
 }
 .paginator__item--prev,
@@ -1894,11 +1891,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   display: block;
   position: relative;
 }
-.paginator__item--prev a,
-.paginator__item--next a {
+.paginator__item--prev button,
+.paginator__item--next button {
   font-size: 16px;
 }
-.paginator__item--active a {
+.paginator__item--active button {
   color: #fff;
   cursor: default;
   border-color: #f9ab00;
@@ -1914,7 +1911,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   .paginator__item {
     margin-right: 20px;
   }
-  .paginator__item a {
+  .paginator__item button {
     width: 40px;
     height: 40px;
   }

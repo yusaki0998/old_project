@@ -10,5 +10,11 @@ export const convertGenderToVietnamese = (gender) => {
 export const convertRoleToVietnamese = (role) => {
   if (role === "manager") return "Quản lý";
   if (role === "staff") return "Nhân viên";
-  return "Please choose";
+  return "Vui lòng chọn";
+};
+
+export const convertStatusToText = (status) => {
+  if (status === "1") return "Phim đang chiếu";
+  if (status === "0") return "Phim sắp chiếu";
+  return "Vui lòng chọn";
 };

@@ -26,4 +26,14 @@ export const updateAccountInfoRequest = async (uId, data) =>
       "Content-type": "application/json",
     },
   });
-export const getUserBySearchRequest = async () => axios.get("/users/search");
+export const getUserBySearchInputRequest = async (input) => {
+  return axios.post(
+    "/users/search",
+    { input },
+    {
+      headers: {
+        "Content-type": "application/json",
+      },
+    }
+  );
+};
