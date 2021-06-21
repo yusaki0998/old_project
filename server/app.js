@@ -13,6 +13,7 @@ const userRoutes = require('./routes/user-route');
 const movieRoutes = require('./routes/movie-route');
 const roomRoutes = require('./routes/room-route');
 const slotRoutes = require('./routes/slot-route');
+const scheduleRoutes = require('./routes/schedule-route');
 
 //Database connect
 const uri =
@@ -63,6 +64,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/movies', movieRoutes);
 app.use('/api/v1/rooms', roomRoutes);
 app.use('/api/v1/slots', slotRoutes);
+app.use('/api/v1/schedules', scheduleRoutes);
 
 //error handling
 app.use((req, res, next) => {

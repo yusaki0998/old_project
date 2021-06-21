@@ -7,7 +7,10 @@ const scheduleSchema = mongoose.Schema({
 
     slot: { type: mongoose.Schema.Types.ObjectId, ref: 'Slot' },
 
-    room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' }
+    room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' },
+
+    showDate: { type: Date },
+
 });
 
 module.exports = mongoose.model('Schedule', scheduleSchema);

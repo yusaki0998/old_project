@@ -11,7 +11,13 @@ module.exports = async (req, res, next) => {
         });
     }
 
-    const payload = jwt.verify(token, process.env.REFRESH_SECRET);
+    const payload = jwt.verify(token, process.env.REFRESH_SECRET, function(err, decode) {
+        console.log(err.message);
+        return res.status(401).json({
+            message: "Invalid token",
+            decode: decode
+        });
+    });
     
     try {
         const user = await User
