@@ -10,6 +10,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { getFilmDetailRequest } from "../../store/api/manager";
 import { checkCondition } from "../../utils/helper";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const EditFilm = () => {
   const [status, setStatus] = useState("");
@@ -356,23 +357,29 @@ const EditFilm = () => {
                 <p>Loại phim</p>
               </div>
               <div className="col-md-8">
-                <div
-                  className={`sign-custom__select ${showStatus ? "show" : ""}`}
-                  onClick={() => setShowStatus((prevState) => !prevState)}
-                >
-                  <li className="gender__text">
-                    {status ? convertStatusToText(status) : "Vui lòng chọn"}
-                  </li>
-                  <ul className={`${showStatus ? "show" : ""}`}>
-                    <li onClick={() => setStatus("1")}>Phim đang chiếu</li>
-                    <li onClick={() => setStatus("0")}>Phim sắp chiếu</li>
-                  </ul>
-                  <button className="sign__select-icon">
-                    <i
-                      className={`fas fa-chevron-${showStatus ? "up" : "down"}`}
-                    ></i>
-                  </button>
-                </div>
+                <OutsideHandler callback={() => setShowStatus(false)}>
+                  <div
+                    className={`sign-custom__select ${
+                      showStatus ? "show" : ""
+                    }`}
+                    onClick={() => setShowStatus((prevState) => !prevState)}
+                  >
+                    <li className="gender__text">
+                      {status ? convertStatusToText(status) : "Vui lòng chọn"}
+                    </li>
+                    <ul className={`${showStatus ? "show" : ""}`}>
+                      <li onClick={() => setStatus("1")}>Phim đang chiếu</li>
+                      <li onClick={() => setStatus("0")}>Phim sắp chiếu</li>
+                    </ul>
+                    <button className="sign__select-icon">
+                      <i
+                        className={`fas fa-chevron-${
+                          showStatus ? "up" : "down"
+                        }`}
+                      ></i>
+                    </button>
+                  </div>
+                </OutsideHandler>
               </div>
             </div>
             <button

@@ -101,6 +101,7 @@ const reducer = (state = initialState, { type, payload }) => {
       };
     case LOGOUT:
       localStorage.removeItem("customerAuthToken");
+      localStorage.removeItem("customerAuthData");
       return {
         ...state,
         token: null,

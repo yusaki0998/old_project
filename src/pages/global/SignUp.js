@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -6,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import logo from "../../template/styles/main/img/logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { signup } from "../../store/actions/authActions";
+import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const SignUp = () => {
   const {
@@ -138,7 +141,6 @@ const SignUp = () => {
                     <p className="input-required">{errors.retype.message}</p>
                   )}
                 </div>
-
                 <div className="sign__row mb-3">
                   <div className="sign__col mr-3">
                     <p className="sign__label">Birth Date</p>
@@ -149,28 +151,30 @@ const SignUp = () => {
                   </div>
                   <div className="sign__col">
                     <p className="sign__label">Gender</p>
-                    <div
-                      className={`sign-custom__select ${
-                        showGender ? "show" : ""
-                      }`}
-                      onClick={() => setShowGender((prevState) => !prevState)}
-                    >
-                      <li className="gender__text">
-                        {gender ? gender : "Please choose"}
-                      </li>
-                      <ul className={`${showGender ? "show" : ""}`}>
-                        <li onClick={() => setGender("male")}>Male</li>
-                        <li onClick={() => setGender("female")}>Female</li>
-                        <li onClick={() => setGender("other")}>Other</li>
-                      </ul>
-                      <button className="sign__select-icon">
-                        <i
-                          className={`fas fa-chevron-${
-                            showGender ? "up" : "down"
-                          }`}
-                        ></i>
-                      </button>
-                    </div>
+                    <OutsideHandler callback={() => setShowGender(false)}>
+                      <div
+                        className={`sign-custom__select ${
+                          showGender ? "show" : ""
+                        }`}
+                        onClick={() => setShowGender((prevState) => !prevState)}
+                      >
+                        <li className="gender__text">
+                          {gender ? gender : "Please choose"}
+                        </li>
+                        <ul className={`${showGender ? "show" : ""}`}>
+                          <li onClick={() => setGender("male")}>Male</li>
+                          <li onClick={() => setGender("female")}>Female</li>
+                          <li onClick={() => setGender("other")}>Other</li>
+                        </ul>
+                        <button className="sign__select-icon">
+                          <i
+                            className={`fas fa-chevron-${
+                              showGender ? "up" : "down"
+                            }`}
+                          ></i>
+                        </button>
+                      </div>
+                    </OutsideHandler>
                   </div>
                 </div>
 

@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
 import { editUserProfile } from "../../store/actions/userActions";
+import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const EditProfile = () => {
   const { loginData } = useSelector((state) => state.auth);
@@ -155,26 +156,32 @@ const EditProfile = () => {
             <div className="sign__row mb-3">
               <div className="sign__col mr-3">
                 <p className="sign__label">Giới tính</p>
-                <div
-                  className={`sign-custom__select ${showGender ? "show" : ""}`}
-                  onClick={() => setShowGender((prevState) => !prevState)}
-                >
-                  <li className="gender__text">
-                    {gender
-                      ? convertGenderToVietnamese(gender)
-                      : "Please choose"}
-                  </li>
-                  <ul className={`${showGender ? "show" : ""}`}>
-                    <li onClick={() => setGender("male")}>Nam</li>
-                    <li onClick={() => setGender("female")}>Nữ</li>
-                    <li onClick={() => setGender("other")}>Khác</li>
-                  </ul>
-                  <button className="sign__select-icon">
-                    <i
-                      className={`fas fa-chevron-${showGender ? "up" : "down"}`}
-                    ></i>
-                  </button>
-                </div>
+                <OutsideHandler callback={() => setShowGender(false)}>
+                  <div
+                    className={`sign-custom__select ${
+                      showGender ? "show" : ""
+                    }`}
+                    onClick={() => setShowGender((prevState) => !prevState)}
+                  >
+                    <li className="gender__text">
+                      {gender
+                        ? convertGenderToVietnamese(gender)
+                        : "Please choose"}
+                    </li>
+                    <ul className={`${showGender ? "show" : ""}`}>
+                      <li onClick={() => setGender("male")}>Nam</li>
+                      <li onClick={() => setGender("female")}>Nữ</li>
+                      <li onClick={() => setGender("other")}>Khác</li>
+                    </ul>
+                    <button className="sign__select-icon">
+                      <i
+                        className={`fas fa-chevron-${
+                          showGender ? "up" : "down"
+                        }`}
+                      ></i>
+                    </button>
+                  </div>
+                </OutsideHandler>
               </div>
               <div className="sign__col">
                 <p className="sign__label unvisible">Button label</p>

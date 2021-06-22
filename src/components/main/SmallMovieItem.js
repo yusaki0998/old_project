@@ -1,12 +1,14 @@
+/** @format */
+
 import React from "react";
 import { Link } from "react-router-dom";
-import coverBg from "../../template/styles/main/img/covers/cover.jpg";
+import poster from "../../assets/poster.jpg";
 
 const SmallMovieItem = () => {
   return (
     <div className="card">
       <div className="card__cover">
-        <img src={coverBg} alt="" />
+        <img src={poster} alt="poster" />
         <Link to="/details/1" className="card__play">
           <i className="icon ion-ios-play"></i>
         </Link>

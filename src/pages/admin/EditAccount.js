@@ -15,6 +15,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { getAccountDetailRequest } from "../../store/api/admin";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { checkCondition } from "../../utils/helper";
+import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const EditAccountInfo = () => {
   const { search } = useLocation();
@@ -208,42 +209,46 @@ const EditAccountInfo = () => {
                       <p>Giới tính</p>
                     </div>
                     <div className="col-md-8">
-                      <div
-                        className={`sign-custom__select ${checkCondition(
-                          showGender,
-                          "show",
-                          ""
-                        )}`}
-                        onClick={() => setShowGender((prevState) => !prevState)}
-                      >
-                        <li className="gender__text">
-                          {checkCondition(
-                            gender,
-                            convertGenderToVietnamese(gender),
-                            "Vui lòng chọn"
-                          )}
-                        </li>
-                        <ul
-                          className={`${checkCondition(
+                      <OutsideHandler callback={() => setShowGender(false)}>
+                        <div
+                          className={`sign-custom__select ${checkCondition(
                             showGender,
                             "show",
                             ""
                           )}`}
+                          onClick={() =>
+                            setShowGender((prevState) => !prevState)
+                          }
                         >
-                          <li onClick={() => setGender("male")}>Nam</li>
-                          <li onClick={() => setGender("female")}>Nữ</li>
-                          <li onClick={() => setGender("other")}>Khác</li>
-                        </ul>
-                        <button className="sign__select-icon">
-                          <i
-                            className={`fas fa-chevron-${checkCondition(
+                          <li className="gender__text">
+                            {checkCondition(
+                              gender,
+                              convertGenderToVietnamese(gender),
+                              "Vui lòng chọn"
+                            )}
+                          </li>
+                          <ul
+                            className={`${checkCondition(
                               showGender,
-                              "up",
-                              "down"
+                              "show",
+                              ""
                             )}`}
-                          ></i>
-                        </button>
-                      </div>
+                          >
+                            <li onClick={() => setGender("male")}>Nam</li>
+                            <li onClick={() => setGender("female")}>Nữ</li>
+                            <li onClick={() => setGender("other")}>Khác</li>
+                          </ul>
+                          <button className="sign__select-icon">
+                            <i
+                              className={`fas fa-chevron-${checkCondition(
+                                showGender,
+                                "up",
+                                "down"
+                              )}`}
+                            ></i>
+                          </button>
+                        </div>
+                      </OutsideHandler>
                     </div>
                   </div>
                   <div className="row align-items-center">
@@ -251,37 +256,43 @@ const EditAccountInfo = () => {
                       <p>Chức vụ</p>
                     </div>
                     <div className="col-md-8">
-                      <div
-                        className={`sign-custom__select ${checkCondition(
-                          showRole,
-                          "show",
-                          ""
-                        )}`}
-                        onClick={() => setShowRole((prevState) => !prevState)}
-                      >
-                        <li className="gender__text">
-                          {checkCondition(
-                            role,
-                            convertRoleToVietnamese(role),
-                            "Vui lòng chọn"
-                          )}
-                        </li>
-                        <ul
-                          className={`${checkCondition(showRole, "show", "")}`}
+                      <OutsideHandler callback={() => setShowRole(false)}>
+                        <div
+                          className={`sign-custom__select ${checkCondition(
+                            showRole,
+                            "show",
+                            ""
+                          )}`}
+                          onClick={() => setShowRole((prevState) => !prevState)}
                         >
-                          <li onClick={() => setRole("manager")}>Quản lý</li>
-                          <li onClick={() => setRole("staff")}>Nhân viên</li>
-                        </ul>
-                        <button className="sign__select-icon">
-                          <i
-                            className={`fas fa-chevron-${checkCondition(
+                          <li className="gender__text">
+                            {checkCondition(
+                              role,
+                              convertRoleToVietnamese(role),
+                              "Vui lòng chọn"
+                            )}
+                          </li>
+                          <ul
+                            className={`${checkCondition(
                               showRole,
-                              "up",
-                              "down"
+                              "show",
+                              ""
                             )}`}
-                          ></i>
-                        </button>
-                      </div>
+                          >
+                            <li onClick={() => setRole("manager")}>Quản lý</li>
+                            <li onClick={() => setRole("staff")}>Nhân viên</li>
+                          </ul>
+                          <button className="sign__select-icon">
+                            <i
+                              className={`fas fa-chevron-${checkCondition(
+                                showRole,
+                                "up",
+                                "down"
+                              )}`}
+                            ></i>
+                          </button>
+                        </div>
+                      </OutsideHandler>
                     </div>
                   </div>
                   <button

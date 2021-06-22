@@ -14,6 +14,7 @@ import {
   createAccount,
   resetCreateAccountState,
 } from "../../store/actions/adminActions";
+import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const CreateAccount = () => {
   const [dob, setDob] = useState(new Date());
@@ -180,30 +181,32 @@ const CreateAccount = () => {
                     <p>Giới tính</p>
                   </div>
                   <div className="col-md-8">
-                    <div
-                      className={`sign-custom__select ${
-                        showGender ? "show" : ""
-                      }`}
-                      onClick={() => setShowGender((prevState) => !prevState)}
-                    >
-                      <li className="gender__text">
-                        {gender
-                          ? convertGenderToVietnamese(gender)
-                          : "Vui lòng chọn"}
-                      </li>
-                      <ul className={`${showGender ? "show" : ""}`}>
-                        <li onClick={() => setGender("male")}>Nam</li>
-                        <li onClick={() => setGender("female")}>Nữ</li>
-                        <li onClick={() => setGender("other")}>Khác</li>
-                      </ul>
-                      <button className="sign__select-icon">
-                        <i
-                          className={`fas fa-chevron-${
-                            showGender ? "up" : "down"
-                          }`}
-                        ></i>
-                      </button>
-                    </div>
+                    <OutsideHandler callback={() => setShowGender(false)}>
+                      <div
+                        className={`sign-custom__select ${
+                          showGender ? "show" : ""
+                        }`}
+                        onClick={() => setShowGender((prevState) => !prevState)}
+                      >
+                        <li className="gender__text">
+                          {gender
+                            ? convertGenderToVietnamese(gender)
+                            : "Vui lòng chọn"}
+                        </li>
+                        <ul className={`${showGender ? "show" : ""}`}>
+                          <li onClick={() => setGender("male")}>Nam</li>
+                          <li onClick={() => setGender("female")}>Nữ</li>
+                          <li onClick={() => setGender("other")}>Khác</li>
+                        </ul>
+                        <button className="sign__select-icon">
+                          <i
+                            className={`fas fa-chevron-${
+                              showGender ? "up" : "down"
+                            }`}
+                          ></i>
+                        </button>
+                      </div>
+                    </OutsideHandler>
                   </div>
                 </div>
                 <div className="row align-items-center">
@@ -211,27 +214,31 @@ const CreateAccount = () => {
                     <p>Chức vụ</p>
                   </div>
                   <div className="col-md-8">
-                    <div
-                      className={`sign-custom__select ${
-                        showRole ? "show" : ""
-                      }`}
-                      onClick={() => setShowRole((prevState) => !prevState)}
-                    >
-                      <li className="gender__text">
-                        {role ? convertRoleToVietnamese(role) : "Vui lòng chọn"}
-                      </li>
-                      <ul className={`${showRole ? "show" : ""}`}>
-                        <li onClick={() => setRole("manager")}>Quản lý</li>
-                        <li onClick={() => setRole("staff")}>Nhân viên</li>
-                      </ul>
-                      <button className="sign__select-icon">
-                        <i
-                          className={`fas fa-chevron-${
-                            showRole ? "up" : "down"
-                          }`}
-                        ></i>
-                      </button>
-                    </div>
+                    <OutsideHandler callback={() => setShowRole(false)}>
+                      <div
+                        className={`sign-custom__select ${
+                          showRole ? "show" : ""
+                        }`}
+                        onClick={() => setShowRole((prevState) => !prevState)}
+                      >
+                        <li className="gender__text">
+                          {role
+                            ? convertRoleToVietnamese(role)
+                            : "Vui lòng chọn"}
+                        </li>
+                        <ul className={`${showRole ? "show" : ""}`}>
+                          <li onClick={() => setRole("manager")}>Quản lý</li>
+                          <li onClick={() => setRole("staff")}>Nhân viên</li>
+                        </ul>
+                        <button className="sign__select-icon">
+                          <i
+                            className={`fas fa-chevron-${
+                              showRole ? "up" : "down"
+                            }`}
+                          ></i>
+                        </button>
+                      </div>
+                    </OutsideHandler>
                   </div>
                 </div>
                 <button

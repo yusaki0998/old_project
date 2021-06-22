@@ -5,18 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListSlot } from "../../store/actions/managerActions";
 import { searchFilmRequest } from "../../store/api/manager";
 import SlotList from "../../components/manager/SlotList";
+import SlotForm from "../../components/manager/SlotForm";
 import Paginator from "../../components/shared/Paginator";
-import { useHistory } from "react-router-dom";
 import { MAX_ITEMS_PER_PAGE } from "./FilmRoom";
 
 const ViewSlot = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const { slot } = useSelector((state) => state.manager);
   const [searchInput, setSearchInput] = useState("");
   const [isTouched, setIsTouched] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
   const [curPage, setCurPage] = useState(0);
+  const [openSlotForm, setOpenSlotForm] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState({});
 
   useEffect(() => {
     dispatch(getListSlot());
@@ -26,7 +27,7 @@ const ViewSlot = () => {
     setFilteredList(slot.list);
   }, [slot.list]);
 
-  const onSearchFilm = () => {
+  const onSearchSlot = () => {
     if (isTouched && searchInput.trim()) {
       searchFilmRequest(searchInput.trim().toLowerCase())
         .then(({ data }) => {
@@ -39,6 +40,18 @@ const ViewSlot = () => {
     if (!searchInput.trim()) {
       setFilteredList(slot.list);
     }
+  };
+
+  const onOpen = (slotData) => {
+    setSelectedSlot(slotData);
+    setOpenSlotForm(true);
+  };
+
+  const onClose = () => {
+    setOpenSlotForm(false);
+    setTimeout(() => {
+      setSelectedSlot({});
+    }, 1000);
   };
 
   return (
@@ -61,15 +74,12 @@ const ViewSlot = () => {
           <button
             className="table__search-button"
             type="button"
-            onClick={onSearchFilm}
+            onClick={onSearchSlot}
           >
             <i className="icon ion-ios-search"></i>
           </button>
         </form>
-        <button
-          className="btn__outline-orange"
-          onClick={() => history.push("/manager/new-slot")}
-        >
+        <button className="btn__outline-orange" onClick={() => onOpen({})}>
           Tạo mới Slot
         </button>
       </div>
@@ -79,6 +89,7 @@ const ViewSlot = () => {
           curPage * MAX_ITEMS_PER_PAGE,
           (curPage + 1) * MAX_ITEMS_PER_PAGE
         )}
+        onEditSlot={onOpen}
       />
       <Paginator
         curPage={curPage}
@@ -86,6 +97,7 @@ const ViewSlot = () => {
         setCurPage={setCurPage}
         totalItems={filteredList.length}
       />
+      <SlotForm open={openSlotForm} close={onClose} slotData={selectedSlot} />
     </div>
   );
 };

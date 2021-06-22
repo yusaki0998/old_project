@@ -1,24 +1,23 @@
 /** @format */
 
 import React, { useState } from "react";
-import { useHistory } from "react-router";
 import SlotListSkeleton from "../../skeleton/SlotListSkeleton";
-import DeleteFilm from "./DeleteFilm";
+import { convertTime } from "../../utils/helper";
+import DeleteSlot from "./DeleteSlot";
 
-const SlotList = ({ list, isLoading }) => {
-  const history = useHistory();
+const SlotList = ({ list, isLoading, onEditSlot }) => {
   const [openDelete, setOpenDelete] = useState(false);
-  const [selectedFilm, setSelectedFilm] = useState({});
+  const [selectedSlot, setSelectedSlot] = useState({});
 
-  const onOpen = (film) => {
-    setSelectedFilm(film);
+  const onOpen = (slot) => {
+    setSelectedSlot(slot);
     setOpenDelete(true);
   };
 
   const onClose = () => {
     setOpenDelete(false);
     setTimeout(() => {
-      setSelectedFilm({});
+      setSelectedSlot({});
     }, 1000);
   };
 
@@ -48,16 +47,15 @@ const SlotList = ({ list, isLoading }) => {
                   </td>
                   <td>
                     <div className="main__table-text">
-                      {slot.startTime}: {slot.endTime}
+                      {convertTime(slot.startTime)} -{" "}
+                      {convertTime(slot.endTime)}
                     </div>
                   </td>
                   <td>
                     <div className="main__table-btns">
                       <button
                         className="main__table-btn main__table-btn--edit"
-                        onClick={() =>
-                          history.push(`/manager/edit-slot?slotId=${slot._id}`)
-                        }
+                        onClick={() => onEditSlot(slot)}
                       >
                         <i className="icon ion-ios-create"></i>
                       </button>
@@ -78,7 +76,7 @@ const SlotList = ({ list, isLoading }) => {
           </tbody>
         </table>
       </div>
-      <DeleteFilm open={openDelete} filmData={selectedFilm} close={onClose} />
+      <DeleteSlot open={openDelete} slotData={selectedSlot} close={onClose} />
     </div>
   );
 };

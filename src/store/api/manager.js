@@ -62,12 +62,20 @@ export const deteleRoomRequest = async (roomId) =>
 
 export const getListSlotRequest = async () => axios.get("/slots");
 
-export const createSlotRequest = async (data) =>
-  axios.post("/slots", data, {
+export const createSlotRequest = async (data, isUpdate, slotId) => {
+  if (isUpdate) {
+    return axios.put(`/slots/${slotId}`, data, {
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+  }
+  return axios.post("/slots", data, {
     headers: {
       "Content-type": "application/json",
     },
   });
+};
 
 export const deteleSlotRequest = async (slotId) =>
   axios.delete(`/slots/${slotId}`);

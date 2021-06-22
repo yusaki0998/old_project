@@ -359,8 +359,16 @@ const reducer = (state = initialState, { type, payload }) => {
           ...state.createSlot,
           isLoading: false,
           error: null,
-          data: payload,
+          data: payload.data,
           success: true,
+        },
+        slot: {
+          ...state.slot,
+          list: payload.isUpdate
+            ? state.slot.list.map((item) =>
+                item._id === payload.slotId ? payload.data : item
+              )
+            : [...state.slot.list, payload.data],
         },
       };
     case CREATE_SLOT_FAILED:

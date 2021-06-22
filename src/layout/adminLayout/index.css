@@ -146,105 +146,7 @@ ul {
     transition: none;
   }
 }
-/*==============================
-	Header
-==============================*/
-.admin-header {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #1a191f;
-  z-index: 100;
-  border-bottom: 1px solid #222028;
-}
-.admin-header__content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 70px;
-  position: relative;
-  padding: 0 15px;
-  width: 100%;
-}
-.admin-header__logo {
-  display: inline-flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  height: 70px;
-  background-color: #1a191f;
-  width: auto;
-}
-.admin-header__logo img {
-  width: 110px;
-  display: block;
-}
-.admin-header__btn {
-  display: block;
-  width: 22px;
-  height: 20px;
-  position: relative;
-}
-.admin-header__btn.admin-header__btn-admin {
-  top: 6%;
-}
-.admin-header__btn span {
-  display: block;
-  position: absolute;
-  height: 2px;
-  width: 22px;
-  background: #000;
-  opacity: 1;
-  left: 0;
-  transform: rotate(0deg);
-  transition: 0.4s ease;
-  top: 0px;
-  background-color: #fff;
-  border-radius: 2px;
-}
-.admin-header__btn span:nth-child(2) {
-  top: 8px;
-}
-.admin-header__btn span:nth-child(3) {
-  top: 16px;
-}
-.admin-header__btn:hover span {
-  background-color: #f9ab00;
-}
-.admin-header__btn--active span {
-  background-color: #f9ab00;
-}
-.admin-header__btn--active span:nth-child(1) {
-  top: 8px;
-  transform: rotate(45deg);
-}
-.admin-header__btn--active span:nth-child(2) {
-  opacity: 0;
-}
-.admin-header__btn--active span:nth-child(3) {
-  top: 8px;
-  transform: rotate(-45deg);
-}
-@media (min-width: 768px) {
-  .admin-header__logo img {
-    width: 120px;
-  }
-}
-@media (min-width: 1200px) {
-  .admin-header {
-    display: none;
-  }
-}
-/*==============================
-	Sidebar
-==============================*/
 
-/*==============================
-	Main
-==============================*/
 .main {
   position: relative;
   margin-top: 70px;
@@ -868,6 +770,7 @@ ul {
 }
 .paginator.c__paginator {
   margin: 0 !important;
+  max-width: fit-content;
 }
 .paginator__item {
   margin: 0;

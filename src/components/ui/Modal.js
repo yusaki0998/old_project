@@ -4,13 +4,22 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "../styles/ui.css";
 
-const Modal = ({ open, close, title, body, onConfirm, isLoading }) => {
+const Modal = ({
+  open,
+  close,
+  title,
+  body,
+  onConfirm,
+  isLoading,
+  children,
+}) => {
   const modalDomNode = document.getElementById("modal");
 
   return ReactDOM.createPortal(
     <div className={`zoom-anim-dialog c__modal ${open ? "show" : ""}`}>
       <h6 className="modal__title">{title}</h6>
-      <p className="modal__text">{body}</p>
+      {body && <p className="modal__text">{body}</p>}
+      {children && <div className="modal__children">{children}</div>}
       <div className="modal__btns">
         <button
           className={`modal__btn modal__btn--apply ${
