@@ -22,6 +22,16 @@ const createRoom = async (req, res) => {
             });
         }
 
+        const findRooms = await Room.findOne({
+            roomName: roomName
+        });
+
+        if(findRooms) {
+            return res.status(409).json({
+                message: "Already have a room with this name"
+            });
+        }
+
         const room = new Room({
             _id: new mongoose.Types.ObjectId(),
             roomName: roomName
@@ -106,6 +116,16 @@ const updateRoom = async (req, res) => {
         if(!room){
             return res.status(404).json({
                 message: "Room not found"
+            });
+        }
+
+        const findRooms = await Room.findOne({
+            roomName: roomName
+        });
+
+        if(findRooms) {
+            return res.status(409).json({
+                message: "Already have a room with this name"
             });
         }
 

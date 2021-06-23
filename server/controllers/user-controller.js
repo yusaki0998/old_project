@@ -123,15 +123,19 @@ const login = async (req, res) => {
             _id: user._id,
         },
             process.env.REFRESH_SECRET, {
-            expiresIn: "8h"
+            expiresIn: "3d"
         });
+
+        const userObj = user.toObject();
+        delete userObj.password;
+        delete userObj.__v;
 
         return res.status(200).json({
             message: "Login success!",
             data: {
                 accessToken: accessToken,
                 refreshToken: refreshToken,
-                user: user
+                user: userObj
             }
         });
 
@@ -238,7 +242,9 @@ const changePassword = async (req, res) => {
 
         const user = await User.findOne({
             _id: id
-        }).exec();
+        })
+        .select('+password')
+        .exec();
 
         if (oldpassword) {
             let validPassword = await bcrypt.compare(oldpassword, user.password);
@@ -537,7 +543,9 @@ const editAccount = async (req, res) => {
 
         const user = await User.findOne({
             _id: id
-        }).exec()
+        })
+        .select('+password')
+        .exec()
 
         if (fullname) {
             user.fullname = fullname;

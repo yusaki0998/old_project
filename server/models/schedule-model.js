@@ -11,6 +11,7 @@ const scheduleSchema = mongoose.Schema({
 
     showDate: { type: Date },
 
+    week: { type: Number },
 });
 
 module.exports = mongoose.model('Schedule', scheduleSchema);
