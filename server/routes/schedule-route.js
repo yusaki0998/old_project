@@ -3,7 +3,7 @@ const router = express.Router();
 
 const checkAuth = require('../middleware/check-auth');
 
-const ScheduleController = require('../controllers/schedule-controller');
+const ScheduleController = require('../bl/schedule-controller');
 
 router.post('/', checkAuth, ScheduleController.createSchedule);
 router.get('/', ScheduleController.getSchedules);

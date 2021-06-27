@@ -28,7 +28,7 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const UserController = require('../controllers/user-controller');
+const UserController = require('../bl/user-controller');
 
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);

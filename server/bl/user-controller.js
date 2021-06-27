@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('../models/user-model');
+const User = require('../dbaccess/user-model');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');

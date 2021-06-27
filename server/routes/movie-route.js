@@ -28,7 +28,7 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const MovieController = require('../controllers/movie-controller');
+const MovieController = require('../bl/movie-controller');
 
 router.post('/', checkAuth, upload.single('coverImage'), MovieController.createMovie);
 router.get('/ongoing', MovieController.getOngoingMovies);
