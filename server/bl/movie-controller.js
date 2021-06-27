@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Movie = require('../models/movie-model');
-const User = require('../models/user-model');
+const Movie = require('../dbaccess/movie-model');
+const User = require('../dbaccess/user-model');
 const moment = require('moment');
 
 const createMovie = async (req, res) => {

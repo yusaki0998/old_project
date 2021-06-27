@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-const Schedule = require('../models/schedule-model');
-const Movie = require('../models/schedule-model');
-const Room = require('../models/room-model');
-const Slot = require('../models/slot-model');
-const User = require('../models/user-model');
+const Schedule = require('../dbaccess/schedule-model');
+const Movie = require('../dbaccess/schedule-model');
+const Room = require('../dbaccess/room-model');
+const Slot = require('../dbaccess/slot-model');
+const User = require('../dbaccess/user-model');
 
 const createSchedule = async (req, res) => {
     try {

@@ -10,11 +10,20 @@ const morgan = require("morgan");
 const path = require("path");
 
 //Declare routes
+<<<<<<< HEAD
 const userRoutes = require("./routes/user-route");
 const movieRoutes = require("./routes/movie-route");
 const roomRoutes = require("./routes/room-route");
 const slotRoutes = require("./routes/slot-route");
 const scheduleRoutes = require("./routes/schedule-route");
+=======
+const userRoutes = require('./routes/user-route');
+const movieRoutes = require('./routes/movie-route');
+const roomRoutes = require('./routes/room-route');
+const slotRoutes = require('./routes/slot-route');
+const scheduleRoutes = require('./routes/schedule-route');
+const seatRoutes = require('./routes/seat-route');
+>>>>>>> b38d996ecf61dc41107f5913fe70dc5c0a35b6a7
 
 //Database connect
 const uri =
@@ -62,11 +71,20 @@ app.get("/", (req, res) => {
 });
 
 //routes
+<<<<<<< HEAD
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/movies", movieRoutes);
 app.use("/api/v1/rooms", roomRoutes);
 app.use("/api/v1/slots", slotRoutes);
 app.use("/api/v1/schedules", scheduleRoutes);
+=======
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/movies', movieRoutes);
+app.use('/api/v1/rooms', roomRoutes);
+app.use('/api/v1/slots', slotRoutes);
+app.use('/api/v1/schedules', scheduleRoutes);
+app.use('/api/v1/seats', seatRoutes);
+>>>>>>> b38d996ecf61dc41107f5913fe70dc5c0a35b6a7
 
 //error handling
 app.use((req, res, next) => {

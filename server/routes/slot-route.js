@@ -3,7 +3,7 @@ const router = express.Router();
 
 const checkAuth = require('../middleware/check-auth');
 
-const SlotController = require('../controllers/slot-controller');
+const SlotController = require('../bl/slot-controller');
 
 router.post('/', checkAuth, SlotController.createSlot);
 router.get('/', SlotController.getSlots);

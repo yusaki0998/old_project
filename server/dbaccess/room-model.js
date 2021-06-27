@@ -5,6 +5,7 @@ const roomSchema = mongoose.Schema({
 
     roomName: { type: String, required: true, unique: true },
 
+    seats: [],
 });
 
 module.exports = mongoose.model('Room', roomSchema);
