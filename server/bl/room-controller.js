@@ -14,7 +14,7 @@ const createRoom = async (req, res) => {
             })
         }
 
-        const { roomName } = req.body;
+        const { roomName, seatMap } = req.body;
 
         if (!roomName) {
             return res.status(301).json({
@@ -34,7 +34,8 @@ const createRoom = async (req, res) => {
 
         const room = new Room({
             _id: new mongoose.Types.ObjectId(),
-            roomName: roomName
+            roomName: roomName,
+            seatMap: seatMap
         });
 
         await room.save();
@@ -55,7 +56,15 @@ const createRoom = async (req, res) => {
 
 const getRooms = async (req, res) => {
     try {
-        const findRooms = await Room.find().exec();
+        const findRooms = await Room
+        .find()
+        .exec();
+
+        if(!findRooms) {
+            return res.status(404).json({
+                message: "Rooms not found"
+            });
+        }
 
         return res.status(200).json({
             message: "Rooms found",
@@ -75,9 +84,16 @@ const getRoom = async (req, res) => {
     try {
         const id = req.params.roomId;
 
-        const findRoom = await Room.findOne({
-            _id: id
-        }).exec();
+        const findRoom = await Room
+        .findById(id)
+        .populate('seatMap')
+        .exec();
+
+        if(!findRoom) {
+            return res.status(404).json({
+                message: "Room not found"
+            });
+        }
 
         return res.status(200).json({
             message: "Room infomation found",
@@ -105,7 +121,7 @@ const updateRoom = async (req, res) => {
             })
         }
 
-        const { roomName } = req.body;
+        const { roomName, seatMap } = req.body;
 
         const id = req.params.roomId;
 
@@ -131,6 +147,10 @@ const updateRoom = async (req, res) => {
 
         if(roomName) {
             room.roomName = roomName;
+        }
+
+        if(seatMap) {
+            room.seatMap = seatMap;
         }
 
         await room.save();
@@ -162,7 +182,6 @@ const deleteRoom = async (req, res) => {
         }
 
         const id = req.params.roomId;
-
         
         const deleteRoom = await Room.findByIdAndDelete(id).exec();
 

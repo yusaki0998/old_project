@@ -40,6 +40,9 @@ const createSchedule = async (req, res) => {
 
         const weekNumber = moment(showDate, "MMDDYYYY").isoWeek();
 
+        const startDay = moment().isoWeek(weekNumber).startOf('isoWeek');
+        const endDay = moment().isoWeek(weekNumber).endOf('isoWeek');
+
         const schedule = new Schedule({
             _id: new mongoose.Types.ObjectId(),
             movie: movieId, //findMovie._id,
@@ -47,6 +50,8 @@ const createSchedule = async (req, res) => {
             slot: slotId, //findSlot._id,
             showDate: showDate,
             week: weekNumber,
+            startDay: startDay,
+            endDay: endDay
         });
 
         await schedule.save();

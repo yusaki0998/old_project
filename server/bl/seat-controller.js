@@ -8,14 +8,11 @@ const addSeatMap = async (req, res) => {
         const seatMap = new SeatMap({
             _id: new mongoose.Types.ObjectId(),
             seats: [
-                { seatNo: "A1", seatType: "normal", price: 60000, status: "empty" },
-                { seatNo: "A2", seatType: "normal", price: 60000, status: "empty" },
-                { seatNo: "A3", seatType: "normal", price: 60000, status: "empty" },
-                { seatNo: "A4", seatType: "normal", price: 60000, status: "empty" },
+
             ]
         });
 
-        seatMap.save(); 
+        seatMap.save();
 
         return res.status(201).json({
             message: "Ok, seat map added",
@@ -33,9 +30,15 @@ const addSeatMap = async (req, res) => {
 const getSeatMaps = async (req, res) => {
     try {
         const seatMap = await SeatMap
-        .find()
-        // .populate('seat')
-        .exec();
+            .find()
+            // .populate('seat')
+            .exec();
+
+        if (!seatMap) {
+            return res.status(404).json({
+                message: "Seat maps not found"
+            });
+        }
 
         return res.status(200).json({
             message: "All seat maps found",
@@ -52,9 +55,15 @@ const getSeatMaps = async (req, res) => {
 
 const getSeatMap = async (req, res) => {
     try {
-        const id = req.params.seatId;
+        const id = req.params.mapId;
 
         const findMap = await SeatMap.findById(id).exec()
+
+        if (!findMap) {
+            return res.status(404).json({
+                message: "Map not found"
+            });
+        }
 
         return res.status(200).json({
             message: "Seat map found",
@@ -68,6 +77,22 @@ const getSeatMap = async (req, res) => {
         });
     }
 }
+
+const getSeatInMap = async (req, res) => {
+    try {
+        const seatId = req.params.seatId;
+        const mapId = req.params.mapId;
+
+        
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 module.exports = {
     addSeatMap,
     getSeatMaps,
