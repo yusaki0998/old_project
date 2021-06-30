@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -21,6 +23,14 @@ const CustomerNavMenu = () => {
             className={`${pathname.includes("/edit-info") ? "active" : ""}`}
           >
             Đổi thông tin
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/customer/edit-password"
+            className={`${pathname.includes("/edit-password") ? "active" : ""}`}
+          >
+            Đổi mật khẩu
           </Link>
         </li>
         <li>

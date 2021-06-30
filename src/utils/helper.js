@@ -34,3 +34,8 @@ export const convertStrToTime = (time) => {
   }
   return "";
 };
+
+export const justContainNumber = (value) => {
+  const regex = /^[0-9]*$/;
+  return value.match(regex);
+};

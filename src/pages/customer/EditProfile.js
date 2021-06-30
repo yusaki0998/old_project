@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
 import { editUserProfile } from "../../store/actions/userActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
+import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 
 const EditProfile = () => {
   const { loginData } = useSelector((state) => state.auth);
@@ -16,7 +17,6 @@ const EditProfile = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
   const [dob, setDob] = useState(new Date(loginData?.data?.dob));
@@ -33,15 +33,22 @@ const EditProfile = () => {
       <div className="d-flex">
         <div className="image__placeholder mr-3">
           <img
-            className="d-block my-3 mx-auto w-100"
-            src={userImg}
+            className="d-block my-3 user__img-wrapper"
+            src={
+              loginData?.data?.avatar
+                ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
+                    "../uploads",
+                    ""
+                  )}`
+                : userImg
+            }
             alt={loginData?.data?.fullname || ""}
           />
           <button className="btn__outline-orange">Thay đổi</button>
         </div>
         <div className="edit__form">
-          <p>
-            <strong>Thông tin tài khoản</strong>
+          <p className="mt-3">
+            <strong>Đổi thông tin tài khoản</strong>
           </p>
           <form onSubmit={handleSubmit(onValid)}>
             <div className="sign__row mb-3">
@@ -56,7 +63,7 @@ const EditProfile = () => {
                   {...register("fullname", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -64,26 +71,6 @@ const EditProfile = () => {
                   <p className="input-required">{errors.fullname.message}</p>
                 )}
               </div>
-              <div className="sign__col">
-                <p className="sign__label">Mật khẩu cũ</p>
-                <input
-                  type="password"
-                  className={`sign__input ${
-                    errors.oldpassword ? "input-error" : ""
-                  }`}
-                  {...register("oldpassword", {
-                    required: {
-                      value: true,
-                      message: "This is required field",
-                    },
-                  })}
-                />
-                {errors.oldpassword && (
-                  <p className="input-required">{errors.oldpassword.message}</p>
-                )}
-              </div>
-            </div>
-            <div className="sign__row mb-3">
               <div className="sign__col mr-3">
                 <p className="sign__label">Email</p>
                 <input
@@ -95,30 +82,12 @@ const EditProfile = () => {
                   {...register("email", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
                 {errors.email && (
                   <p className="input-required">{errors.email.message}</p>
-                )}
-              </div>
-              <div className="sign__col">
-                <p className="sign__label">Mật khẩu mới</p>
-                <input
-                  type="password"
-                  className={`sign__input ${
-                    errors.newpassword ? "input-error" : ""
-                  }`}
-                  {...register("newpassword", {
-                    required: {
-                      value: true,
-                      message: "This is required field",
-                    },
-                  })}
-                />
-                {errors.newpassword && (
-                  <p className="input-required">{errors.newpassword.message}</p>
                 )}
               </div>
             </div>
@@ -131,29 +100,6 @@ const EditProfile = () => {
                   className="divDisable"
                 />
               </div>
-              <div className="sign__col">
-                <p className="sign__label">Nhập lại mật khẩu mới</p>
-                <input
-                  type="password"
-                  className={`sign__input ${
-                    errors.retype ? "input-error" : ""
-                  }`}
-                  {...register("retype", {
-                    required: {
-                      value: true,
-                      message: "This is required field",
-                    },
-                    validate: (value) =>
-                      watch("newpassword") === value ||
-                      "Password confirm must matched",
-                  })}
-                />
-                {errors.retype && (
-                  <p className="input-required">{errors.retype.message}</p>
-                )}
-              </div>
-            </div>
-            <div className="sign__row mb-3">
               <div className="sign__col mr-3">
                 <p className="sign__label">Giới tính</p>
                 <OutsideHandler callback={() => setShowGender(false)}>
@@ -183,6 +129,8 @@ const EditProfile = () => {
                   </div>
                 </OutsideHandler>
               </div>
+            </div>
+            <div className="sign__row mb-3">
               <div className="sign__col">
                 <p className="sign__label unvisible">Button label</p>
                 <button
@@ -193,6 +141,9 @@ const EditProfile = () => {
                 >
                   {isLoading ? "Đang lưu" : "Lưu thay đổi"}
                 </button>
+              </div>
+              <div className="sign__col mr-3">
+                <p className="sign__label d-none">D-none column</p>
               </div>
             </div>
           </form>

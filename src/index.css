@@ -130,7 +130,7 @@ code {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #fff;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }
 .customer__nav-menu ul a {
   display: block;
@@ -203,6 +203,7 @@ code {
   justify-content: center;
   align-items: center;
   margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .ui__loading-spinner img {
@@ -328,4 +329,15 @@ code {
 }
 .header__nav-link {
   min-width: fit-content;
+  font-weight: 600;
+}
+.user__img-wrapper {
+  max-width: 100px;
+  margin: auto;
+}
+.slick-next {
+  right: -20px !important;
+}
+.slick-prev {
+  left: -20px !important;
 }

@@ -41,7 +41,7 @@ const NewFilm = () => {
 
   const onValid = (data) => {
     if (!imgRef || !imgRef.current || !imgRef.current.files) {
-      setImgError("This is required field");
+      setImgError("Đây là mục bắt buộc");
     } else {
       const formdata = new FormData();
       for (const property in data) {
@@ -74,7 +74,7 @@ const NewFilm = () => {
                   {...register("movieName", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -98,7 +98,7 @@ const NewFilm = () => {
                   {...register("director", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -120,7 +120,7 @@ const NewFilm = () => {
                   {...register("actor", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -142,7 +142,7 @@ const NewFilm = () => {
                   {...register("genre", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -166,7 +166,7 @@ const NewFilm = () => {
                   {...register("nation", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -190,7 +190,7 @@ const NewFilm = () => {
                   {...register("amountOfTime", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -216,7 +216,7 @@ const NewFilm = () => {
                   {...register("showtimes", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -240,7 +240,7 @@ const NewFilm = () => {
                   {...register("ageRating", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -274,7 +274,7 @@ const NewFilm = () => {
                   {...register("description", {
                     required: {
                       value: true,
-                      message: "This is required field",
+                      message: "Đây là mục bắt buộc",
                     },
                   })}
                 />
@@ -297,7 +297,12 @@ const NewFilm = () => {
                   <li className="gender__text">
                     {status ? convertStatusToText(status) : "Vui lòng chọn"}
                   </li>
-                  <ul className={`${showStatus ? "show" : ""}`}>
+                  <ul
+                    className={`${showStatus ? "show" : ""}`}
+                    style={{
+                      height: 95,
+                    }}
+                  >
                     <li onClick={() => setStatus("1")}>Phim đang chiếu</li>
                     <li onClick={() => setStatus("0")}>Phim sắp chiếu</li>
                   </ul>

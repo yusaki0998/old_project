@@ -1,7 +1,6 @@
 /** @format */
 
 import React from "react";
-import { MAX_ITEMS_PER_PAGE } from "../../pages/manager/FilmRoom";
 
 const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
   if (!maxPage || maxPage <= 1) {
@@ -9,9 +8,6 @@ const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
   }
   return (
     <div className="paginator-wrap">
-      <span>
-        {MAX_ITEMS_PER_PAGE} from {totalItems}
-      </span>
       <ul
         className="paginator c__paginator"
         style={{

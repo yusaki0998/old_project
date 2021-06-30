@@ -3,13 +3,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import poster from "../../assets/poster.jpg";
+import { justContainNumber } from "../../utils/helper";
 
-const TopMovieDetail = () => {
+const TopMovieDetail = ({ movieDetail }) => {
+  const showTotalTime = (time) => {
+    if (!time) {
+      return "";
+    }
+    if (justContainNumber(time)) {
+      return `${time} minutes`;
+    }
+    return time;
+  };
+
   return (
     <div className="row">
       <div className="col-12">
         <h1 className="section__title section__title--mb">
-          I Dream in Another Language
+          {movieDetail.movieName}
         </h1>
       </div>
       <div className="col-12 col-xl-6">
@@ -28,48 +39,43 @@ const TopMovieDetail = () => {
               >
                 <i className="icon ion-ios-play-circle"></i> Watch trailer
               </a>
+              <button className="card__trailer">
+                <i className="icon ion-ios-cart"></i> Mua vé
+              </button>
             </div>
             <div className="col-12 col-md-8 col-lg-9 col-xl-7">
               <div className="card__content">
                 <ul className="card__meta">
                   <li>
-                    <span>Director:</span> Vince Gilligan
+                    <span>Director:</span> {movieDetail?.director}
                   </li>
                   <li>
-                    <span>Cast:</span> <Link to="/">Brian Cranston</Link>{" "}
-                    <Link to="/">Jesse Plemons</Link>{" "}
-                    <Link to="/">Matt Jones</Link>{" "}
-                    <Link to="/">Jonathan Banks</Link>{" "}
-                    <Link to="/">Charles Baker</Link>{" "}
-                    <Link to="/">Tess Harper</Link>
+                    <span>Cast : </span>
+                    {movieDetail?.actor?.split(", ").map((name, index) => (
+                      <Link to="/" key={index}>
+                        {name}
+                      </Link>
+                    ))}
                   </li>
                   <li>
-                    <span>Genre:</span> <Link to="/">Action</Link>
-                    <Link to="/">Triler</Link>
+                    <span>Genre:</span>
+                    <Link to="/"> {movieDetail?.genre} </Link>
                   </li>
                   <li>
-                    <span>Release year:</span> 2019
+                    <span>Release year:</span>
+                    {movieDetail?.showtimes?.toString()?.substr(0, 4)}
                   </li>
                   <li>
-                    <span>Running time:</span> 130 min
+                    <span>Running time:</span>{" "}
+                    {showTotalTime(movieDetail?.amountOfTime)}
                   </li>
                   <li>
-                    <span>Country:</span> <Link to="/">USA</Link>
+                    <span>Country:</span>
+                    <Link to="/"> {movieDetail?.nation} </Link>
                   </li>
                 </ul>
                 <div className="card__description">
-                  It is a long established fact that a reader will be distracted
-                  by the readable content of a page when looking at its layout.
-                  The point of using Lorem Ipsum is that it has a more-or-less
-                  normal distribution of letters, as opposed to using 'Content
-                  here, content here', making it look like readable English.
-                  Many desktop publishing packages and web page editors now use
-                  Lorem Ipsum as their default model text, and a search for
-                  'lorem ipsum' will uncover many web sites still in their
-                  infancy. The point of using Lorem Ipsum is that it has a
-                  more-or-less normal distribution of letters, as opposed to
-                  using 'Content here, content here', making it look like
-                  readable English.
+                  {movieDetail?.description}
                 </div>
               </div>
             </div>

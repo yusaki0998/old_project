@@ -81,7 +81,7 @@ const EditRoom = () => {
                     {...register("roomName", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                     })}
                   />

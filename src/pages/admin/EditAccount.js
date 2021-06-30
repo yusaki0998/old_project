@@ -99,7 +99,7 @@ const EditAccountInfo = () => {
                           {...register("fullname", {
                             required: {
                               value: true,
-                              message: "This is required field",
+                              message: "Đây là mục bắt buộc",
                             },
                           })}
                         />
@@ -132,7 +132,7 @@ const EditAccountInfo = () => {
                           {...register("email", {
                             required: {
                               value: true,
-                              message: "This is required field",
+                              message: "Đây là mục bắt buộc",
                             },
                           })}
                         />
@@ -154,6 +154,7 @@ const EditAccountInfo = () => {
                           type="password"
                           className="sign__input"
                           {...register("password")}
+                          autoComplete="false"
                         />
                       </div>
                     </div>
@@ -192,7 +193,7 @@ const EditAccountInfo = () => {
                           {...register("phone", {
                             required: {
                               value: true,
-                              message: "This is required field",
+                              message: "Đây là mục bắt buộc",
                             },
                           })}
                         />

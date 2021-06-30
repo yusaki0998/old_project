@@ -53,11 +53,11 @@ const SignUp = () => {
                     className={`sign__input ${
                       errors.fullname ? "input-error" : ""
                     }`}
-                    placeholder="Name"
+                    placeholder="Họ tên"
                     {...register("fullname", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                     })}
                   />
@@ -71,11 +71,11 @@ const SignUp = () => {
                     className={`sign__input ${
                       errors.phone ? "input-error" : ""
                     }`}
-                    placeholder="Phone number"
+                    placeholder="Số điện thoại"
                     {...register("phone", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                     })}
                   />
@@ -93,7 +93,7 @@ const SignUp = () => {
                     {...register("email", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                     })}
                   />
@@ -108,13 +108,14 @@ const SignUp = () => {
                     className={`sign__input ${
                       errors.password ? "input-error" : ""
                     }`}
-                    placeholder="Password"
+                    placeholder="Mật khẩu"
                     {...register("password", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                     })}
+                    autoComplete="false"
                   />
                   {errors.password && (
                     <p className="input-required">{errors.password.message}</p>
@@ -126,16 +127,16 @@ const SignUp = () => {
                     className={`sign__input ${
                       errors.retype ? "input-error" : ""
                     }`}
-                    placeholder="Confirm Password"
+                    placeholder="Nhập lại mật khẩu"
                     {...register("retype", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                       validate: (value) =>
-                        watch("password") === value ||
-                        "Password confirm must matched",
+                        watch("password") === value || "Mật khẩu không khớp",
                     })}
+                    autoComplete="false"
                   />
                   {errors.retype && (
                     <p className="input-required">{errors.retype.message}</p>
@@ -143,14 +144,14 @@ const SignUp = () => {
                 </div>
                 <div className="sign__row mb-3">
                   <div className="sign__col mr-3">
-                    <p className="sign__label">Birth Date</p>
+                    <p className="sign__label">Ngày sinh</p>
                     <DatePicker
                       selected={dob}
                       onChange={(date) => setDob(date)}
                     />
                   </div>
                   <div className="sign__col">
-                    <p className="sign__label">Gender</p>
+                    <p className="sign__label">Giới tính </p>
                     <OutsideHandler callback={() => setShowGender(false)}>
                       <div
                         className={`sign-custom__select ${
@@ -184,11 +185,11 @@ const SignUp = () => {
                   }`}
                   type="submit"
                 >
-                  {signUp.isLoading ? "Signing up" : "Sign up"}
+                  {signUp.isLoading ? "Đang đăng ký" : "Đăng ký"}
                 </button>
 
                 <span className="sign__text">
-                  Already have an account? <Link to="/signin">Sign in!</Link>
+                  Đã có tài khoản? <Link to="/signin">Đăng nhập!</Link>
                 </span>
               </form>
             </div>

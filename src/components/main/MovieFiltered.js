@@ -1,14 +1,17 @@
+/** @format */
+
 import React from "react";
 import MovieItem from "./MovieItem";
+import MovieListSkeleton from "../../skeleton/end-user/MovieListSkeleton";
 
-const MovieFiltered = () => {
+const MovieFiltered = ({ isLoading, list }) => {
   return (
     <section className="content">
       <div className="content__head">
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <h2 className="content__title">New items</h2>
+              <h2 className="content__title mt-3">Thể loại</h2>
               <ul
                 className="nav nav-tabs content__tabs"
                 id="content__tabs"
@@ -155,14 +158,17 @@ const MovieFiltered = () => {
             role="tabpanel"
             aria-labelledby="1-tab"
           >
+            {isLoading && <MovieListSkeleton />}
             <div className="row row--grid">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(
-                (item) => (
-                  <div className="col-6 col-sm-4 col-md-3 col-xl-2" key={item}>
-                    <MovieItem />
+              {!isLoading &&
+                list?.map((item) => (
+                  <div
+                    className="col-6 col-sm-4 col-md-3 col-xl-2"
+                    key={item._id}
+                  >
+                    <MovieItem movieItem={item} />
                   </div>
-                )
-              )}
+                ))}
             </div>
           </div>
         </div>

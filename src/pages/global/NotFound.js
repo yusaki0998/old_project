@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -10,11 +12,9 @@ const NotFound = () => {
             <div className="page-404__wrap">
               <div className="page-404__content">
                 <h1 className="page-404__title">404</h1>
-                <p className="page-404__text">
-                  The page you are looking for not available!
-                </p>
+                <p className="page-404__text">Trang này hiện không tìm thấy!</p>
                 <Link to="/" className="page-404__btn">
-                  go back
+                  Quay lại trang chủ
                 </Link>
               </div>
             </div>

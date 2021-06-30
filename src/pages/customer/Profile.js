@@ -1,7 +1,10 @@
+/** @format */
+
 import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import userImg from "../../template/styles/main/img/user.svg";
+import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
 
 const Profile = () => {
@@ -11,11 +14,20 @@ const Profile = () => {
     <div className="customer__profile-wrapper my-5">
       <div className="d-flex">
         <div className="mr-3">
-          <img
-            className="d-block my-3 mx-auto w-100"
-            src={userImg}
-            alt={loginData?.data?.fullname || ""}
-          />
+          <div className="">
+            <img
+              className="d-block my-3 user__img-wrapper"
+              src={
+                loginData?.data?.avatar
+                  ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
+                      "../uploads",
+                      ""
+                    )}`
+                  : userImg
+              }
+              alt={loginData?.data?.fullname || ""}
+            />
+          </div>
           <button
             onClick={() => history.push("/customer/edit-info")}
             className="btn__outline-orange"
@@ -31,7 +43,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="info__detail mt-3">
-        <p className="border__bottom-white">
+        <p className="border__bottom-white mt-3">
           <strong>Thông tin tài khoản</strong>
         </p>
         <div className="info__row">

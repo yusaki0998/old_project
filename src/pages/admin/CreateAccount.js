@@ -77,7 +77,7 @@ const CreateAccount = () => {
                         {...register("fullname", {
                           required: {
                             value: true,
-                            message: "This is required field",
+                            message: "Đây là mục bắt buộc",
                           },
                         })}
                       />
@@ -103,7 +103,7 @@ const CreateAccount = () => {
                         {...register("email", {
                           required: {
                             value: true,
-                            message: "This is required field",
+                            message: "Đây là mục bắt buộc",
                           },
                         })}
                       />
@@ -127,9 +127,10 @@ const CreateAccount = () => {
                         {...register("password", {
                           required: {
                             value: true,
-                            message: "This is required field",
+                            message: "Đây là mục bắt buộc",
                           },
                         })}
+                        autoComplete="false"
                       />
                       {errors.password && (
                         <p className="input-required">
@@ -166,7 +167,7 @@ const CreateAccount = () => {
                         {...register("phone", {
                           required: {
                             value: true,
-                            message: "This is required field",
+                            message: "Đây là mục bắt buộc",
                           },
                         })}
                       />
@@ -226,7 +227,12 @@ const CreateAccount = () => {
                             ? convertRoleToVietnamese(role)
                             : "Vui lòng chọn"}
                         </li>
-                        <ul className={`${showRole ? "show" : ""}`}>
+                        <ul
+                          className={`${showRole ? "show" : ""}`}
+                          style={{
+                            height: 95,
+                          }}
+                        >
                           <li onClick={() => setRole("manager")}>Quản lý</li>
                           <li onClick={() => setRole("staff")}>Nhân viên</li>
                         </ul>

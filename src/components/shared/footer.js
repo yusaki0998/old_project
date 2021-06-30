@@ -18,9 +18,9 @@ const Footer = () => {
               <span className="footer__copyright">© HOTFLIX, 2019—2021</span>
 
               <nav className="footer__nav">
-                <Link to="/about">About Us</Link>
-                <Link to="/contacts">Contacts</Link>
-                <Link to="/privacy">Privacy policy</Link>
+                <Link to="/about">Về chúng tôi</Link>
+                <Link to="/contacts">Liên hệ</Link>
+                <Link to="/privacy">Chính sách & Điều khoản</Link>
               </nav>
 
               <button className="footer__back" type="button">

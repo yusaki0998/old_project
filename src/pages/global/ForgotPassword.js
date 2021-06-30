@@ -37,16 +37,15 @@ const ForgotPassword = () => {
                     {...register("phone", {
                       required: {
                         value: true,
-                        message: "This is required field",
+                        message: "Đây là mục bắt buộc",
                       },
                       minLength: {
                         value: "10",
-                        message:
-                          "Phone number must be contains at least 10 number characters",
+                        message: "Số điện thoại phải bao gồm ít nhất 10 chữ số",
                       },
                       pattern: {
                         value: /^\d+$/,
-                        message: "Phone number must be number characters",
+                        message: "Số điện thoại phải là chữ số",
                       },
                     })}
                   />
@@ -58,7 +57,8 @@ const ForgotPassword = () => {
                 <div className="sign__group sign__group--checkbox">
                   <input id="remember" name="remember" type="checkbox" />
                   <label htmlFor="remember">
-                    I agree to the <Link to="/privacy">Privacy Policy</Link>
+                    Tôi đồng ý với{" "}
+                    <Link to="/privacy"> Điều khoản & Chính sách</Link>
                   </label>
                 </div>
 
@@ -67,7 +67,7 @@ const ForgotPassword = () => {
                 </button>
 
                 <span className="sign__text">
-                  We will send a OTP code to your phone
+                  Mã OTP sẽ được gửi tới số điện thoại này
                 </span>
               </form>
             </div>

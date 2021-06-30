@@ -245,7 +245,14 @@ ul {
 .main__table-wrap {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: scroll;
+}
+.main__table-wrap {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.main__table-wrap::-webkit-scrollbar {
+  display: none;
 }
 .main__table {
   width: 100%;
@@ -348,7 +355,7 @@ ul {
   justify-content: flex-start;
   align-items: center;
   padding: 4px 10px;
-  background-color: #222028;
+  background-color: transparent;
   max-width: 110px;
 }
 .main__table-btn {
@@ -746,9 +753,6 @@ ul {
   color: rgba(255, 255, 255, 0.7);
 }
 @media (min-width: 576px) {
-  .paginator-wrap {
-    justify-content: space-between;
-  }
   .paginator-wrap span {
     display: flex;
   }

@@ -48,8 +48,8 @@ const DeleteAccount = ({ open, close, userData }) => {
         title="Xóa tài khoản"
         body={
           userData?.role === "manager"
-            ? `Bạn có chắc muốn xóa mã quản lý ${userData._id || ""}`
-            : `Bạn có chắc muốn xóa mã nhân viên ${userData._id || ""}`
+            ? `Bạn có chắc muốn xóa quản lý ${userData?.fullname || ""}`
+            : `Bạn có chắc muốn xóa nhân viên ${userData?.fullname || ""}`
         }
         onConfirm={onConfirm}
         isLoading={isLoading}

@@ -1,27 +1,30 @@
 /** @format */
-
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Notification from "./components/ui/Notification";
+import CustomerLayout from "./layout/customerLayout";
+import ManagerLayout from "./layout/managerLayout";
+import LoadingSpinner from "./components/ui/LoadingSpinner";
 import UnAuthLayout from "./layout/unAuthLayout";
 import AuthLayout from "./layout/authLayout";
 import PublicLayout from "./layout/publicLayout";
 import AdminLayout from "./layout/adminLayout";
-import HomePage from "./pages/global/HomePage";
-import PricingPage from "./pages/global/PricingPlan";
-import Login from "./pages/global/Login";
-import About from "./pages/global/About";
-import Contact from "./pages/global/Contact";
-import Catalog from "./pages/global/Catalog";
-import SignUp from "./pages/global/SignUp";
-import NotFound from "./pages/global/NotFound";
-import MovieDetail from "./pages/global/MovieDetail";
-import CustomerProfile from "./pages/main/CustomerProfile";
-import ForgotPassword from "./pages/global/ForgotPassword";
-import FAQ from "./pages/global/FAQ";
-import Privacy from "./pages/global/Privacy";
-import ConfirmOTP from "./pages/global/ConfirmOTP";
-import Notification from "./components/ui/Notification";
-import CustomerLayout from "./layout/customerLayout";
-import ManagerLayout from "./layout/managerLayout";
+
+const HomePage = lazy(() => import("./pages/global/HomePage"));
+const CurrentFilm = lazy(() => import("./pages/global/CurrentFilm"));
+const ComingFilm = lazy(() => import("./pages/global/ComingFilm"));
+const PricingPage = lazy(() => import("./pages/global/PricingPlan"));
+const About = lazy(() => import("./pages/global/About"));
+const Contact = lazy(() => import("./pages/global/Contact"));
+const SignUp = lazy(() => import("./pages/global/SignUp"));
+const NotFound = lazy(() => import("./pages/global/NotFound"));
+const MovieDetail = lazy(() => import("./pages/global/MovieDetail"));
+const CustomerProfile = lazy(() => import("./pages/main/CustomerProfile"));
+const ForgotPassword = lazy(() => import("./pages/global/ForgotPassword"));
+const FAQ = lazy(() => import("./pages/global/FAQ"));
+const Privacy = lazy(() => import("./pages/global/Privacy"));
+const ConfirmOTP = lazy(() => import("./pages/global/ConfirmOTP"));
+const Login = lazy(() => import("./pages/global/Login"));
 
 function App() {
   return (
@@ -29,64 +32,95 @@ function App() {
       <Router>
         <Switch>
           <Route path="/signin">
-            <UnAuthLayout>
-              <Login />
-            </UnAuthLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <UnAuthLayout>
+                <Login />
+              </UnAuthLayout>
+            </Suspense>
           </Route>
           <Route path="/confirm-otp">
-            <UnAuthLayout>
-              <ConfirmOTP />
-            </UnAuthLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <UnAuthLayout>
+                <ConfirmOTP />
+              </UnAuthLayout>
+            </Suspense>
           </Route>
           <Route path="/signup">
-            <UnAuthLayout>
-              <SignUp />
-            </UnAuthLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <UnAuthLayout>
+                <SignUp />
+              </UnAuthLayout>
+            </Suspense>
           </Route>
           <Route path="/pricing">
-            <PublicLayout>
-              <PricingPage />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <PricingPage />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="/privacy">
-            <PublicLayout>
-              <Privacy />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <Privacy />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="/about">
-            <PublicLayout>
-              <About />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <About />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="/contacts">
-            <PublicLayout>
-              <Contact />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <Contact />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="/details/:id">
-            <PublicLayout>
-              <MovieDetail />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <MovieDetail />
+              </PublicLayout>
+            </Suspense>
           </Route>
-          <Route path="/catalog">
-            <PublicLayout>
-              <Catalog />
-            </PublicLayout>
+          <Route path="/current-film">
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <CurrentFilm />
+              </PublicLayout>
+            </Suspense>
+          </Route>
+          <Route path="/coming-film">
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <ComingFilm />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="/faq">
-            <PublicLayout>
-              <FAQ />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <FAQ />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="/profile">
-            <AuthLayout>
-              <CustomerProfile />
-            </AuthLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <AuthLayout>
+                <CustomerProfile />
+              </AuthLayout>
+            </Suspense>
           </Route>
           <Route path="/forgot">
-            <AuthLayout>
-              <ForgotPassword />
-            </AuthLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <AuthLayout>
+                <ForgotPassword />
+              </AuthLayout>
+            </Suspense>
           </Route>
           <Route path="/admin">
             <AdminLayout />
@@ -98,12 +132,16 @@ function App() {
             <ManagerLayout />
           </Route>
           <Route exact path="/">
-            <PublicLayout>
-              <HomePage />
-            </PublicLayout>
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <HomePage />
+              </PublicLayout>
+            </Suspense>
           </Route>
           <Route path="*">
-            <NotFound />
+            <Suspense fallback={<LoadingSpinner />}>
+              <NotFound />
+            </Suspense>
           </Route>
         </Switch>
       </Router>

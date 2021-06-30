@@ -129,6 +129,7 @@ const reducer = (state = initialState, { type, payload }) => {
         },
       };
     case GET_USER_PROFILE_SUCCESS:
+      localStorage.setItem("customerAuthData", JSON.stringify(payload));
       return {
         ...state,
         loginData: {

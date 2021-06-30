@@ -64,7 +64,8 @@ const ManagerList = () => {
         <div className="row">
           <div className="col-12">
             <div className="admin__manager-list__wrapper text-white mt-5">
-              <div className="d-flex justify-content-end mb-3">
+              <div className="d-flex justify-content-between mb-4 align-items-center">
+                <h3>Danh sách quản lý</h3>
                 <form className="table__search">
                   <input
                     className="header__search-input"
@@ -98,7 +99,7 @@ const ManagerList = () => {
                         <th>Tên tài khoản</th>
                         <th>Tên quản lý</th>
                         <th>Số điện thoại</th>
-                        <th></th>
+                        <th>Chỉnh sửa / Xóa</th>
                       </tr>
                     </thead>
                     <tbody>

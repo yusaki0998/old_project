@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import projectImg from "../../template/styles/main/img/gallery/project-1.jpg";
 
@@ -5,9 +7,9 @@ const MoviePhotos = () => {
   return (
     <div
       className="tab-pane fade"
-      id="tab-3"
+      id="tab-1"
       role="tabpanel"
-      aria-labelledby="3-tab"
+      aria-labelledby="1-tab"
     >
       <div className="gallery" itemScope>
         <div className="row row--grid">

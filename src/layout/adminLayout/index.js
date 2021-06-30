@@ -1,18 +1,19 @@
 /** @format */
 
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import "./index.css";
 import { Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
-import Sidebar from "../../components/shared/Sidebar";
-import Dashboard from "../../pages/admin/Dashboard";
-import AdminHeader from "../../components/shared/AdminHeader";
-import Catalog from "../../pages/admin/Catalog";
-import Users from "../../pages/admin/Users";
-import CreateAccount from "../../pages/admin/CreateAccount";
 import { useSelector } from "react-redux";
-import ManagerList from "../../pages/admin/ManagerList";
-import StaffList from "../../pages/admin/StaffList";
-import EditAccountInfo from "../../pages/admin/EditAccount";
+import Sidebar from "../../components/shared/Sidebar";
+import AdminHeader from "../../components/shared/AdminHeader";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+const Catalog = lazy(() => import("../../pages/admin/Catalog"));
+const Users = lazy(() => import("../../pages/admin/Users"));
+const CreateAccount = lazy(() => import("../../pages/admin/CreateAccount"));
+const ManagerList = lazy(() => import("../../pages/admin/ManagerList"));
+const StaffList = lazy(() => import("../../pages/admin/StaffList"));
+const EditAccountInfo = lazy(() => import("../../pages/admin/EditAccount"));
+const Dashboard = lazy(() => import("../../pages/admin/Dashboard.js"));
 
 const AdminLayout = ({ children }) => {
   const { loginData } = useSelector((state) => state.auth);
@@ -32,25 +33,39 @@ const AdminLayout = ({ children }) => {
       {children}
       <Switch>
         <Route exact path={`${router.path}/`}>
-          <Dashboard />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Dashboard />
+          </Suspense>
         </Route>
         <Route exact path={`${router.path}/catalog`}>
-          <Catalog />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Catalog />
+          </Suspense>
         </Route>
         <Route exact path={`${router.path}/users`}>
-          <Users />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Users />
+          </Suspense>
         </Route>
         <Route exact path={`${router.path}/create-account`}>
-          <CreateAccount />
+          <Suspense fallback={<LoadingSpinner />}>
+            <CreateAccount />
+          </Suspense>
         </Route>
         <Route exact path={`${router.path}/managers`}>
-          <ManagerList />
+          <Suspense fallback={<LoadingSpinner />}>
+            <ManagerList />
+          </Suspense>
         </Route>
         <Route exact path={`${router.path}/employees`}>
-          <StaffList />
+          <Suspense fallback={<LoadingSpinner />}>
+            <StaffList />
+          </Suspense>
         </Route>
         <Route exact path={`${router.path}/edit-account`}>
-          <EditAccountInfo />
+          <Suspense fallback={<LoadingSpinner />}>
+            <EditAccountInfo />
+          </Suspense>
         </Route>
       </Switch>
     </>

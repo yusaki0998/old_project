@@ -19,32 +19,6 @@ const MovieDetailNav = () => {
               href="#tab-1"
               role="tab"
               aria-controls="tab-1"
-              aria-selected="true"
-            >
-              Comments
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-toggle="tab"
-              href="#tab-2"
-              role="tab"
-              aria-controls="tab-2"
-              aria-selected="false"
-            >
-              Reviews
-            </a>
-          </li>
-
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-toggle="tab"
-              href="#tab-3"
-              role="tab"
-              aria-controls="tab-3"
               aria-selected="false"
             >
               Photos

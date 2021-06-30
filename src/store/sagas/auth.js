@@ -57,9 +57,16 @@ function* loginWorker(action) {
     );
     axiosInstance.defaults.headers.common["token"] = `${data.data.accessToken}`;
     if (data?.data?.user?.role === "admin") {
-      action.history.push("/admin");
-    } else {
-      action.history.push("/");
+      window.location.href = "/admin";
+    }
+    if (data?.data?.user?.role === "manager") {
+      window.location.href = "/manager";
+    }
+    if (data?.data?.user?.role === "staff") {
+      window.location.href = "/staff";
+    }
+    if (data?.data?.user?.role === "customer") {
+      yield action.history.push("/");
     }
     const newNoti = {
       id: uuid_v4(),
