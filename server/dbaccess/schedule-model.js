@@ -9,6 +9,28 @@ const scheduleSchema = mongoose.Schema({
 
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' },
 
+    roomSeats: [{
+        seatNo: { type: String, required: true },
+
+        seatType: {
+            type: String,
+            enum: ['normal', 'vip'],
+            default: 'normal'
+        },
+
+        price: {
+            type: Number,
+            enum: [60000, 80000],
+            default: 60000
+        },
+
+        status: {
+            type: String,
+            enum: ['empty', 'pending', 'sold'],
+            default: 'empty'
+        },
+    }], select: false,
+
     showDate: { type: Date },
 
     week: { type: Number },
@@ -16,6 +38,8 @@ const scheduleSchema = mongoose.Schema({
     startDay: { type: Date },
 
     endDay: { type: Date },
+
+    
 });
 
 module.exports = mongoose.model('Schedule', scheduleSchema);

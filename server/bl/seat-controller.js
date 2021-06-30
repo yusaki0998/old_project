@@ -4,7 +4,6 @@ const SeatMap = require('../dbaccess/seat-map-model');
 
 const addSeatMap = async (req, res) => {
     try {
-
         const seatMap = new SeatMap({
             _id: new mongoose.Types.ObjectId(),
             seats: [
@@ -83,7 +82,22 @@ const getSeatInMap = async (req, res) => {
         const seatId = req.params.seatId;
         const mapId = req.params.mapId;
 
-        
+        const findSeatMap = await SeatMap
+            .findOne({ _id: mapId, })
+            .select({ seats: { $elemMatch: { _id: seatId } } })
+            .exec();
+
+        if (!findSeatMap) {
+            return res.status(404).json({
+                message: "Map or seat in map not exist"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Seat found",
+            data: findSeatMap
+        });
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({
@@ -96,5 +110,6 @@ const getSeatInMap = async (req, res) => {
 module.exports = {
     addSeatMap,
     getSeatMaps,
-    getSeatMap
+    getSeatMap,
+    getSeatInMap
 }

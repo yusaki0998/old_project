@@ -22,9 +22,25 @@ const register = async (req, res) => {
             });
         }
 
-        if (phone.length < 10) {
+        const checkEmail = await User.find({ email: email }).exec();
+
+        if (checkEmail) {
+            return res.status(409).json({
+                message: "Email already registered"
+            });
+        }
+
+        if (phone.length > 10) {
             return res.status(301).json({
                 message: "Your phone number is invalid, phone number must be 10 numbers"
+            });
+        }
+
+        const checkPhone = await User.find({ phone: phone }).exec();
+
+        if (checkPhone) {
+            return res.status(409).json({
+                message: "Phone already registered"
             });
         }
 
@@ -243,8 +259,8 @@ const changePassword = async (req, res) => {
         const user = await User.findOne({
             _id: id
         })
-        .select('+password')
-        .exec();
+            .select('+password')
+            .exec();
 
         if (oldpassword) {
             let validPassword = await bcrypt.compare(oldpassword, user.password);
@@ -304,9 +320,25 @@ const addAccount = async (req, res) => {
             });
         }
 
-        if (phone.length < 10) {
+        const checkEmail = await User.find({ email: email }).exec();
+
+        if (checkEmail) {
+            return res.status(409).json({
+                message: "Email already registered"
+            });
+        }
+
+        if (phone.length > 10) {
             return res.status(301).json({
                 message: "Your phone number is invalid"
+            });
+        }
+
+        const checkPhone = await User.find({ phone: phone }).exec();
+
+        if (checkPhone) {
+            return res.status(409).json({
+                message: "Phone already registered"
             });
         }
 
@@ -503,7 +535,7 @@ const deleteAccount = async (req, res) => {
 
         const deleteAccount = await User.findByIdAndRemove(id).exec();
 
-        if(!deleteAccount) {
+        if (!deleteAccount) {
             return res.status(404).json({
                 message: "Id not found cannot delete account"
             });
@@ -544,8 +576,8 @@ const editAccount = async (req, res) => {
         const user = await User.findOne({
             _id: id
         })
-        .select('+password')
-        .exec()
+            .select('+password')
+            .exec()
 
         if (fullname) {
             user.fullname = fullname;
@@ -590,16 +622,8 @@ const editAccount = async (req, res) => {
         }
 
         if (password) {
-            let validPassword = await bcrypt.compare(password, user.password);
-
-            if (!validPassword) {
-                return res.status(301).json({
-                    message: "Password invalid"
-                });
-            } else {
-                const hashedPassword = await bcrypt.hash(password, 10);
-                user.password = hashedPassword
-            }
+            const hashedPassword = await bcrypt.hash('123456', 10);
+            user.password = hashedPassword
         }
 
         await user.save();

@@ -5,6 +5,7 @@ const Movie = require('../dbaccess/schedule-model');
 const Room = require('../dbaccess/room-model');
 const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
+const SeatMap = require('../dbaccess/seat-map-model');
 
 const createSchedule = async (req, res) => {
     try {
@@ -22,7 +23,9 @@ const createSchedule = async (req, res) => {
 
         // const findMovie = await Movie.findById(movieId).exec();
 
-        // const findRoom = await Room.findById(roomId).exec();
+        const findRoom = await Room.findById(roomId).populate('seatMap').exec();
+
+        const findMap = await SeatMap.findOne({ _id: findRoom.seatMap}).exec();
 
         // const findSlot = await Slot.findById(slotId).exec();
 
@@ -48,6 +51,7 @@ const createSchedule = async (req, res) => {
             movie: movieId, //findMovie._id,
             room: roomId, //findRoom._id,
             slot: slotId, //findSlot._id,
+            roomSeats: findMap.seats,
             showDate: showDate,
             week: weekNumber,
             startDay: startDay,
@@ -67,6 +71,7 @@ const createSchedule = async (req, res) => {
             message: "Schedule created",
             data: findSchedule
         });
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({

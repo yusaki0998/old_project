@@ -24,6 +24,12 @@ const createMovie = async (req, res) => {
             });
         }
 
+        if(amountOfTime < 0) {
+            return res.status(301).json({
+                message: "Movie amount of time can't be smaller than 0"
+            });
+        }
+
         if (!moment(showtimes).isValid()) {
             return res.status(301).json({
                 message: "Showtimes is in invalid format"
@@ -179,10 +185,22 @@ const updateMovie = async (req, res) => {
         }
 
         if (amountOfTime) {
-            movie.amountOfTime = amountOfTime;
+            if(amountOfTime < 0) {
+                return res.status(301).json({
+                    message: "Movie amount of time can't be smaller than 0"
+                });
+            }
+            else {
+                movie.amountOfTime = amountOfTime;
+            }
         }
 
-        if (showtimes && !moment(showtimes).isValid()) {
+        if (showtimes) {
+            if (!moment(showtimes).isValid()) {
+                return res.status(301).json({
+                    message: "Showtimes is in invalid format"
+                });
+            }
             movie.showtimes = showtimes;
         }
 
