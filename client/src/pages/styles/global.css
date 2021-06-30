@@ -1,0 +1,12 @@
+.confirm__otp {
+  padding: 150px 0;
+  color: #fff;
+}
+.sign__label {
+  color: #fff;
+}
+.sign__link {
+  display: block;
+  max-width: 140px;
+  margin: 25px auto;
+}

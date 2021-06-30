@@ -1,0 +1,53 @@
+/** @format */
+
+@media (max-width: 1024px) {
+  .nav-tabs.content__tabs li a {
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 54px;
+    color: #fff;
+    position: relative;
+    text-transform: uppercase;
+  }
+  .nav-tabs.content__tabs li a.active {
+    color: #f9ab00;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-tabs.content__tabs {
+    justify-content: space-between;
+  }
+  .info__detail .info__row .label {
+    flex: 0.45;
+  }
+  .edit__customer-profile__wrapper .sign__row {
+    flex-direction: column !important;
+  }
+  .edit__customer-profile__wrapper .sign__row .sign__col.mr-3 {
+    margin-right: 0 !important;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .edit__customer-profile__wrapper .d-flex {
+    flex-direction: column;
+  }
+  .edit__customer-profile__wrapper .d-flex .image__placeholder button {
+    margin: 10px auto;
+  }
+  .customer__nav-menu ul a {
+    margin-right: 0.8rem;
+    font-weight: 500;
+  }
+  .admin__create-account__wrapper {
+    max-width: 98%;
+  }
+  .nav-tabs.content__tabs li a {
+    font-size: 11px;
+  }
+}
