@@ -13,9 +13,17 @@ const movieSchema = mongoose.Schema({
 
     nation: { type: String },
 
-    ageRating: { type: String },
+    // phim dành cho mọi lứa tuổi (dán nhãn là P), 
+    // phim cấm trẻ em dưới 13 tuổi (C13), 
+    // phim không dành cho người dưới 16 tuổi (C16) 
+    // phim cấm khán giả dưới 18 tuổi (C18)
+    ageRating: {
+        type: String, 
+        enum: ['P', 'C13', 'C16', 'C18'],
+        default: 'P'
+    },
 
-    amountOfTime: { type: String },
+    amountOfTime: { type: Number },
 
     showtimes: { type: Date },
 
