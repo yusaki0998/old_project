@@ -115,9 +115,26 @@ const getMovie = async (req, res) => {
             _id: id,
         }).exec();
 
+        if(!findMovie) {
+            return res.status(404).json({
+                message: "Invalid id, movie not found"
+            });
+        }
+
+        const findSchedule = await Schedule.find({
+            movie: id
+        })
+        .select('-roomSeats')
+        .populate('room', 'roomName')
+        .populate('slot')
+        .exec();
+
         return res.status(200).json({
-            message: "Movie information found",
-            data: findMovie
+            message: "Movie found",
+            data: {
+                movie: findMovie,
+                schedule: findSchedule
+            }
         });
 
     } catch (error) {
