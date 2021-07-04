@@ -39,3 +39,13 @@ export const justContainNumber = (value) => {
   const regex = /^[0-9]*$/;
   return value.match(regex);
 };
+
+export const getBirhDate = (date) => {
+  const subDate = date?.toString()?.substr(0, 10);
+  const dateField = subDate?.split("-");
+  return [
+    parseInt(dateField?.[0], 10).toString(),
+    parseInt(dateField?.[1], 10).toString(),
+    parseInt(dateField?.[2], 10).toString(),
+  ];
+};

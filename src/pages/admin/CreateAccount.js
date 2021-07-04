@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import logo from "../../template/styles/main/img/logo.svg";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import {
   convertGenderToVietnamese,
   convertRoleToVietnamese,
@@ -17,7 +15,6 @@ import {
 import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const CreateAccount = () => {
-  const [dob, setDob] = useState(new Date());
   const [gender, setGender] = useState("");
   const [showGender, setShowGender] = useState(false);
   const [role, setRole] = useState("");
@@ -39,7 +36,6 @@ const CreateAccount = () => {
       reset();
       setGender("");
       setRole("");
-      setDob(new Date());
       const timer = setTimeout(() => {
         dispatch(resetCreateAccountState());
       }, 500);
@@ -49,9 +45,32 @@ const CreateAccount = () => {
     }
   }, [createAccountData?.success, reset, dispatch]);
 
+  const optionListMarkup = (startNum, endNum) => {
+    const options = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = startNum; i <= endNum; i++) {
+      options.push(
+        <option value={i} key={i}>
+          {i}
+        </option>
+      );
+    }
+    return options;
+  };
+
   const onValid = (data) => {
+    const dob = `${data.birthMonth}/${data.birthDay}/${data.birthYear}`;
+    delete data.birthMonth;
+    delete data.birthDay;
+    delete data.birthYear;
     dispatch(
-      createAccount({ ...data, role, gender, dob, retype: data.password })
+      createAccount({
+        ...data,
+        role,
+        gender,
+        dob,
+        retype: data.password,
+      })
     );
   };
 
@@ -64,10 +83,10 @@ const CreateAccount = () => {
               <img src={logo} alt="Hotflix" className="d-block mx-auto my-4" />
               <form onSubmit={handleSubmit(onValid)}>
                 <div className="row align-items-center">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Họ và tên</p>
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-10">
                     <div className="sign__group">
                       <input
                         type="text"
@@ -90,10 +109,10 @@ const CreateAccount = () => {
                   </div>
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Email</p>
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-10">
                     <div className="sign__group">
                       <input
                         type="text"
@@ -114,10 +133,10 @@ const CreateAccount = () => {
                   </div>
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Mật khẩu</p>
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-10">
                     <div className="sign__group">
                       <input
                         type="password"
@@ -141,23 +160,67 @@ const CreateAccount = () => {
                   </div>
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Ngày sinh</p>
                   </div>
-                  <div className="col-md-8">
-                    <div className="sign__group">
-                      <DatePicker
-                        selected={dob}
-                        onChange={(date) => setDob(date)}
-                      />
+                  <div className="col-md-10">
+                    <div className="row">
+                      <div className="col-4">
+                        <label htmlFor="birthYear">Năm</label>
+                        <div className="sign__group">
+                          <select
+                            className="sign__input"
+                            {...register("birthYear", {
+                              required: {
+                                value: true,
+                                message: "Đây là mục bắt buộc",
+                              },
+                            })}
+                          >
+                            {optionListMarkup(1910, 2020)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <label htmlFor="birthMonth">Tháng</label>
+                        <div className="sign__group">
+                          <select
+                            className="sign__input"
+                            {...register("birthMonth", {
+                              required: {
+                                value: true,
+                                message: "Đây là mục bắt buộc",
+                              },
+                            })}
+                          >
+                            {optionListMarkup(1, 12)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <label htmlFor="birthDay">Ngày</label>
+                        <div className="sign__group">
+                          <select
+                            className="sign__input"
+                            {...register("birthDay", {
+                              required: {
+                                value: true,
+                                message: "Đây là mục bắt buộc",
+                              },
+                            })}
+                          >
+                            {optionListMarkup(1, 31)}
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Số điện thoại</p>
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-10">
                     <div className="sign__group">
                       <input
                         type="text"
@@ -178,13 +241,13 @@ const CreateAccount = () => {
                   </div>
                 </div>
                 <div className="row align-items-center mb-4">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Giới tính</p>
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-10">
                     <OutsideHandler callback={() => setShowGender(false)}>
                       <div
-                        className={`sign-custom__select ${
+                        className={`mw-50 sign-custom__select ${
                           showGender ? "show" : ""
                         }`}
                         onClick={() => setShowGender((prevState) => !prevState)}
@@ -211,13 +274,13 @@ const CreateAccount = () => {
                   </div>
                 </div>
                 <div className="row align-items-center">
-                  <div className="col-md-4">
+                  <div className="col-md-2">
                     <p>Chức vụ</p>
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-10">
                     <OutsideHandler callback={() => setShowRole(false)}>
                       <div
-                        className={`sign-custom__select ${
+                        className={`mw-50 sign-custom__select ${
                           showRole ? "show" : ""
                         }`}
                         onClick={() => setShowRole((prevState) => !prevState)}

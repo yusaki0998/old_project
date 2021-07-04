@@ -12,8 +12,8 @@ const Profile = () => {
   const history = useHistory();
   return (
     <div className="customer__profile-wrapper my-5">
-      <div className="d-flex">
-        <div className="mr-3">
+      <div className="d-flex align-items-center">
+        <div className="mr-4">
           <div className="">
             <img
               className="d-block my-3 user__img-wrapper"
@@ -43,7 +43,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="info__detail mt-3">
-        <p className="border__bottom-white mt-3">
+        <p className="border__bottom-white mt-3 d-inline-block">
           <strong>Thông tin tài khoản</strong>
         </p>
         <div className="info__row">

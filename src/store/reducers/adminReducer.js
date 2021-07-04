@@ -15,6 +15,7 @@ import {
   UPDATE_ACCOUNT_INFO_START,
   UPDATE_ACCOUNT_INFO_SUCCESS,
   UPDATE_ACCOUNT_INFO_FAILED,
+  RESET_UPDATE_ACCOUNT_STATE,
 } from "../actions/types";
 
 const initialState = {
@@ -36,6 +37,7 @@ const initialState = {
   },
   updateAccount: {
     isLoading: false,
+    success: false,
   },
 };
 
@@ -132,12 +134,28 @@ const reducer = (state = initialState, { type, payload }) => {
           isLoading: true,
         },
       };
-    case UPDATE_ACCOUNT_INFO_SUCCESS:
+
     case UPDATE_ACCOUNT_INFO_FAILED:
       return {
         ...state,
         updateAccount: {
           isLoading: false,
+        },
+      };
+    case UPDATE_ACCOUNT_INFO_SUCCESS:
+      return {
+        ...state,
+        updateAccount: {
+          isLoading: false,
+          success: true,
+        },
+      };
+    case RESET_UPDATE_ACCOUNT_STATE:
+      return {
+        ...state,
+        updateAccount: {
+          isLoading: false,
+          success: false,
         },
       };
     case RESET_CREATE_ACCOUNT_STATE:

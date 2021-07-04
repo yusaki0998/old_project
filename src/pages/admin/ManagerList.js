@@ -9,6 +9,7 @@ import { getListManager } from "../../store/actions/adminActions";
 import { useHistory } from "react-router-dom";
 import { getUserBySearchInputRequest } from "../../store/api/admin";
 import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
+import { convertGenderToVietnamese } from "../../utils/convertGender";
 
 const ManagerList = () => {
   const dispatch = useDispatch();
@@ -94,11 +95,11 @@ const ManagerList = () => {
                   <table className="main__table">
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th>Mã quản lý</th>
-                        <th>Tên tài khoản</th>
+                        <th>Email</th>
                         <th>Tên quản lý</th>
                         <th>Số điện thoại</th>
+                        <th>Giới tính </th>
+                        <th>Ngày sinh </th>
                         <th>Chỉnh sửa / Xóa</th>
                       </tr>
                     </thead>
@@ -110,18 +111,8 @@ const ManagerList = () => {
                             curPage * MAX_ITEMS_PER_PAGE,
                             (curPage + 1) * MAX_ITEMS_PER_PAGE
                           )
-                          .map((manager, index) => (
+                          .map((manager) => (
                             <tr key={manager._id}>
-                              <td>
-                                <div className="main__table-text">
-                                  {index + 1}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="main__table-text">
-                                  <a href="/"> {manager._id} </a>
-                                </div>
-                              </td>
                               <td>
                                 <div className="main__table-text">
                                   {manager.email}
@@ -135,6 +126,16 @@ const ManagerList = () => {
                               <td>
                                 <div className="main__table-text">
                                   {manager.phone}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {convertGenderToVietnamese(manager.gender)}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {manager.dob?.toString()?.substr(0, 10)}
                                 </div>
                               </td>
                               <td>

@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,11 +9,17 @@ import {
   createRoom,
   resetCreateRoomState,
 } from "../../store/actions/managerActions";
+import { getListSeatMapRequest } from "../../store/api/manager";
+import seatMap from "../../assets/seat-map.jpg";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 
 const NewRoom = () => {
   const { createRoom: createRoomData } = useSelector((state) => state.manager);
   const dispatch = useDispatch();
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
+  const [seatMapList, setSeatMapList] = useState([]);
+  const [selectedSeatMap, setSelectedSeatMap] = useState("");
 
   const {
     register,
@@ -25,6 +31,7 @@ const NewRoom = () => {
   useEffect(() => {
     if (createRoomData?.success) {
       reset();
+      setSelectedSeatMap("");
       const timer = setTimeout(() => {
         dispatch(resetCreateRoomState());
       }, 500);
@@ -34,13 +41,23 @@ const NewRoom = () => {
     }
   }, [createRoomData?.success, reset, dispatch]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    getListSeatMapRequest()
+      .then(({ data }) => {
+        setSeatMapList(data?.data || []);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
   const onValid = (data) => {
-    dispatch(createRoom(data));
+    dispatch(createRoom({ ...data, seatMap: selectedSeatMap }));
   };
 
   return (
     <main className="pb-4">
-      <div className="admin__create-account__wrapper text-white">
+      <div className="admin__create-room__wrapper text-white mt-2r">
         <button
           className={`btn__outline-orange mb-4`}
           onClick={() => history.push("/manager/room")}
@@ -52,10 +69,10 @@ const NewRoom = () => {
         </h3>
         <form onSubmit={handleSubmit(onValid)}>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-2">
               <p>Tên phòng</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-4">
               <div className="sign__group">
                 <input
                   type="text"
@@ -74,6 +91,29 @@ const NewRoom = () => {
                 )}
               </div>
             </div>
+          </div>
+          <div className="row">
+            {isLoading && <LoadingSpinner />}
+            {!isLoading &&
+              seatMapList?.map((item, index) => (
+                <div className="col-6 col-sm-4 col-md-3" key={item._id}>
+                  <div
+                    className={`seat__map-item ${
+                      selectedSeatMap === item._id ? "active" : ""
+                    }`}
+                  >
+                    <img
+                      src={seatMap}
+                      alt="seat map"
+                      className="w-100"
+                      onClick={() => setSelectedSeatMap(item?._id)}
+                    />
+                    <p>
+                      <strong>Sơ đồ {index + 1}</strong>
+                    </p>
+                  </div>
+                </div>
+              ))}
           </div>
           <button
             className={`btn__outline-orange mx-auto my-4 ${

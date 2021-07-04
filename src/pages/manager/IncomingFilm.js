@@ -4,14 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListComingFilm } from "../../store/actions/managerActions";
 import FilmList from "../../components/manager/FilmList";
 import Paginator from "../../components/shared/Paginator";
-import { useHistory } from "react-router-dom";
 import { searchFilmRequest } from "../../store/api/manager";
 import { MAX_ITEMS_PER_PAGE } from "./FilmRoom";
 
 const IncomingFilm = () => {
   const dispatch = useDispatch();
   const { comingFilm } = useSelector((state) => state.manager);
-  const history = useHistory();
   const [searchInput, setSearchInput] = useState("");
   const [isTouched, setIsTouched] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
@@ -64,12 +62,6 @@ const IncomingFilm = () => {
             <i className="icon ion-ios-search"></i>
           </button>
         </form>
-        <button
-          className="btn__outline-orange"
-          onClick={() => history.push("/manager/new-film?from=coming")}
-        >
-          Tạo mới phim
-        </button>
       </div>
       <FilmList
         isLoading={comingFilm.isLoading}

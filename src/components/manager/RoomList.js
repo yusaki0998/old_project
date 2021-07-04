@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { Link, useHistory } from "react-router-dom";
 import RoomListSkeleton from "../../skeleton/RoomListSkeleton";
 import DeleteRoom from "./DeleteRoom";
 
@@ -25,11 +25,12 @@ const RoomList = ({ list, isLoading }) => {
   return (
     <div className="admin__manager-list__wrapper">
       <div className="main__table-wrap">
-        <table className="main__table">
+        <table className="main__table room__list">
           <thead>
             <tr>
               <th>ID</th>
               <th>Tên phòng</th>
+              <th>Tên map</th>
               <th>Sửa</th>
               <th>Xóa</th>
             </tr>
@@ -43,7 +44,16 @@ const RoomList = ({ list, isLoading }) => {
                     <div className="main__table-text">{index + 1}</div>
                   </td>
                   <td>
-                    <div className="main__table-text">{room.roomName}</div>
+                    <div className="main__table-text">
+                      <Link to={`/manager/room-detail?roomId=${room._id}`}>
+                        {room.roomName}
+                      </Link>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="main__table-text">
+                      {room?.seatMap || "Not yet"}
+                    </div>
                   </td>
                   <td>
                     <div className="main__table-btns">

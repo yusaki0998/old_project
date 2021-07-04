@@ -256,14 +256,14 @@ ul {
 }
 .main__table {
   width: 100%;
-  min-width: 1050px;
+  min-width: 500px;
   border-spacing: 0;
 }
 .main__table thead {
   border-bottom: 20px solid #1a191f;
 }
 .main__table thead th {
-  font-size: 12px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 400;
   padding: 0 15px 0 15px;

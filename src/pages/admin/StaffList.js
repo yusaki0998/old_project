@@ -9,6 +9,7 @@ import DeleteAccount from "../../components/admin/DeleteAccount";
 import { useHistory } from "react-router-dom";
 import { getUserBySearchInputRequest } from "../../store/api/admin";
 import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
+import { convertGenderToVietnamese } from "../../utils/convertGender";
 
 const StaffList = () => {
   const dispatch = useDispatch();
@@ -94,11 +95,11 @@ const StaffList = () => {
                   <table className="main__table">
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th>Mã nhân viên</th>
-                        <th>Tên tài khoản</th>
+                        <th>Email</th>
                         <th>Tên nhân viên</th>
                         <th>Số điện thoại</th>
+                        <th>Giới tính </th>
+                        <th>Ngày sinh </th>
                         <th>Chỉnh sửa / Xóa</th>
                       </tr>
                     </thead>
@@ -110,18 +111,8 @@ const StaffList = () => {
                             curPage * MAX_ITEMS_PER_PAGE,
                             (curPage + 1) * MAX_ITEMS_PER_PAGE
                           )
-                          .map((staff, index) => (
+                          .map((staff) => (
                             <tr key={staff._id}>
-                              <td>
-                                <div className="main__table-text">
-                                  {index + 1}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="main__table-text">
-                                  <a href="/"> {staff._id} </a>
-                                </div>
-                              </td>
                               <td>
                                 <div className="main__table-text">
                                   {staff.email}
@@ -135,6 +126,16 @@ const StaffList = () => {
                               <td>
                                 <div className="main__table-text">
                                   {staff.phone}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {convertGenderToVietnamese(staff.gender)}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="main__table-text">
+                                  {staff.dob?.toString()?.substr(0, 10)}
                                 </div>
                               </td>
                               <td>

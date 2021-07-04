@@ -51,6 +51,9 @@ export const createRoomRequest = async (data) =>
 export const getRoomDetailRequest = async (roomId) =>
   axios.get(`/rooms/${roomId}`);
 
+export const getSeatDetailRequest = async (mapId) =>
+  axios.get(`/seats/seat-maps/${mapId}`);
+
 export const updateRoomInfoRequest = async (roomId, data) =>
   axios.put(`/rooms/${roomId}`, data, {
     headers: {
@@ -89,3 +92,5 @@ export const updateSlotInfoRequest = async (slotId, data) =>
       "Content-type": "application/json",
     },
   });
+
+export const getListSeatMapRequest = async () => axios.get("/seats/seat-maps");

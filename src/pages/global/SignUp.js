@@ -160,7 +160,7 @@ const SignUp = () => {
                         onClick={() => setShowGender((prevState) => !prevState)}
                       >
                         <li className="gender__text">
-                          {gender ? gender : "Please choose"}
+                          {gender ? gender : "Vui lòng chọn"}
                         </li>
                         <ul className={`${showGender ? "show" : ""}`}>
                           <li onClick={() => setGender("male")}>Male</li>

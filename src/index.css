@@ -193,6 +193,9 @@ code {
   max-width: 70%;
   margin: 2rem auto;
 }
+.mt-2r {
+  margin-top: 2rem;
+}
 .admin__manager-list__wrapper th {
   padding: 0 !important;
 }
@@ -340,4 +343,49 @@ code {
 }
 .slick-prev {
   left: -20px !important;
+}
+.w-100 {
+  width: 100%;
+}
+.seat__map-item img {
+  border-radius: 10px;
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+.seat__map-item.active img {
+  border-color: #f9ab00;
+}
+.seat__map-item p {
+  text-align: center;
+  margin: 10px 0;
+}
+.seat__map-item.active p {
+  color: #f9ab00;
+}
+.seat__types {
+  display: block !important;
+}
+.room__list {
+  width: 60% !important;
+}
+.room__paginator {
+  width: 60%;
+}
+.min-height-80vh {
+  min-height: 80vh;
+}
+.edit__profile--form {
+  max-width: 50%;
+}
+.mw-50 {
+  max-width: 50%;
+}
+.back__btn {
+  display: flex;
+  justify-content: flex-start;
+}
+.back__btn button {
+  margin-left: 0;
+  font-size: 12px;
+  border: 1px solid #222028;
 }

@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import "./../../template/styles/main/index.css";
 import Header from "../../components/shared/header";
@@ -7,7 +9,7 @@ const PublicLayout = ({ children }) => {
   return (
     <>
       <Header />
-      {children}
+      <div className="min-height-80vh">{children}</div>
       <Footer />
     </>
   );

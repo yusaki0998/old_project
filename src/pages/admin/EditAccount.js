@@ -2,24 +2,23 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import logo from "../../template/styles/main/img/logo.svg";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import {
   convertGenderToVietnamese,
   convertRoleToVietnamese,
 } from "../../utils/convertGender";
 import { useDispatch, useSelector } from "react-redux";
-import { updateAccountInfo } from "../../store/actions/adminActions";
+import {
+  resetUpdateAccountState,
+  updateAccountInfo,
+} from "../../store/actions/adminActions";
 import { useHistory, useLocation } from "react-router-dom";
 import { getAccountDetailRequest } from "../../store/api/admin";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import { checkCondition } from "../../utils/helper";
+import { checkCondition, getBirhDate } from "../../utils/helper";
 import OutsideHandler from "../../components/shared/ClickWrapper";
 
 const EditAccountInfo = () => {
   const { search } = useLocation();
-  const [dob, setDob] = useState(new Date());
   const [gender, setGender] = useState("");
   const [showGender, setShowGender] = useState(false);
   const [role, setRole] = useState("");
@@ -50,7 +49,6 @@ const EditAccountInfo = () => {
       getAccountDetailRequest(userIdField, roleField)
         .then(({ data }) => {
           setUserDetailData(data?.data);
-          setDob(new Date(data?.data?.dob));
           setGender(data?.data?.gender);
           setRole(data?.data?.role);
           setIsLoading(false);
@@ -62,7 +60,30 @@ const EditAccountInfo = () => {
     }
   }, [history, userIdField, roleField]);
 
+  useEffect(() => {
+    if (updateAccountData.success) {
+      history.push(
+        `/admin/${roleField === "manager" ? "managers" : "employees"}`
+      );
+      dispatch(resetUpdateAccountState());
+    }
+  }, [history, updateAccountData.success, roleField, dispatch]);
+
+  const optionListMarkup = (startNum, endNum) => {
+    const options = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = startNum; i <= endNum; i++) {
+      options.push(
+        <option value={i} key={i}>
+          {i}
+        </option>
+      );
+    }
+    return options;
+  };
+
   const onValid = (data) => {
+    const dob = `${data.birthMonth}/${data.birthDay}/${data.birthYear}`;
     dispatch(
       updateAccountInfo(userDetailData?._id, { ...data, role, gender, dob })
     );
@@ -74,15 +95,15 @@ const EditAccountInfo = () => {
         <div className="row">
           <div className="col-12">
             <div className="admin__create-account__wrapper text-white">
-              <img src={logo} alt="Hotflix" className="d-block mx-auto my-4" />
+              <h2 className="text-center my-4">Thay đổi thông tin</h2>
               {isLoading && <LoadingSpinner />}
               {!isLoading && userDetailData?.fullname && (
                 <form onSubmit={handleSubmit(onValid)}>
                   <div className="row align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                       <p>Họ và tên</p>
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                       <div className="sign__group">
                         <input
                           type="text"
@@ -112,11 +133,11 @@ const EditAccountInfo = () => {
                     </div>
                   </div>
                   <div className="row align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                       <p>Email</p>
                     </div>
-                    <div className="col-md-8">
-                      <div className="sign__group">
+                    <div className="col-md-10">
+                      <div className="sign__group divDisable">
                         <input
                           type="text"
                           defaultValue={checkCondition(
@@ -145,38 +166,82 @@ const EditAccountInfo = () => {
                     </div>
                   </div>
                   <div className="row align-items-center">
-                    <div className="col-md-4">
-                      <p>Mật khẩu</p>
-                    </div>
-                    <div className="col-md-8">
-                      <div className="sign__group">
-                        <input
-                          type="password"
-                          className="sign__input"
-                          {...register("password")}
-                          autoComplete="false"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                       <p>Ngày sinh</p>
                     </div>
-                    <div className="col-md-8">
-                      <div className="sign__group">
-                        <DatePicker
-                          selected={dob}
-                          onChange={(date) => setDob(date)}
-                        />
+                    <div className="col-md-10">
+                      <div className="row">
+                        <div className="col-4">
+                          <label htmlFor="birthYear">Năm</label>
+                          <div className="sign__group">
+                            <select
+                              className="sign__input"
+                              {...register("birthYear", {
+                                required: {
+                                  value: true,
+                                  message: "Đây là mục bắt buộc",
+                                },
+                              })}
+                              defaultValue={checkCondition(
+                                userDetailData?.dob,
+                                getBirhDate(userDetailData?.dob)[0],
+                                ""
+                              )}
+                            >
+                              {optionListMarkup(1910, 2025)}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-4">
+                          <label htmlFor="birthMonth">Tháng</label>
+                          <div className="sign__group">
+                            <select
+                              className="sign__input"
+                              {...register("birthMonth", {
+                                required: {
+                                  value: true,
+                                  message: "Đây là mục bắt buộc",
+                                },
+                              })}
+                              defaultValue={checkCondition(
+                                userDetailData?.dob,
+                                getBirhDate(userDetailData?.dob)[1],
+                                ""
+                              )}
+                            >
+                              {optionListMarkup(1, 12)}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-4">
+                          <label htmlFor="birthDay">Ngày</label>
+                          <div className="sign__group">
+                            <select
+                              className="sign__input"
+                              {...register("birthDay", {
+                                required: {
+                                  value: true,
+                                  message: "Đây là mục bắt buộc",
+                                },
+                              })}
+                              defaultValue={checkCondition(
+                                userDetailData?.dob,
+                                getBirhDate(userDetailData?.dob)[2],
+                                ""
+                              )}
+                            >
+                              {optionListMarkup(1, 31)}
+                            </select>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="row align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                       <p>Số điện thoại</p>
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                       <div className="sign__group">
                         <input
                           type="text"
@@ -206,13 +271,13 @@ const EditAccountInfo = () => {
                     </div>
                   </div>
                   <div className="row align-items-center mb-4">
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                       <p>Giới tính</p>
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                       <OutsideHandler callback={() => setShowGender(false)}>
                         <div
-                          className={`sign-custom__select ${checkCondition(
+                          className={`mw-50 sign-custom__select ${checkCondition(
                             showGender,
                             "show",
                             ""
@@ -253,13 +318,13 @@ const EditAccountInfo = () => {
                     </div>
                   </div>
                   <div className="row align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-md-2">
                       <p>Chức vụ</p>
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                       <OutsideHandler callback={() => setShowRole(false)}>
                         <div
-                          className={`sign-custom__select ${checkCondition(
+                          className={`mw-50 sign-custom__select ${checkCondition(
                             showRole,
                             "show",
                             ""
@@ -279,6 +344,9 @@ const EditAccountInfo = () => {
                               "show",
                               ""
                             )}`}
+                            style={{
+                              height: 95,
+                            }}
                           >
                             <li onClick={() => setRole("manager")}>Quản lý</li>
                             <li onClick={() => setRole("staff")}>Nhân viên</li>
@@ -312,6 +380,23 @@ const EditAccountInfo = () => {
                   </button>
                 </form>
               )}
+              <div className="back__btn">
+                {!isLoading && (
+                  <button
+                    className={`btn__outline-orange mb-4`}
+                    onClick={() =>
+                      history.push(
+                        `/admin/${
+                          roleField === "manager" ? "managers" : "employees"
+                        }`
+                      )
+                    }
+                  >
+                    <i className="fas fa-chevron-left mr-2"></i> Quay lại danh
+                    sách
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

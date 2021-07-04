@@ -4,7 +4,7 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 
 const UserListSkeleton = () => {
-  return [1, 2, 3, 4, 5].map((item) => (
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
     <tr key={item}>
       <td>
         <div className="main__table-text">

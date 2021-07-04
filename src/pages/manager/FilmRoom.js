@@ -8,7 +8,7 @@ import RoomList from "../../components/manager/RoomList";
 import Paginator from "../../components/shared/Paginator";
 import { useHistory } from "react-router-dom";
 
-export const MAX_ITEMS_PER_PAGE = 5;
+export const MAX_ITEMS_PER_PAGE = 10;
 
 const FilmRoom = () => {
   const dispatch = useDispatch();
@@ -81,12 +81,14 @@ const FilmRoom = () => {
           (curPage + 1) * MAX_ITEMS_PER_PAGE
         )}
       />
-      <Paginator
-        curPage={curPage}
-        maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
-        setCurPage={setCurPage}
-        totalItems={filteredList.length}
-      />
+      <div className="room__paginator">
+        <Paginator
+          curPage={curPage}
+          maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
+          setCurPage={setCurPage}
+          totalItems={filteredList.length}
+        />
+      </div>
     </div>
   );
 };

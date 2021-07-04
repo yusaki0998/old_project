@@ -6,12 +6,10 @@ import { getListCurrentFilm } from "../../store/actions/managerActions";
 import { searchFilmRequest } from "../../store/api/manager";
 import FilmList from "../../components/manager/FilmList";
 import Paginator from "../../components/shared/Paginator";
-import { useHistory } from "react-router-dom";
 import { MAX_ITEMS_PER_PAGE } from "./FilmRoom";
 
 const CurrentFilm = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const { currentFilm } = useSelector((state) => state.manager);
   const [searchInput, setSearchInput] = useState("");
   const [isTouched, setIsTouched] = useState(false);
@@ -66,12 +64,6 @@ const CurrentFilm = () => {
             <i className="icon ion-ios-search"></i>
           </button>
         </form>
-        <button
-          className="btn__outline-orange"
-          onClick={() => history.push("/manager/new-film?from=current")}
-        >
-          Tạo mới phim
-        </button>
       </div>
       <FilmList
         isLoading={currentFilm.isLoading}

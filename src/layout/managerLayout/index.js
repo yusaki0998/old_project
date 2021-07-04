@@ -13,6 +13,7 @@ const FilmRoom = lazy(() => import("../../pages/manager/FilmRoom"));
 const NewRoom = lazy(() => import("../../pages/manager/NewRoom"));
 const ViewSlot = lazy(() => import("../../pages/manager/ViewSlot"));
 const EditRoom = lazy(() => import("../../pages/manager/EditRoom"));
+const RoomDetail = lazy(() => import("../../pages/manager/RoomDetail"));
 
 const ManagerLayout = () => {
   const router = useRouteMatch();
@@ -60,6 +61,11 @@ const ManagerLayout = () => {
             <Route exact path={`${router.path}/edit-room`}>
               <Suspense fallback={<LoadingSpinner />}>
                 <EditRoom />
+              </Suspense>
+            </Route>
+            <Route exact path={`${router.path}/room-detail`}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <RoomDetail />
               </Suspense>
             </Route>
             <Route exact path={`${router.path}/slot`}>

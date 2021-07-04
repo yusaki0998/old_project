@@ -2299,7 +2299,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   border-bottom: 1px solid #1a191f;
 }
 .main__table thead th {
-  font-size: 12px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
   padding: 0 10px 15px 0;

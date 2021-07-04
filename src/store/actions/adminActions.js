@@ -19,6 +19,7 @@ import {
   UPDATE_ACCOUNT_INFO_START,
   UPDATE_ACCOUNT_INFO_SUCCESS,
   UPDATE_ACCOUNT_INFO_FAILED,
+  RESET_UPDATE_ACCOUNT_STATE,
 } from "./types";
 
 export const getListManager = () => ({
@@ -103,4 +104,8 @@ export const updateAccountInfoSuccess = (payload) => ({
 export const updateAccountInfoFailed = (payload) => ({
   type: UPDATE_ACCOUNT_INFO_FAILED,
   payload,
+});
+
+export const resetUpdateAccountState = () => ({
+  type: RESET_UPDATE_ACCOUNT_STATE,
 });

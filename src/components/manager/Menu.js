@@ -13,11 +13,9 @@ import ConfirmLogoutModal from "../modals/ConfirmLogout";
 const Menu = () => {
   const { sidebar } = useSelector((state) => state.ui);
   const { loginData } = useSelector((state) => state.auth);
-  const { pathname, search } = useLocation();
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
-  const query = new URLSearchParams(search);
-  const fromField = query.get("from");
 
   const [showLogout, setShowLogout] = useState(false);
 
@@ -63,10 +61,22 @@ const Menu = () => {
           <ul className="sidebar__nav">
             <li className="sidebar__nav-item">
               <Link
+                onClick={() => history.push("/manager/new-film?from=current")}
                 className={`sidebar__nav-link ${checkCondition(
-                  pathname.includes("/current") ||
-                    pathname === "/manager" ||
-                    fromField === "current",
+                  pathname.includes("/new-film"),
+                  "sidebar__nav-link--active",
+                  ""
+                )}`}
+                to="/manager/new-film"
+              >
+                <i className="icon ion-ios-add"></i>
+                <span> Tạo mới phim</span>
+              </Link>
+            </li>
+            <li className="sidebar__nav-item">
+              <Link
+                className={`sidebar__nav-link ${checkCondition(
+                  pathname.includes("/current") || pathname === "/manager",
                   "sidebar__nav-link--active",
                   ""
                 )}`}
@@ -79,7 +89,7 @@ const Menu = () => {
             <li className="sidebar__nav-item">
               <Link
                 className={`sidebar__nav-link ${checkCondition(
-                  pathname.includes("/coming") || fromField === "coming",
+                  pathname.includes("/coming"),
                   "sidebar__nav-link--active",
                   ""
                 )}`}

@@ -57,12 +57,12 @@ const EditPassword = () => {
     <div className="edit__customer-profile__wrapper my-5">
       <div className="d-flex">
         <div className="edit__form">
-          <p>
-            <strong>Thông tin mật khẩu</strong>
-          </p>
-          <form onSubmit={handleSubmit(onValid)}>
+          <form
+            className="edit__profile--form"
+            onSubmit={handleSubmit(onValid)}
+          >
             <div className="sign__row mb-3">
-              <div className="sign__col mr-3">
+              <div className="sign__col">
                 <p className="sign__label">Mật khẩu cũ</p>
                 <input
                   type="password"
@@ -81,6 +81,8 @@ const EditPassword = () => {
                   <p className="input-required">{errors.oldpassword.message}</p>
                 )}
               </div>
+            </div>
+            <div className="sign__row mb-3">
               <div className="sign__col">
                 <p className="sign__label">Mật khẩu mới</p>
                 <input
@@ -101,9 +103,8 @@ const EditPassword = () => {
                 )}
               </div>
             </div>
-            <div className="sign__row mb-3"></div>
             <div className="sign__row mb-3">
-              <div className="sign__col mr-3">
+              <div className="sign__col">
                 <p className="sign__label">Nhập lại mật khẩu mới</p>
                 <input
                   type="password"
@@ -125,17 +126,16 @@ const EditPassword = () => {
                   <p className="input-required">{errors.retype.message}</p>
                 )}
               </div>
-              <div className="sign__col">
-                <p className="sign__label unvisible">Button label</p>
-                <button
-                  className={`btn__outline-orange btn__block ${
-                    loading ? "divDisable" : ""
-                  }`}
-                  type="submit"
-                >
-                  {loading ? "Đang lưu" : "Lưu thay đổi"}
-                </button>
-              </div>
+            </div>
+            <div className="mt-4">
+              <button
+                className={`btn__outline-orange btn__block ${
+                  loading ? "divDisable" : ""
+                }`}
+                type="submit"
+              >
+                {loading ? "Đang lưu" : "Lưu thay đổi"}
+              </button>
             </div>
           </form>
         </div>

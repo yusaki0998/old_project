@@ -37,7 +37,7 @@ const CustomerLayout = ({ children }) => {
       <Header />
       <CustomerNavMenu />
       {children}
-      <div className="container text-white">
+      <div className="container text-white min-height-80vh">
         <Switch>
           <Route exact path={`${router.path}/info`}>
             <Suspense fallback={<LoadingSpinner />}>

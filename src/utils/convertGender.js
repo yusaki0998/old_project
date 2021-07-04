@@ -18,3 +18,9 @@ export const convertStatusToText = (status) => {
   if (status === "0") return "Phim sắp chiếu";
   return "Vui lòng chọn";
 };
+
+export const convertSeatTypeToVietnamese = (seatType) => {
+  if (seatType === "vip") return "VIP";
+  if (seatType === "normal") return "Thường";
+  return "Vui lòng chọn";
+};

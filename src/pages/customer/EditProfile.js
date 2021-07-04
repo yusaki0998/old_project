@@ -31,7 +31,7 @@ const EditProfile = () => {
   return (
     <div className="edit__customer-profile__wrapper my-5">
       <div className="d-flex">
-        <div className="image__placeholder mr-3">
+        <div className="image__placeholder mr-4">
           <img
             className="d-block my-3 user__img-wrapper"
             src={
@@ -50,9 +50,12 @@ const EditProfile = () => {
           <p className="mt-3">
             <strong>Đổi thông tin tài khoản</strong>
           </p>
-          <form onSubmit={handleSubmit(onValid)}>
+          <form
+            className="edit__profile--form"
+            onSubmit={handleSubmit(onValid)}
+          >
             <div className="sign__row mb-3">
-              <div className="sign__col mr-3">
+              <div className="sign__col">
                 <p className="sign__label">Tên</p>
                 <input
                   type="text"
@@ -71,7 +74,9 @@ const EditProfile = () => {
                   <p className="input-required">{errors.fullname.message}</p>
                 )}
               </div>
-              <div className="sign__col mr-3">
+            </div>
+            <div className="sign__row mb-3">
+              <div className="sign__col">
                 <p className="sign__label">Email</p>
                 <input
                   type="email"
@@ -92,7 +97,7 @@ const EditProfile = () => {
               </div>
             </div>
             <div className="sign__row mb-3">
-              <div className="sign__col mr-3">
+              <div className="sign__col">
                 <p className="sign__label">Ngày sinh</p>
                 <DatePicker
                   selected={dob}
@@ -100,7 +105,9 @@ const EditProfile = () => {
                   className="divDisable"
                 />
               </div>
-              <div className="sign__col mr-3">
+            </div>
+            <div className="sign__row mb-3">
+              <div className="sign__col">
                 <p className="sign__label">Giới tính</p>
                 <OutsideHandler callback={() => setShowGender(false)}>
                   <div
@@ -112,7 +119,7 @@ const EditProfile = () => {
                     <li className="gender__text">
                       {gender
                         ? convertGenderToVietnamese(gender)
-                        : "Please choose"}
+                        : "Vui lòng chọn"}
                     </li>
                     <ul className={`${showGender ? "show" : ""}`}>
                       <li onClick={() => setGender("male")}>Nam</li>
@@ -130,21 +137,15 @@ const EditProfile = () => {
                 </OutsideHandler>
               </div>
             </div>
-            <div className="sign__row mb-3">
-              <div className="sign__col">
-                <p className="sign__label unvisible">Button label</p>
-                <button
-                  className={`btn__outline-orange btn__block ${
-                    isLoading ? "divDisable" : ""
-                  }`}
-                  type="submit"
-                >
-                  {isLoading ? "Đang lưu" : "Lưu thay đổi"}
-                </button>
-              </div>
-              <div className="sign__col mr-3">
-                <p className="sign__label d-none">D-none column</p>
-              </div>
+            <div className="mb-3">
+              <button
+                className={`btn__outline-orange btn__block ${
+                  isLoading ? "divDisable" : ""
+                }`}
+                type="submit"
+              >
+                {isLoading ? "Đang lưu" : "Lưu thay đổi"}
+              </button>
             </div>
           </form>
         </div>
