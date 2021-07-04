@@ -83,8 +83,12 @@ const createSchedule = async (req, res) => {
 
 const getSchedules = async (req, res) => {
     try {
+        const weekNumber = req.query.week;
         const findSchedules = await Schedule
-        .find()
+        .find({
+            week: weekNumber
+        })
+        .select('-roomSeats')
         .populate('movie', 'movieName')
         .populate('room', 'roomName')
         .populate('slot')
@@ -234,5 +238,5 @@ module.exports = {
     getSchedules,
     getSchedule,
     editSchedule,
-    deleteSchedule
+    deleteSchedule,
 }
