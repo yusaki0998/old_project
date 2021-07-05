@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
     try {
         const token = req.header('token');
         
-        const payload = jwt.verify(token, process.env.REFRESH_SECRET,);
+        const payload = jwt.verify(token, 'huytqse06084',);
 
         const user = await User
         .findById(payload._id)
