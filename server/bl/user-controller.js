@@ -24,7 +24,7 @@ const register = async (req, res) => {
 
         const checkEmail = await User.find({ email: email }).exec();
 
-        if (checkEmail) {
+        if (checkEmail.length > 0) {
             return res.status(409).json({
                 message: "Email already registered"
             });
@@ -38,7 +38,7 @@ const register = async (req, res) => {
 
         const checkPhone = await User.find({ phone: phone }).exec();
 
-        if (checkPhone) {
+        if (checkPhone.length > 0) {
             return res.status(409).json({
                 message: "Phone already registered"
             });
@@ -322,7 +322,7 @@ const addAccount = async (req, res) => {
 
         const checkEmail = await User.find({ email: email }).exec();
 
-        if (checkEmail) {
+        if (checkEmail.length > 0) {
             return res.status(409).json({
                 message: "Email already registered"
             });
@@ -336,7 +336,7 @@ const addAccount = async (req, res) => {
 
         const checkPhone = await User.find({ phone: phone }).exec();
 
-        if (checkPhone) {
+        if (checkPhone.length > 0) {
             return res.status(409).json({
                 message: "Phone already registered"
             });

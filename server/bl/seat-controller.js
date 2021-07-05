@@ -4,10 +4,12 @@ const SeatMap = require('../dbaccess/seat-map-model');
 
 const addSeatMap = async (req, res) => {
     try {
+        const { name } = req.body;
         const seatMap = new SeatMap({
             _id: new mongoose.Types.ObjectId(),
+            name: name,
             seats: [
-
+                
             ]
         });
 
