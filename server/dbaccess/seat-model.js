@@ -23,6 +23,14 @@ const seatSchema = mongoose.Schema({
         enum: ['empty', 'pending', 'sold'],
         default: 'empty'
     },
+
+    row: {
+        type: Number
+    },
+
+    column: {
+        type: Number
+    }
 });
 
-module.exports = mongoose.model('Seat', seatSchema);
+module.exports = seatSchema;
