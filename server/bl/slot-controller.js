@@ -23,6 +23,16 @@ const createSlot = async (req, res) => {
             });
         }
 
+        const checkSlot = await Slot.find({
+            slotName: slotName
+        }).exec();
+
+        if(checkSlot.length > 0) {
+            return res.status(301).json({
+                message: "Slot name already exist"
+            });
+        }
+
         if (startTime > 2359 || startTime < 0) {
             return res.status(301).json({
                 message: "Start time must be with in 0h-23h59 range"

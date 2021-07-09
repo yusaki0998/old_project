@@ -128,18 +128,11 @@ const login = async (req, res) => {
             });
         }
 
-        const accessToken = jwt.sign({
-            _id: user._id,
-        },
-            process.env.ACCESS_SECRET, {
-            expiresIn: "30s"
-        });
-
         const refreshToken = jwt.sign({
             _id: user._id,
         },
             process.env.REFRESH_SECRET, {
-            expiresIn: "3d"
+            expiresIn: "8h"
         });
 
         const userObj = user.toObject();
@@ -149,7 +142,6 @@ const login = async (req, res) => {
         return res.status(200).json({
             message: "Login success!",
             data: {
-                accessToken: accessToken,
                 refreshToken: refreshToken,
                 user: userObj
             }

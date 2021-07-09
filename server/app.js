@@ -3,9 +3,9 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 const cors = require('cors');
-//const db = require('./config/db');
+const db = require('./config/db');
 const morgan = require("morgan");
 
 //Declare routes
@@ -18,25 +18,25 @@ const seatRoutes = require('./routes/seat-route');
 const ticketRoutes = require('./routes/ticket-route');
 
 //Database connect
-const uri =
-  "mongodb+srv://" +
-  process.env.MONGO_ATLAS_USER +
-  ":" +
-  process.env.MONGO_ATLAS_PW +
-  "@capstonecluster.e4xd9.mongodb.net/ot-bm?retryWrites=true&w=majority";
+// const uri =
+//   "mongodb+srv://" +
+//   process.env.MONGO_ATLAS_USER +
+//   ":" +
+//   process.env.MONGO_ATLAS_PW +
+//   "@capstonecluster.e4xd9.mongodb.net/ot-bm?retryWrites=true&w=majority";
 
-mongoose
-  .connect(uri, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("OK!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// mongoose
+//   .connect(uri, {
+//     useCreateIndex: true,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => {
+//     console.log("OK!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 //middleware section
 app.use(morgan("dev"));

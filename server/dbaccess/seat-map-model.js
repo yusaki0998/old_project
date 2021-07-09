@@ -6,7 +6,7 @@ const seatMapSchema = mongoose.Schema({
 
     name: { type: String },
 
-    seats: { type: [Seat]}
+    seats: { type: [Seat] }
 });
 
 module.exports = mongoose.model('SeatMap', seatMapSchema);

@@ -110,10 +110,6 @@ const getComingSoonMovies = async (req, res) => {
 
 const getMovie = async (req, res) => {
     try {
-        const currentUser = req.userData._id;
-
-        const checkUser = await User.findById(currentUser).exec();
-
         const id = req.params.movieId;
 
         const findMovie = await Movie.findById(id).exec();
@@ -124,32 +120,12 @@ const getMovie = async (req, res) => {
             });
         }
 
-        const findSchedule = await Schedule.find({
-            movie: id
-        })
-        .select('-roomSeats')
-        .populate('room', 'roomName')
-        .populate('slot')
-        .exec();
-
-        if (checkUser.role === 'manager') {
-            return res.status(200).json({
-                message: "Movie found",
-                data: {
-                    movie: findMovie,
-                }
-            });
-        }
-
-        if (checkUser.role === 'customer' || checkUser.role === 'staff') {
-            return res.status(200).json({
-                message: "Movie found",
-                data: {
-                    movie: findMovie,
-                    schedule: findSchedule
-                }
-            });
-        }
+        return res.status(200).json({
+            message: "Movie found",
+            data: {
+                movie: findMovie,
+            }
+        });
 
     } catch (error) {
         console.error(error.message);
