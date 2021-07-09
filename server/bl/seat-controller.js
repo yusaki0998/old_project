@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const db = require('../config/db');
 const Seat = require('../dbaccess/seat-model');
 const SeatMap = require('../dbaccess/seat-map-model');
+const Schedule = require('../dbaccess/schedule-model');
 
 const addSeatMap = async (req, res) => {
     try {
@@ -9,11 +11,11 @@ const addSeatMap = async (req, res) => {
             _id: new mongoose.Types.ObjectId(),
             name: name,
             seats: [
-                
+
             ]
         });
 
-        seatMap.save();
+        await seatMap.save();
 
         return res.status(201).json({
             message: "Ok, seat map added",
@@ -109,9 +111,59 @@ const getSeatInMap = async (req, res) => {
     }
 }
 
+const editSeatInMap = async (req, res) => {
+    const session = await mongoose.startSession();
+    try {
+        session.startTransaction();
+
+        const mapId = req.params.mapId;
+
+        const { type, price } = req.body;
+
+        await SeatMap.updateMany(
+            {
+                _id: mapId,
+            },
+            { $set: { 'seats.$[item].price': price } },
+            {
+                multi: true,
+                arrayFilters: [{ 'item.seatType': type }],
+                session
+            }
+        ).exec();
+
+        await Schedule.updateMany(
+            { seatMap: mapId},
+            { $set: { 'roomSeats.$[item].price': price } },
+            {
+                multi: true,
+                arrayFilters: [{'item.seatType': type}],
+                session
+            }
+        ).exec();
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.status(200).json({
+            message: "All seats updated",
+        });
+
+    } catch (error) {
+        console.error(error);
+        await session.abortTransaction();
+        session.endSession();
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 module.exports = {
     addSeatMap,
     getSeatMaps,
     getSeatMap,
-    getSeatInMap
+    getSeatInMap,
+    editSeatInMap
 }

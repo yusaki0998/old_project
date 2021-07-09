@@ -7,7 +7,10 @@ const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
 
 const createTicket = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
+        session.startTransaction();
+
         const currentUser = req.userData._id;
 
         const checkUser = await User.findById(currentUser).exec();
@@ -46,8 +49,11 @@ const createTicket = async (req, res) => {
                 slot: findSchedule.slot,
                 seat: seatChosen,
                 user: checkUser._id
-            });
+            }, { session });
         });
+
+        await session.commitTransaction();
+        session.endSession();
 
         return res.status(201).json({
             message: "All ticket booked, check your history",
@@ -56,6 +62,8 @@ const createTicket = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
+        await session.abortTransaction();
+        session.endSession();
         res.status(500).json({
             message: "Internal server error",
             error: error

@@ -10,6 +10,8 @@ const scheduleSchema = mongoose.Schema({
 
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' },
 
+    seatMap: { type: mongoose.Schema.Types.ObjectId, ref: 'SeatMap' },
+
     roomSeats: { type: [Seat], select: false },
 
     showDate: { type: Date },
