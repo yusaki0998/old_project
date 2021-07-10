@@ -7,7 +7,7 @@ Nodejs 14.17.0 hoặc Nodejs 14.x
 ### How to run
 Đổi `.env.example` sang `.env`
 
-Điền các thông tin sau vào file `env`
+Điền các thông tin sau vào file `.env`
 ```
 MONGO_ATLAS_USER = trungbeo hoặc namto hoặc tu
 MONGO_ATLAS_PW = 123456aA@
