@@ -232,6 +232,10 @@ const CreateAccount = () => {
                             value: true,
                             message: "Đây là mục bắt buộc",
                           },
+                          pattern: {
+                            value: /^[0-9]*$/,
+                            message: "Vui lòng nhập chữ số",
+                          },
                         })}
                       />
                       {errors.phone && (

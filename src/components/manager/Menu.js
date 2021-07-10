@@ -9,6 +9,7 @@ import { logout } from "../../store/actions/authActions";
 import logo from "../../template/styles/main/img/logo.svg";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
+import { hideSidebar } from "../../store/actions/uiActions";
 
 const Menu = () => {
   const { sidebar } = useSelector((state) => state.ui);
@@ -61,13 +62,13 @@ const Menu = () => {
           <ul className="sidebar__nav">
             <li className="sidebar__nav-item">
               <Link
-                onClick={() => history.push("/manager/new-film?from=current")}
                 className={`sidebar__nav-link ${checkCondition(
                   pathname.includes("/new-film"),
                   "sidebar__nav-link--active",
                   ""
                 )}`}
                 to="/manager/new-film"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-add"></i>
                 <span> Tạo mới phim</span>
@@ -81,6 +82,7 @@ const Menu = () => {
                   ""
                 )}`}
                 to="/manager/current"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-film"></i>
                 <span>Phim đang chiếu</span>
@@ -94,6 +96,7 @@ const Menu = () => {
                   ""
                 )}`}
                 to="/manager/coming"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-videocam"></i>
                 <span>Phim sắp chiếu</span>
@@ -109,6 +112,7 @@ const Menu = () => {
                   ""
                 )}`}
                 to="/manager/room"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-desktop"></i>
                 <span>Phòng chiếu</span>
@@ -122,6 +126,7 @@ const Menu = () => {
                   ""
                 )}`}
                 to="/manager/calendar"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-calendar"></i>
                 <span>Lịch chiếu</span>
@@ -135,6 +140,7 @@ const Menu = () => {
                   ""
                 )}`}
                 to="/manager/slot"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-man"></i>
                 <span>Slot chiếu</span>
@@ -148,6 +154,7 @@ const Menu = () => {
                   ""
                 )}`}
                 to="/manager/revenue"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-card"></i>
                 <span>Doanh thu</span>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { convertStatusToText } from "../../utils/convertGender";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,14 +11,19 @@ import {
   resetCreateNewFilmState,
 } from "../../store/actions/managerActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
+import { AGE_THRESHOLD, showAgeThreshold } from "../../utils/age";
 
 const NewFilm = () => {
   const [status, setStatus] = useState("");
   const [showStatus, setShowStatus] = useState(false);
+  const [ageRating, setAgeRating] = useState("");
+  const [showAgeRating, setShowAgeRating] = useState(false);
   const { createFilm: createFilmData } = useSelector((state) => state.manager);
   const dispatch = useDispatch();
   const imgRef = useRef();
   const [imgError, setImgError] = useState("");
+  const [showtimes, setShowtimes] = useState(new Date());
+  const [previewImageSrc, setPreviewImageSrc] = useState("");
 
   const {
     register,
@@ -30,6 +36,8 @@ const NewFilm = () => {
     if (createFilmData?.success) {
       reset();
       setStatus("");
+      setAgeRating("");
+
       const timer = setTimeout(() => {
         dispatch(resetCreateNewFilmState());
       }, 500);
@@ -38,6 +46,14 @@ const NewFilm = () => {
       };
     }
   }, [createFilmData?.success, reset, dispatch]);
+
+  useEffect(() => {
+    setPreviewImageSrc(
+      imgRef?.current?.files?.[0]
+        ? URL?.createObjectURL(imgRef?.current?.files?.[0])
+        : ""
+    );
+  }, [imgRef]);
 
   const onValid = (data) => {
     if (!imgRef || !imgRef.current || !imgRef.current.files) {
@@ -49,6 +65,8 @@ const NewFilm = () => {
       }
       formdata.append("coverImage", imgRef.current.files[0]);
       formdata.append("status", status);
+      formdata.append("ageRating", ageRating);
+      formdata.append("showtimes", showtimes);
       dispatch(createNewFilm(formdata));
     }
   };
@@ -61,10 +79,10 @@ const NewFilm = () => {
         </h3>
         <form onSubmit={handleSubmit(onValid)}>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Tên phim</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <input
                   type="text"
@@ -85,10 +103,10 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Đạo diễn</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <input
                   type="text"
@@ -109,10 +127,10 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Diễn viên</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <input
                   type="text"
@@ -131,10 +149,10 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Thể loại</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <input
                   type="text"
@@ -153,10 +171,10 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Quốc gia</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <input
                   type="text"
@@ -177,13 +195,13 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Thời lượng</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <input
-                  type="text"
+                  type="number"
                   className={`sign__input ${
                     errors.amountOfTime ? "input-error" : ""
                   }`}
@@ -203,69 +221,75 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Khởi chiếu</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
-                <input
-                  type="number"
-                  className={`sign__input ${
-                    errors.showtimes ? "input-error" : ""
-                  }`}
-                  {...register("showtimes", {
-                    required: {
-                      value: true,
-                      message: "Đây là mục bắt buộc",
-                    },
-                  })}
+                <DatePicker
+                  selected={showtimes}
+                  onChange={(date) => setShowtimes(date)}
                 />
-                {errors.showtimes && (
-                  <p className="input-required">{errors.showtimes.message}</p>
-                )}
               </div>
             </div>
           </div>
-          <div className="row align-items-center">
-            <div className="col-md-4">
+          <div className="row align-items-center mb-4">
+            <div className="col-md-3">
               <p>Giới hạn tuổi</p>
             </div>
-            <div className="col-md-8">
-              <div className="sign__group">
-                <input
-                  type="text"
-                  className={`sign__input ${
-                    errors.ageRating ? "input-error" : ""
+            <div className="col-md-9">
+              <OutsideHandler callback={() => setShowAgeRating(false)}>
+                <div
+                  className={`sign-custom__select ${
+                    showAgeRating ? "show" : ""
                   }`}
-                  {...register("ageRating", {
-                    required: {
-                      value: true,
-                      message: "Đây là mục bắt buộc",
-                    },
-                  })}
-                />
-                {errors.ageRating && (
-                  <p className="input-required">{errors.ageRating.message}</p>
-                )}
-              </div>
+                  onClick={() => setShowAgeRating((prevState) => !prevState)}
+                >
+                  <li className="gender__text">
+                    {ageRating ? showAgeThreshold(ageRating) : "Vui lòng chọn"}
+                  </li>
+                  <ul
+                    className={`${showAgeRating ? "show" : ""}`}
+                    style={{
+                      height: "auto",
+                    }}
+                  >
+                    {AGE_THRESHOLD.map((item) => (
+                      <li key={item.key} onClick={() => setAgeRating(item.key)}>
+                        {item.label}
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="sign__select-icon">
+                    <i
+                      className={`fas fa-chevron-${
+                        showAgeRating ? "up" : "down"
+                      }`}
+                    ></i>
+                  </button>
+                </div>
+              </OutsideHandler>
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Ảnh Cover</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-5">
               <div className="sign__group">
                 <input ref={imgRef} type="file" className="sign__input pt-1" />
                 {imgError && <p className="input-required">{imgError}</p>}
               </div>
             </div>
+            <div className="col-md-4 img__preview">
+              {imgRef && <img src={previewImageSrc} alt={previewImageSrc} />}
+            </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Nội dung</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <div className="sign__group">
                 <textarea
                   className={`sign__input sign_textarea ${
@@ -285,10 +309,10 @@ const NewFilm = () => {
             </div>
           </div>
           <div className="row align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <p>Loại phim</p>
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <OutsideHandler callback={() => setShowStatus(false)}>
                 <div
                   className={`sign-custom__select ${showStatus ? "show" : ""}`}

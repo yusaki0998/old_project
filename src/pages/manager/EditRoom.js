@@ -27,7 +27,11 @@ const EditRoom = () => {
   const [seatMapList, setSeatMapList] = useState([]);
   const [selectedSeatMap, setSelectedSeatMap] = useState("");
 
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     if (!roomIdField) {
@@ -37,6 +41,7 @@ const EditRoom = () => {
       getRoomDetailRequest(roomIdField)
         .then(({ data }) => {
           setRoomDetailData(data?.data);
+          setSelectedSeatMap(data?.data?.seatMap?._id);
           setIsLoading(false);
         })
         .catch((_) => {
@@ -82,16 +87,27 @@ const EditRoom = () => {
                 <p>Tên phòng</p>
               </div>
               <div className="col-md-4">
-                <div className="sign__group divDisable">
+                <div className="sign__group">
                   <input
                     type="text"
-                    className={`sign__input`}
+                    className={`sign__input ${
+                      errors.roomName ? "input-error" : ""
+                    }`}
                     defaultValue={checkCondition(
                       roomDetailData?.roomName,
                       roomDetailData?.roomName,
                       ""
                     )}
+                    {...register("roomName", {
+                      required: {
+                        value: true,
+                        message: "Đây là mục bắt buộc",
+                      },
+                    })}
                   />
+                  {errors.roomName && (
+                    <p className="input-required">{errors.roomName.message}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -102,10 +118,7 @@ const EditRoom = () => {
                   <div className="col-6 col-sm-4 col-md-3" key={item._id}>
                     <div
                       className={`seat__map-item ${
-                        selectedSeatMap === item._id ||
-                        roomDetailData?.seatMap?._id === item._id
-                          ? "active"
-                          : ""
+                        selectedSeatMap === item._id ? "active" : ""
                       }`}
                     >
                       <img
@@ -115,7 +128,7 @@ const EditRoom = () => {
                         onClick={() => setSelectedSeatMap(item?._id)}
                       />
                       <p>
-                        <strong>Sơ đồ {index + 1}</strong>
+                        <strong>{item.name}</strong>
                       </p>
                     </div>
                   </div>

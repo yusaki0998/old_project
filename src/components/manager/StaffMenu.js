@@ -1,24 +1,21 @@
 /** @format */
 
 import React, { useState } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import "../styles/sidebar.css";
-import logo from "../../template/styles/main/img/logo.svg";
-import userImg from "../../template/styles/main/img/user.svg";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { checkCondition } from "../../utils/helper";
+import userImg from "../../template/styles/main/img/user.svg";
 import { logout } from "../../store/actions/authActions";
+import logo from "../../template/styles/main/img/logo.svg";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
 
-const Sidebar = ({ userInfo }) => {
-  const { pathname, search } = useLocation();
+const StaffMenu = () => {
   const { sidebar } = useSelector((state) => state.ui);
   const { loginData } = useSelector((state) => state.auth);
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
-
-  const query = new URLSearchParams(search);
-  const roleField = query.get("role");
 
   const [showLogout, setShowLogout] = useState(false);
 
@@ -35,6 +32,7 @@ const Sidebar = ({ userInfo }) => {
         <div className="sidebar__user">
           <div className="sidebar__user-img">
             <img
+              className="user__img-wrapper"
               src={
                 loginData?.data?.avatar
                   ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
@@ -43,15 +41,14 @@ const Sidebar = ({ userInfo }) => {
                     )}`
                   : userImg
               }
-              alt={userInfo?.fullname}
+              alt={loginData?.data?.fullname}
             />
           </div>
 
           <div className="sidebar__user-title">
-            <span>Admin</span>
-            <p className="sidebar__user-name">{userInfo?.fullname}</p>
+            <span>Staff</span>
+            <p className="sidebar__user-name">{loginData?.data?.fullname}</p>
           </div>
-
           <button
             className="sidebar__user-btn"
             type="button"
@@ -64,47 +61,32 @@ const Sidebar = ({ userInfo }) => {
           <ul className="sidebar__nav">
             <li className="sidebar__nav-item">
               <Link
-                to="/admin/create-account"
-                className={`sidebar__nav-link ${
-                  pathname.includes("/create-account")
-                    ? "sidebar__nav-link--active"
-                    : ""
-                }`}
+                className={`sidebar__nav-link ${checkCondition(
+                  pathname.includes("/customers"),
+                  "sidebar__nav-link--active",
+                  ""
+                )}`}
+                to="/staff/customers"
               >
-                <i className="icon ion-ios-create"></i>
-                <span>Tạo tài khoản</span>
+                <i className="icon ion-ios-contacts"></i>
+                <span> Khách hàng</span>
               </Link>
             </li>
             <li className="sidebar__nav-item">
               <Link
-                to="/admin/employees"
-                className={`sidebar__nav-link ${
-                  pathname.includes("/employees") ||
-                  (roleField === "staff" && pathname.includes("/edit-account"))
-                    ? "sidebar__nav-link--active"
-                    : ""
-                }`}
+                className={`sidebar__nav-link ${checkCondition(
+                  pathname.includes("/booking-ticket"),
+                  "sidebar__nav-link--active",
+                  ""
+                )}`}
+                to="/staff/booking-ticket"
               >
-                <i className="icon ion-ios-contact"></i> <span>Nhân viên</span>
-              </Link>
-            </li>
-            <li className="sidebar__nav-item">
-              <Link
-                to="/admin/managers"
-                className={`sidebar__nav-link ${
-                  pathname.includes("/managers") ||
-                  (roleField === "manager" &&
-                    pathname.includes("/edit-account"))
-                    ? "sidebar__nav-link--active"
-                    : ""
-                }`}
-              >
-                <i className="icon ion-ios-contact"></i> <span>Quản lý</span>
+                <i className="icon ion-ios-contacts"></i>
+                <span>Đặt vé</span>
               </Link>
             </li>
           </ul>
         </div>
-        <div className="sidebar__copyright">© HOTFLIX, 2021.</div>
       </div>
       <ConfirmLogoutModal
         open={showLogout}
@@ -119,4 +101,4 @@ const Sidebar = ({ userInfo }) => {
   );
 };
 
-export default Sidebar;
+export default StaffMenu;

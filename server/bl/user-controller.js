@@ -24,7 +24,7 @@ const register = async (req, res) => {
 
         const checkEmail = await User.find({ email: email }).exec();
 
-        if (checkEmail) {
+        if (checkEmail.length > 0) {
             return res.status(409).json({
                 message: "Email already registered"
             });
@@ -38,7 +38,7 @@ const register = async (req, res) => {
 
         const checkPhone = await User.find({ phone: phone }).exec();
 
-        if (checkPhone) {
+        if (checkPhone.length > 0) {
             return res.status(409).json({
                 message: "Phone already registered"
             });
@@ -128,18 +128,11 @@ const login = async (req, res) => {
             });
         }
 
-        const accessToken = jwt.sign({
-            _id: user._id,
-        },
-            process.env.ACCESS_SECRET, {
-            expiresIn: "30s"
-        });
-
         const refreshToken = jwt.sign({
             _id: user._id,
         },
             process.env.REFRESH_SECRET, {
-            expiresIn: "3d"
+            expiresIn: "8h"
         });
 
         const userObj = user.toObject();
@@ -149,7 +142,6 @@ const login = async (req, res) => {
         return res.status(200).json({
             message: "Login success!",
             data: {
-                accessToken: accessToken,
                 refreshToken: refreshToken,
                 user: userObj
             }
@@ -322,7 +314,7 @@ const addAccount = async (req, res) => {
 
         const checkEmail = await User.find({ email: email }).exec();
 
-        if (checkEmail) {
+        if (checkEmail.length > 0) {
             return res.status(409).json({
                 message: "Email already registered"
             });
@@ -336,7 +328,7 @@ const addAccount = async (req, res) => {
 
         const checkPhone = await User.find({ phone: phone }).exec();
 
-        if (checkPhone) {
+        if (checkPhone.length > 0) {
             return res.status(409).json({
                 message: "Phone already registered"
             });

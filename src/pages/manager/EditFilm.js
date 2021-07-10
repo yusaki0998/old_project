@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { convertStatusToText } from "../../utils/convertGender";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,10 +12,14 @@ import { getFilmDetailRequest } from "../../store/api/manager";
 import { checkCondition } from "../../utils/helper";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import OutsideHandler from "../../components/shared/ClickWrapper";
+import { AGE_THRESHOLD, showAgeThreshold } from "../../utils/age";
 
 const EditFilm = () => {
   const [status, setStatus] = useState("");
   const [showStatus, setShowStatus] = useState(false);
+  const [ageRating, setAgeRating] = useState("");
+  const [showAgeRating, setShowAgeRating] = useState(false);
+  const [showtimes, setShowtimes] = useState(new Date());
   const { updateFilm: updateFilmData } = useSelector((state) => state.manager);
   const dispatch = useDispatch();
   const imgRef = useRef();
@@ -39,8 +44,10 @@ const EditFilm = () => {
       setIsLoading(true);
       getFilmDetailRequest(filmIdField)
         .then(({ data }) => {
-          setFilmDetailData(data?.data);
-          setStatus(data?.data?.status?.toString());
+          setFilmDetailData(data?.data?.movie);
+          setStatus(data?.data?.movie?.status?.toString());
+          setShowtimes(new Date(data?.data?.movie?.showtimes));
+          setAgeRating(data?.data?.movie?.ageRating);
           setIsLoading(false);
         })
         .catch((_) => {
@@ -60,6 +67,8 @@ const EditFilm = () => {
       }
       formdata.append("coverImage", imgRef.current.files[0]);
       formdata.append("status", status);
+      formdata.append("ageRating", ageRating);
+      formdata.append("showtimes", showtimes);
       dispatch(updateFilmInfo(filmIdField, formdata));
     }
   };
@@ -74,10 +83,10 @@ const EditFilm = () => {
         {!isLoading && filmDetailData.movieName && (
           <form onSubmit={handleSubmit(onValid)}>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Tên phim</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
                     type="text"
@@ -103,10 +112,10 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Đạo diễn</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
                     type="text"
@@ -132,10 +141,10 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Diễn viên</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
                     type="text"
@@ -161,10 +170,10 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Thể loại</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
                     type="text"
@@ -190,10 +199,10 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Quốc gia</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
                     type="text"
@@ -219,13 +228,13 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Thời lượng</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
-                    type="text"
+                    type="number"
                     className={`sign__input ${
                       errors.amountOfTime ? "input-error" : ""
                     }`}
@@ -250,68 +259,66 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Khởi chiếu</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
-                  <input
-                    type="number"
-                    className={`sign__input ${
-                      errors.showtimes ? "input-error" : ""
-                    }`}
-                    defaultValue={checkCondition(
-                      filmDetailData?.showtimes,
-                      filmDetailData?.showtimes?.substr(0, 4),
-                      ""
-                    )}
-                    {...register("showtimes", {
-                      required: {
-                        value: true,
-                        message: "Đây là mục bắt buộc",
-                      },
-                    })}
+                  <DatePicker
+                    selected={showtimes}
+                    onChange={(date) => setShowtimes(date)}
                   />
-                  {errors.showtimes && (
-                    <p className="input-required">{errors.showtimes.message}</p>
-                  )}
                 </div>
               </div>
             </div>
-            <div className="row align-items-center">
-              <div className="col-md-4">
+            <div className="row align-items-center mb-4">
+              <div className="col-md-3">
                 <p>Giới hạn tuổi</p>
               </div>
-              <div className="col-md-8">
-                <div className="sign__group">
-                  <input
-                    type="text"
-                    className={`sign__input ${
-                      errors.ageRating ? "input-error" : ""
+              <div className="col-md-9">
+                <OutsideHandler callback={() => setShowAgeRating(false)}>
+                  <div
+                    className={`sign-custom__select ${
+                      showAgeRating ? "show" : ""
                     }`}
-                    defaultValue={checkCondition(
-                      filmDetailData?.ageRating,
-                      filmDetailData?.ageRating,
-                      ""
-                    )}
-                    {...register("ageRating", {
-                      required: {
-                        value: true,
-                        message: "Đây là mục bắt buộc",
-                      },
-                    })}
-                  />
-                  {errors.ageRating && (
-                    <p className="input-required">{errors.ageRating.message}</p>
-                  )}
-                </div>
+                    onClick={() => setShowAgeRating((prevState) => !prevState)}
+                  >
+                    <li className="gender__text">
+                      {ageRating
+                        ? showAgeThreshold(ageRating)
+                        : "Vui lòng chọn"}
+                    </li>
+                    <ul
+                      className={`${showAgeRating ? "show" : ""}`}
+                      style={{
+                        height: "auto",
+                      }}
+                    >
+                      {AGE_THRESHOLD.map((item) => (
+                        <li
+                          key={item.key}
+                          onClick={() => setAgeRating(item.key)}
+                        >
+                          {item?.label}
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="sign__select-icon">
+                      <i
+                        className={`fas fa-chevron-${
+                          showAgeRating ? "up" : "down"
+                        }`}
+                      ></i>
+                    </button>
+                  </div>
+                </OutsideHandler>
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Ảnh Cover</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <input
                     ref={imgRef}
@@ -323,10 +330,10 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Nội dung</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <div className="sign__group">
                   <textarea
                     className={`sign__input sign_textarea ${
@@ -353,10 +360,10 @@ const EditFilm = () => {
               </div>
             </div>
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <p>Loại phim</p>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-9">
                 <OutsideHandler callback={() => setShowStatus(false)}>
                   <div
                     className={`sign-custom__select ${

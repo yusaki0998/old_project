@@ -21,6 +21,7 @@ const Login = () => {
   const onValid = (data) => {
     dispatch(login(data, history));
   };
+
   return (
     <div className="sign section--bg" data-bg={section}>
       <div className="container">

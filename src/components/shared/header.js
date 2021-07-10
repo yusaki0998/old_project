@@ -44,6 +44,7 @@ const Header = ({ hideCenterDiv, isActive }) => {
                         pathname === "/" ? "header__nav-link--active" : ""
                       }`}
                       to="/"
+                      onClick={() => dispatch(hideSidebar())}
                     >
                       Trang chủ
                     </Link>
@@ -56,6 +57,7 @@ const Header = ({ hideCenterDiv, isActive }) => {
                           : ""
                       }`}
                       to="/current-film"
+                      onClick={() => dispatch(hideSidebar())}
                     >
                       Phim đang chiếu
                     </Link>
@@ -68,6 +70,7 @@ const Header = ({ hideCenterDiv, isActive }) => {
                           ? "header__nav-link--active"
                           : ""
                       }`}
+                      onClick={() => dispatch(hideSidebar())}
                     >
                       Phim sắp chiếu
                     </Link>

@@ -4,12 +4,11 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import userImg from "../../template/styles/main/img/user.svg";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
 import { editUserProfile } from "../../store/actions/userActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
+import { checkCondition, getBirhDate } from "../../utils/helper";
 
 const EditProfile = () => {
   const { loginData } = useSelector((state) => state.auth);
@@ -19,13 +18,29 @@ const EditProfile = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [dob, setDob] = useState(new Date(loginData?.data?.dob));
   const [gender, setGender] = useState(loginData?.data?.gender);
   const [showGender, setShowGender] = useState(false);
   const dispatch = useDispatch();
 
+  const optionListMarkup = (startNum, endNum) => {
+    const options = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = startNum; i <= endNum; i++) {
+      options.push(
+        <option value={i} key={i}>
+          {i}
+        </option>
+      );
+    }
+    return options;
+  };
+
   const onValid = (data) => {
-    dispatch(editUserProfile({ ...data, gender }));
+    const dob = `${data.birthMonth}/${data.birthDay}/${data.birthYear}`;
+    delete data.birthMonth;
+    delete data.birthDay;
+    delete data.birthYear;
+    dispatch(editUserProfile({ ...data, gender, dob }));
   };
 
   return (
@@ -99,11 +114,95 @@ const EditProfile = () => {
             <div className="sign__row mb-3">
               <div className="sign__col">
                 <p className="sign__label">Ngày sinh</p>
-                <DatePicker
-                  selected={dob}
-                  onChange={(date) => setDob(date)}
-                  className="divDisable"
+                <div className="row">
+                  <div className="col-4">
+                    <label htmlFor="birthYear">Năm</label>
+                    <div className="sign__group">
+                      <select
+                        className="sign__input"
+                        {...register("birthYear", {
+                          required: {
+                            value: true,
+                            message: "Đây là mục bắt buộc",
+                          },
+                        })}
+                        defaultValue={checkCondition(
+                          loginData?.data?.dob,
+                          getBirhDate(loginData?.data?.dob)[0],
+                          ""
+                        )}
+                      >
+                        {optionListMarkup(1910, 2025)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <label htmlFor="birthMonth">Tháng</label>
+                    <div className="sign__group">
+                      <select
+                        className="sign__input"
+                        {...register("birthMonth", {
+                          required: {
+                            value: true,
+                            message: "Đây là mục bắt buộc",
+                          },
+                        })}
+                        defaultValue={checkCondition(
+                          loginData?.data?.dob,
+                          getBirhDate(loginData?.data?.dob)[1],
+                          ""
+                        )}
+                      >
+                        {optionListMarkup(1, 12)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <label htmlFor="birthDay">Ngày</label>
+                    <div className="sign__group">
+                      <select
+                        className="sign__input"
+                        {...register("birthDay", {
+                          required: {
+                            value: true,
+                            message: "Đây là mục bắt buộc",
+                          },
+                        })}
+                        defaultValue={checkCondition(
+                          loginData?.data?.dob,
+                          getBirhDate(loginData?.data?.dob)[2],
+                          ""
+                        )}
+                      >
+                        {optionListMarkup(1, 31)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="sign__row mb-3">
+              <div className="sign__col">
+                <p className="sign__label">Số điện thoại</p>
+                <input
+                  type="text"
+                  className={`sign__input ${errors.phone ? "input-error" : ""}`}
+                  placeholder="Số điện thoại"
+                  defaultValue={loginData?.data?.phone}
+                  {...register("phone", {
+                    required: {
+                      value: true,
+                      message: "Đây là mục bắt buộc",
+                    },
+                    pattern: {
+                      value: /^[0-9]*$/,
+                      message: "Vui lòng nhập chữ số",
+                    },
+                  })}
                 />
+                {errors.phone && (
+                  <p className="input-required">{errors.phone.message}</p>
+                )}
               </div>
             </div>
             <div className="sign__row mb-3">

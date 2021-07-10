@@ -46,6 +46,7 @@ export default class WeekPicker extends React.Component {
   };
 
   handleWeekClick = (weekNumber, days, e) => {
+    this.props.callback(weekNumber, days);
     this.setState({
       selectedDays: days,
     });

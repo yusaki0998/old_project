@@ -13,8 +13,6 @@ const seatSchema = mongoose.Schema({
 
     price: {
         type: Number,
-        enum: [60000, 80000],
-        default: 60000
     },
 
     //0:empty, 1:pending, 2:sold
@@ -23,6 +21,14 @@ const seatSchema = mongoose.Schema({
         enum: ['empty', 'pending', 'sold'],
         default: 'empty'
     },
+
+    row: {
+        type: Number
+    },
+
+    column: {
+        type: Number
+    }
 });
 
-module.exports = mongoose.model('Seat', seatSchema);
+module.exports = seatSchema;

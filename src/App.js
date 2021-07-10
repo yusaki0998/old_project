@@ -1,5 +1,5 @@
 /** @format */
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Notification from "./components/ui/Notification";
 import CustomerLayout from "./layout/customerLayout";
@@ -9,6 +9,8 @@ import UnAuthLayout from "./layout/unAuthLayout";
 import AuthLayout from "./layout/authLayout";
 import PublicLayout from "./layout/publicLayout";
 import AdminLayout from "./layout/adminLayout";
+import StaffLayout from "./layout/staffLayout";
+import { useSelector } from "react-redux";
 
 const HomePage = lazy(() => import("./pages/global/HomePage"));
 const CurrentFilm = lazy(() => import("./pages/global/CurrentFilm"));
@@ -27,6 +29,14 @@ const ConfirmOTP = lazy(() => import("./pages/global/ConfirmOTP"));
 const Login = lazy(() => import("./pages/global/Login"));
 
 function App() {
+  const { sidebar } = useSelector((state) => state.ui);
+
+  useEffect(() => {
+    if (!sidebar.show) {
+      document.querySelector("body").className = "body";
+    }
+  }, [sidebar]);
+
   return (
     <div className="App">
       <Router>
@@ -130,6 +140,9 @@ function App() {
           </Route>
           <Route path="/manager">
             <ManagerLayout />
+          </Route>
+          <Route path="/staff">
+            <StaffLayout />
           </Route>
           <Route exact path="/">
             <Suspense fallback={<LoadingSpinner />}>

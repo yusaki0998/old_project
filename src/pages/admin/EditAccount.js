@@ -84,6 +84,9 @@ const EditAccountInfo = () => {
 
   const onValid = (data) => {
     const dob = `${data.birthMonth}/${data.birthDay}/${data.birthYear}`;
+    delete data.birthMonth;
+    delete data.birthDay;
+    delete data.birthYear;
     dispatch(
       updateAccountInfo(userDetailData?._id, { ...data, role, gender, dob })
     );
@@ -259,6 +262,10 @@ const EditAccountInfo = () => {
                             required: {
                               value: true,
                               message: "Đây là mục bắt buộc",
+                            },
+                            pattern: {
+                              value: /^[0-9]*$/,
+                              message: "Vui lòng nhập chữ số",
                             },
                           })}
                         />

@@ -57,6 +57,9 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
           : "Tạo mới slot thành công!",
       };
       dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 5000);
       dispatch(
         createSlotSuccess({
           data: dataRes.data,

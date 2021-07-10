@@ -49,6 +49,9 @@ const SlotForm = ({ open, close, slotData }) => {
           : "Tạo mới slot thành công!",
       };
       dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 5000);
       dispatch(
         createSlotSuccess({
           data: dataRes.data,
@@ -78,7 +81,9 @@ const SlotForm = ({ open, close, slotData }) => {
     <>
       <Modal
         open={open}
-        close={close}
+        close={() => {
+          close();
+        }}
         title={
           slotData._id ? "Thay đổi thời gian chiếu" : "Tạo mới thời gian chiếu"
         }
@@ -105,7 +110,7 @@ const SlotForm = ({ open, close, slotData }) => {
                   )}
                   {...register("slotName", {
                     required: {
-                      value: true,
+                      value: slotData._id ? false : true,
                       message: "Đây là mục bắt buộc",
                     },
                   })}

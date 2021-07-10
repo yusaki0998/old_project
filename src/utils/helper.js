@@ -49,3 +49,13 @@ export const getBirhDate = (date) => {
     parseInt(dateField?.[2], 10).toString(),
   ];
 };
+
+export const dayInWeeks = [
+  "Thứ 2",
+  "Thứ 3",
+  "Thứ 4",
+  "Thứ 5",
+  "Thứ 6",
+  "Thứ 7",
+  "Chủ Nhật",
+];

@@ -71,4 +71,18 @@
   .mw-50 {
     max-width: 100%;
   }
+  .header__nav-link {
+    font-size: 12px !important;
+    font-weight: 400;
+  }
+  .header__logo img {
+    width: 60px !important;
+    position: relative;
+    left: -25px;
+  }
+  .header__sign-in {
+    height: 30px !important;
+    width: 30px !important;
+    min-width: 30px !important;
+  }
 }

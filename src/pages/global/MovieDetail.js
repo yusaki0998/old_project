@@ -10,10 +10,12 @@ import { scrollToTop } from "../../utils/scrollToTopPos";
 import { getFilmDetailRequest } from "../../store/api/global";
 import { useHistory, useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { getListSlotRequest } from "../../store/api/manager";
 
 const MovieDetail = () => {
   const [movieDetail, setMovieDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [listSlot, setListSlot] = useState([]);
   const { id } = useParams();
   const history = useHistory();
 
@@ -25,7 +27,7 @@ const MovieDetail = () => {
     setIsLoading(true);
     getFilmDetailRequest(id)
       .then(({ data }) => {
-        setMovieDetail(data?.data);
+        setMovieDetail(data?.data?.movie);
       })
       .catch((err) => {
         console.log(err);
@@ -34,8 +36,19 @@ const MovieDetail = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const fetchSlotList = () => {
+    getListSlotRequest()
+      .then(({ data }) => {
+        setListSlot(data?.data || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     fetchMovieDetail();
+    fetchSlotList();
     // eslint-disable-next-line
   }, [id]);
 
@@ -54,7 +67,7 @@ const MovieDetail = () => {
         <>
           <section className="section section--details">
             <div className="container">
-              <TopMovieDetail movieDetail={movieDetail} />
+              <TopMovieDetail movieDetail={movieDetail} listSlot={listSlot} />
             </div>
           </section>
           <section className="content">

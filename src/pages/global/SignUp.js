@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import logo from "../../template/styles/main/img/logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { signup } from "../../store/actions/authActions";
@@ -18,13 +16,29 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
   const [showGender, setShowGender] = useState(false);
-  const [dob, setDob] = useState(new Date());
   const [gender, setGender] = useState("");
   const dispatch = useDispatch();
   const { signUp } = useSelector((state) => state.auth);
   const history = useHistory();
 
+  const optionListMarkup = (startNum, endNum) => {
+    const options = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = startNum; i <= endNum; i++) {
+      options.push(
+        <option value={i} key={i}>
+          {i}
+        </option>
+      );
+    }
+    return options;
+  };
+
   const onValid = (data) => {
+    const dob = `${data.birthMonth}/${data.birthDay}/${data.birthYear}`;
+    delete data.birthMonth;
+    delete data.birthDay;
+    delete data.birthYear;
     dispatch(
       signup(
         {
@@ -77,6 +91,10 @@ const SignUp = () => {
                         value: true,
                         message: "Đây là mục bắt buộc",
                       },
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "Vui lòng nhập chữ số",
+                      },
                     })}
                   />
                   {errors.phone && (
@@ -101,7 +119,6 @@ const SignUp = () => {
                     <p className="input-required">{errors.email.message}</p>
                   )}
                 </div>
-
                 <div className="sign__group">
                   <input
                     type="password"
@@ -142,14 +159,62 @@ const SignUp = () => {
                     <p className="input-required">{errors.retype.message}</p>
                   )}
                 </div>
-                <div className="sign__row mb-3">
-                  <div className="sign__col mr-3">
-                    <p className="sign__label">Ngày sinh</p>
-                    <DatePicker
-                      selected={dob}
-                      onChange={(date) => setDob(date)}
-                    />
+                <div className="sign__birthDate w-100 text-white">
+                  <p>Ngày sinh</p>
+                  <div className="birthDate__row">
+                    <div className="row">
+                      <div className="col-4">
+                        <label htmlFor="birthYear">Năm</label>
+                        <div className="sign__group">
+                          <select
+                            className="sign__input"
+                            {...register("birthYear", {
+                              required: {
+                                value: true,
+                                message: "Đây là mục bắt buộc",
+                              },
+                            })}
+                          >
+                            {optionListMarkup(1910, 2020)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <label htmlFor="birthMonth">Tháng</label>
+                        <div className="sign__group">
+                          <select
+                            className="sign__input"
+                            {...register("birthMonth", {
+                              required: {
+                                value: true,
+                                message: "Đây là mục bắt buộc",
+                              },
+                            })}
+                          >
+                            {optionListMarkup(1, 12)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <label htmlFor="birthDay">Ngày</label>
+                        <div className="sign__group">
+                          <select
+                            className="sign__input"
+                            {...register("birthDay", {
+                              required: {
+                                value: true,
+                                message: "Đây là mục bắt buộc",
+                              },
+                            })}
+                          >
+                            {optionListMarkup(1, 31)}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                </div>
+                <div className="sign__row mb-3">
                   <div className="sign__col">
                     <p className="sign__label">Giới tính </p>
                     <OutsideHandler callback={() => setShowGender(false)}>
@@ -178,7 +243,6 @@ const SignUp = () => {
                     </OutsideHandler>
                   </div>
                 </div>
-
                 <button
                   className={`sign__btn ${
                     signUp.isLoading ? "divDisable" : ""

@@ -94,3 +94,13 @@ export const updateSlotInfoRequest = async (slotId, data) =>
   });
 
 export const getListSeatMapRequest = async () => axios.get("/seats/seat-maps");
+
+export const getListScheduleRequest = async (weekNum) =>
+  axios.get(`/schedules?week=${weekNum}`);
+
+export const updateScheduleInfoRequest = async (scheduleId, data) =>
+  axios.put(`/schedules/${scheduleId}`, data, {
+    headers: {
+      "Content-type": "application/json",
+    },
+  });

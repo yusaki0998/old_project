@@ -1832,7 +1832,7 @@ ul {
 }
 @media (min-width: 576px) {
   .sign__form {
-    padding: 50px 60px;
+    padding: 50px 50px;
   }
   .sign__logo {
     margin-bottom: 50px;

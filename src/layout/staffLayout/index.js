@@ -2,7 +2,7 @@
 
 import React, { lazy, Suspense } from "react";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
-import Menu from "../../components/manager/Menu";
+import StaffMenu from "../../components/manager/StaffMenu";
 import ManagerHeader from "../../components/shared/ManagerHeader";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 const CurrentFilm = lazy(() => import("../../pages/manager/CurrentFilm"));
@@ -16,13 +16,13 @@ const EditRoom = lazy(() => import("../../pages/manager/EditRoom"));
 const RoomDetail = lazy(() => import("../../pages/manager/RoomDetail"));
 const FilmCalendar = lazy(() => import("../../pages/manager/FilmCalendar"));
 
-const ManagerLayout = () => {
+const StaffLayout = () => {
   const router = useRouteMatch();
 
   return (
     <>
       <ManagerHeader />
-      <Menu />
+      <StaffMenu />
       <div className="main">
         <div className="container-fluid">
           <Switch>
@@ -88,4 +88,4 @@ const ManagerLayout = () => {
   );
 };
 
-export default ManagerLayout;
+export default StaffLayout;

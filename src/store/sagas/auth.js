@@ -56,18 +56,7 @@ function* loginWorker(action) {
       JSON.stringify(data.data.user)
     );
     axiosInstance.defaults.headers.common["token"] = `${data.data.accessToken}`;
-    if (data?.data?.user?.role === "admin") {
-      window.location.href = "/admin";
-    }
-    if (data?.data?.user?.role === "manager") {
-      window.location.href = "/manager";
-    }
-    if (data?.data?.user?.role === "staff") {
-      window.location.href = "/staff";
-    }
-    if (data?.data?.user?.role === "customer") {
-      yield action.history.push("/");
-    }
+
     const newNoti = {
       id: uuid_v4(),
       type: "success",

@@ -21,3 +21,7 @@ export const updateUserPasswordRequest = async (data) => {
     },
   });
 };
+
+export const getUserTicketOrderHistoryRequest = async () => {
+  return axios.get("/tickets");
+};

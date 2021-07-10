@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Movie = require('../dbaccess/movie-model');
 const User = require('../dbaccess/user-model');
+const Schedule = require('../dbaccess/schedule-model');
 const moment = require('moment');
 
 const createMovie = async (req, res) => {
@@ -24,7 +25,7 @@ const createMovie = async (req, res) => {
             });
         }
 
-        if(amountOfTime < 0) {
+        if (amountOfTime < 0) {
             return res.status(301).json({
                 message: "Movie amount of time can't be smaller than 0"
             });
@@ -111,13 +112,19 @@ const getMovie = async (req, res) => {
     try {
         const id = req.params.movieId;
 
-        const findMovie = await Movie.findOne({
-            _id: id,
-        }).exec();
+        const findMovie = await Movie.findById(id).exec();
+
+        if (!findMovie) {
+            return res.status(404).json({
+                message: "Invalid id, movie not found"
+            });
+        }
 
         return res.status(200).json({
-            message: "Movie information found",
-            data: findMovie
+            message: "Movie found",
+            data: {
+                movie: findMovie,
+            }
         });
 
     } catch (error) {
@@ -185,7 +192,7 @@ const updateMovie = async (req, res) => {
         }
 
         if (amountOfTime) {
-            if(amountOfTime < 0) {
+            if (amountOfTime < 0) {
                 return res.status(301).json({
                     message: "Movie amount of time can't be smaller than 0"
                 });
@@ -278,7 +285,7 @@ const search = async (req, res) => {
             ]
         }).limit(5).exec();
 
-        if(!findMovies || findMovies.length === 0){
+        if (!findMovies || findMovies.length === 0) {
             return res.json([]);
         }
 
@@ -286,7 +293,7 @@ const search = async (req, res) => {
             message: "Movies found",
             data: findMovies
         });
-        
+
     } catch (error) {
         console.error(error.message);
         res.status(500).json({

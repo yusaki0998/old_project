@@ -10,5 +10,6 @@ router.get('/', ScheduleController.getSchedules);
 router.get('/:scheduleId', ScheduleController.getSchedule);
 router.put('/:scheduleId', checkAuth, ScheduleController.editSchedule);
 router.delete('/:scheduleId', checkAuth, ScheduleController.deleteSchedule);
+router.get('/movies/:movieId', checkAuth, ScheduleController.getMovieSchedule);
 
 module.exports = router;

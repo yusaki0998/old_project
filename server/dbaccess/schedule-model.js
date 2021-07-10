@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Seat = require('./seat-model');
 
 const scheduleSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -9,27 +10,9 @@ const scheduleSchema = mongoose.Schema({
 
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' },
 
-    roomSeats: [{
-        seatNo: { type: String, required: true },
+    seatMap: { type: mongoose.Schema.Types.ObjectId, ref: 'SeatMap' },
 
-        seatType: {
-            type: String,
-            enum: ['normal', 'vip'],
-            default: 'normal'
-        },
-
-        price: {
-            type: Number,
-            enum: [60000, 80000],
-            default: 60000
-        },
-
-        status: {
-            type: String,
-            enum: ['empty', 'pending', 'sold'],
-            default: 'empty'
-        },
-    }], select: false,
+    roomSeats: { type: [Seat], select: false },
 
     showDate: { type: Date },
 
@@ -39,7 +22,6 @@ const scheduleSchema = mongoose.Schema({
 
     endDay: { type: Date },
 
-    
 });
 
 module.exports = mongoose.model('Schedule', scheduleSchema);

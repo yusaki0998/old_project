@@ -9,10 +9,7 @@ const options = {
   onOpen: (props) => console.log(props.foo),
   onClose: (props) => console.log(props.foo),
   autoClose: 5000,
-  hideProgressBar: false,
   position: toast.POSITION.TOP_CENTER,
-  pauseOnHover: false,
-  progress: 0.2,
 };
 
 const Notification = () => {

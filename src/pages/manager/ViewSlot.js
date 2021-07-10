@@ -51,7 +51,7 @@ const ViewSlot = () => {
     setOpenSlotForm(false);
     setTimeout(() => {
       setSelectedSlot({});
-    }, 1000);
+    }, 200);
   };
 
   return (
