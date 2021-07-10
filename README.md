@@ -5,7 +5,7 @@ Web đặt phim (Reservation system)
 Nodejs 14.17.0 hoặc Nodejs 14.x
 
 ### How to run
-Đổi `.env.example` sang `env`
+Đổi `.env.example` sang `.env`
 
 Điền các thông tin sau vào file `env`
 ```
