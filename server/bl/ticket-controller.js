@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
-const Movie = require('../dbaccess/movie-model');
-const Room = require('../dbaccess/room-model');
-const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
 
 const createTicket = async (req, res) => {
@@ -19,21 +16,21 @@ const createTicket = async (req, res) => {
 
         const seatChosens = req.body.seats;
 
-        if(!seatChosens) {
+        if (!seatChosens) {
             return res.status(301).json({
                 message: "Seat chosen is not valid",
                 data: null
             });
         }
 
-        if(!Array.isArray(seatChosens)) {
+        if (!Array.isArray(seatChosens)) {
             return res.status(409).json({
                 message: "Seat chosen is not an array",
                 data: null
             });
         }
 
-        if(seatChosens.length > 8) {
+        if (seatChosens.length > 8) {
             return res.status(301).json({
                 message: "You cannot choose more than 8 seats"
             });
@@ -41,23 +38,37 @@ const createTicket = async (req, res) => {
 
         const findSchedule = await Schedule.findById(id).exec();
 
-        seatChosens.forEach(async (seatChosen) => {
-            const newTicket = await Ticket.create({
+        let buyTicket = [];
+        seatChosens.forEach(seat => {
+            buyTicket.push({
                 _id: new mongoose.Types.ObjectId(),
-                movie: findSchedule.movie,
-                room: findSchedule.room,
-                slot: findSchedule.slot,
-                seat: seatChosen,
+                schedule: findSchedule._id,
+                seat: seat,
                 user: checkUser._id
-            }, { session });
+            })
         });
+
+        const data = await Ticket.insertMany(buyTicket, { session });
+
+        const seatNumber = seatChosens.map(seat => seat.seatNo);
+
+        //update seats status in current schedule
+        const data0 = await Schedule.updateMany(
+            { _id: findSchedule._id },
+            { $set: { 'roomSeats.$[item].status': "pending" } },
+            {
+                multi: true,
+                arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
+                session
+            }
+        ).exec();
 
         await session.commitTransaction();
         session.endSession();
 
         return res.status(201).json({
-            message: "All ticket booked, check your history",
-            ///data: addTicket
+            message: "All ticket booked",
+            data: data
         });
 
     } catch (error) {
@@ -78,16 +89,29 @@ const getTickets = async (req, res) => {
         const checkUser = await User.findById(currentUser).exec();
 
         const findTickets = await Ticket
-        .find({
-            user: checkUser._id
-        })
-        .populate('movie', 'movieName')
-        .populate('room', 'roomName')
-        .populate('slot')
-        .populate('user', 'fullname phone')
-        .exec();
+            .find({
+                user: checkUser._id
+            })
+            .populate({
+                path: 'schedule',
+                model: 'Schedule',
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
+            })
+            .populate('user', 'fullname phone')
+            .exec();
 
-        if(!findTickets) {
+        if (!findTickets) {
             return res.status(404).json({
                 message: "All tickets not found",
             });
@@ -112,14 +136,27 @@ const getTicket = async (req, res) => {
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
-        .findById(id)
-        .populate('movie', 'movieName')
-        .populate('room', 'roomName')
-        .populate('slot')
-        .populate('user', 'fullname phone')
-        .exec();
+            .findById(id)
+            .populate({
+                path: 'schedule',
+                model: 'Schedule',
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
+            })
+            .populate('user', 'fullname phone')
+            .exec();
 
-        if(!findTicket) {
+        if (!findTicket) {
             return res.status(404).json({
                 message: "Ticket not found"
             });
@@ -144,10 +181,10 @@ const updateTicketStatus = async (req, res) => {
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
-        .findById(id)
-        .exec();
+            .findById(id)
+            .exec();
 
-        if(!findTicket) {
+        if (!findTicket) {
             return res.status(404).json({
                 message: "Ticket not found"
             });
@@ -155,7 +192,7 @@ const updateTicketStatus = async (req, res) => {
 
         const { status } = req.body;
 
-        const updateTicket = await Ticket.findByIdAndUpdate(id, { status: status}).exec();
+        const updateTicket = await Ticket.findByIdAndUpdate(id, { status: status }).exec();
 
         return res.status(200).json({
             message: "Ticket status updated",
@@ -175,10 +212,10 @@ const deleteTicket = async (req, res) => {
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
-        .findById(id)
-        .exec();
+            .findById(id)
+            .exec();
 
-        if(!findTicket) {
+        if (!findTicket) {
             return res.status(404).json({
                 message: "Ticket not found"
             });

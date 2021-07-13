@@ -1,30 +1,12 @@
 const mongoose = require('mongoose');
+const Seat = require('./seat-model');
 
 const ticketSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
 
-    movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie' },
+    schedule: { type: mongoose.Schema.Types.ObjectId, ref: 'Schedule' },
 
-    slot: { type: mongoose.Schema.Types.ObjectId, ref: 'Slot' },
-
-    room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room' },
-
-    seat: {
-        seatNo: { type: String, required: true },
-
-        seatType: {
-            type: String,
-            enum: ['normal', 'vip'],
-            default: 'normal'
-        },
-
-        price: {
-            type: Number,
-            enum: [60000, 80000],
-            default: 60000
-        },
-    },
-    //=> seat type, price
+    seat: { type: { Seat } },
 
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
