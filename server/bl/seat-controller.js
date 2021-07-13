@@ -121,9 +121,7 @@ const editSeatInMap = async (req, res) => {
         const { type, price } = req.body;
 
         await SeatMap.updateMany(
-            {
-                _id: mapId,
-            },
+            { _id: mapId, },
             { $set: { 'seats.$[item].price': price } },
             {
                 multi: true,
@@ -133,11 +131,11 @@ const editSeatInMap = async (req, res) => {
         ).exec();
 
         await Schedule.updateMany(
-            { seatMap: mapId},
+            { seatMap: mapId },
             { $set: { 'roomSeats.$[item].price': price } },
             {
                 multi: true,
-                arrayFilters: [{'item.seatType': type}],
+                arrayFilters: [{ 'item.seatType': type }],
                 session
             }
         ).exec();
