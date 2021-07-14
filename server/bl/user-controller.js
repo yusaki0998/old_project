@@ -101,7 +101,7 @@ const login = async (req, res) => {
         const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (!regexp.test(email)) {
-            return res.status(401).json({
+            return res.status(301).json({
                 message: "Email is invalid",
                 data: null
             });
@@ -114,7 +114,7 @@ const login = async (req, res) => {
             .exec();
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "User not found"
             });
         }
@@ -122,7 +122,7 @@ const login = async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
-            return res.status(401).json({
+            return res.status(301).json({
                 message: "Password does not match",
                 data: null
             });
@@ -164,7 +164,7 @@ const profile = async (req, res) => {
             .exec();
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "Failed to retrieve user info"
             });
         }

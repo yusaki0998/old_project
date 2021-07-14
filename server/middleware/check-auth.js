@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
         .exec();
 
         if(!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "User not exist"
             });
         }
