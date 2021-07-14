@@ -164,7 +164,7 @@ const profile = async (req, res) => {
             .exec();
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "Failed to retrieve user info"
             });
         }
