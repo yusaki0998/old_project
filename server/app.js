@@ -3,16 +3,9 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
 const cors = require("cors");
-//const db = require('./config/db');
-//const mongoose = require("mongoose");
-<<<<<<< HEAD
-const db = require("./config/db");
-=======
-const cors = require('cors');
-require('./config/db');
->>>>>>> ccc465053025a8da3b14efbd129f5a719873acdd
+
+require("./config/db");
 const morgan = require("morgan");
 const path = require("path");
 
