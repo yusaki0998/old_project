@@ -195,7 +195,7 @@ const updateProfile = async (req, res) => {
         }).exec()
 
         if (req.file) {
-            user.avatar = req.file.originalname;
+            user.avatar = req.file.path;
         }
 
         if (fullname) {
@@ -638,18 +638,44 @@ const search = async (req, res) => {
     try {
         const input = req.query.input;
 
-        const findUsers = await User.find({
-            $and: [
-                {
-                    $or: [
-                        { fullname: new RegExp(input, 'i') }
-                    ]
-                },
-                {
-                    _id: { $ne: req.userData._id.toString() }
-                }
-            ]
-        }).limit(10).exec();
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        let findUsers
+        if (checkUser.role === 'manager') {
+            findUsers = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { fullname: new RegExp(input, 'i') }
+                        ]
+                    },
+                    {
+                        _id: { $ne: req.userData._id.toString() }
+                    }
+                ]
+            }).limit(10).exec();
+        }
+        else if (checkUser.role === 'staff') {
+            findUsers = await User.find({
+                $and: [
+                    {
+                        $or: [
+                            { fullname: new RegExp(input, 'i') }
+                        ]
+                    },
+                    {
+                        _id: { $ne: req.userData._id.toString() }
+                    }
+                ]
+            }).limit(10).exec();
+        }
+        else {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
 
         if (!findUsers || findUsers.length === 0) {
             return res.json([]);
