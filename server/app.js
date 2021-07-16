@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 //const mongoose = require("mongoose");
 const cors = require('cors');
-const db = require('./config/db');
+require('./config/db');
 const morgan = require("morgan");
 
 //Declare routes
