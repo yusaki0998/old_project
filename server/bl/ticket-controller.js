@@ -2,6 +2,77 @@ const mongoose = require('mongoose');
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');
+const Movie = require('../dbaccess/movie-model');
+
+const getMovieSchedule = async (req, res) => {
+    try {
+        const id = req.params.movieId;
+
+        const findMovie = await Movie
+            .findById(id)
+            .exec();
+
+        if (!findMovie) {
+            return res.status(404).json({
+                message: "Invalid id, movie not found"
+            });
+        }
+
+        const findSchedule = await Schedule.find({
+            movie: id
+        })
+            .select('-roomSeats')
+            .populate('room', 'roomName')
+            .populate('slot')
+            .exec();
+
+        return res.status(200).json({
+            message: "Movie schedule found",
+            data: {
+                movie: findMovie,
+                schedule: findSchedule
+            }
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getScheduleSeats = async (req, res) => {
+    try {
+        const id = req.params.scheduleId;
+
+        const findSchedule = await Schedule
+            .findById(id)
+            .select('+roomSeats')
+            .populate('movie', 'movieName')
+            .populate('room', 'roomName')
+            .populate('slot')
+            .exec();
+
+        if (!findSchedule) {
+            return res.status(404).json({
+                message: "Schedule not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Schedule found",
+            data: findSchedule
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
 
 const createTicket = async (req, res) => {
     const session = await mongoose.startSession();
@@ -53,7 +124,7 @@ const createTicket = async (req, res) => {
         const seatNumber = seatChosens.map(seat => seat.seatNo);
 
         //update seats status in current schedule
-        const data0 = await Schedule.updateMany(
+        await Schedule.updateMany(
             { _id: findSchedule._id },
             { $set: { 'roomSeats.$[item].status': "pending" } },
             {
@@ -177,7 +248,10 @@ const getTicket = async (req, res) => {
 }
 
 const updateTicketStatus = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
+        session.startTransaction();
+
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
@@ -192,14 +266,29 @@ const updateTicketStatus = async (req, res) => {
 
         const { status } = req.body;
 
-        const updateTicket = await Ticket.findByIdAndUpdate(id, { status: status }).exec();
+        const updateTicket = await Ticket.findByIdAndUpdate(id, { status: status }, { session }).exec();
+
+        await Schedule.updateMany(
+            { _id: findTicket.schedule },
+            { $set: { 'roomSeats.$[item].status': "sold" } },
+            {
+                multi: true,
+                arrayFilters: [{ 'item.seatNo': { $in: findTicket.seat.seatNo } }],
+                session
+            }
+        ).exec();
+
+        await session.commitTransaction();
+        session.endSession();
 
         return res.status(200).json({
             message: "Ticket status updated",
             data: updateTicket
         });
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        await session.abortTransaction();
+        session.endSession();
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -228,7 +317,7 @@ const deleteTicket = async (req, res) => {
             data: deleteTicket
         });
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -237,9 +326,11 @@ const deleteTicket = async (req, res) => {
 }
 
 module.exports = {
+    getMovieSchedule,
+    getScheduleSeats,
     createTicket,
     getTickets,
     getTicket,
     updateTicketStatus,
-    deleteTicket
+    deleteTicket,
 }
