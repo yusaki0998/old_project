@@ -235,82 +235,10 @@ const deleteSchedule = async (req, res) => {
     }
 }
 
-const getMovieSchedule = async (req, res) => {
-    try {
-        const id = req.params.movieId;
-
-        const findMovie = await Movie
-            .findById(id)
-            .exec();
-
-        if (!findMovie) {
-            return res.status(404).json({
-                message: "Invalid id, movie not found"
-            });
-        }
-
-        const findSchedule = await Schedule.find({
-            movie: id
-        })
-            .select('-roomSeats')
-            .populate('room', 'roomName')
-            .populate('slot')
-            .exec();
-
-        return res.status(200).json({
-            message: "Movie schedule found",
-            data: {
-                movie: findMovie,
-                schedule: findSchedule
-            }
-        });
-
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).json({
-            message: "Internal server error",
-            error: error
-        });
-    }
-}
-
-const getScheduleSeats = async (req, res) => {
-    try {
-        const id = req.params.scheduleId;
-
-        const findSchedule = await Schedule
-            .findById(id)
-            .select('+roomSeats')
-            .populate('movie', 'movieName')
-            .populate('room', 'roomName')
-            .populate('slot')
-            .exec();
-
-        if (!findSchedule) {
-            return res.status(404).json({
-                message: "Schedule not found"
-            });
-        }
-
-        return res.status(200).json({
-            message: "Schedule found",
-            data: findSchedule
-        });
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).json({
-            message: "Internal server error",
-            error: error
-        });
-    }
-}
-
 module.exports = {
     createSchedule,
     getSchedules,
     getSchedule,
     editSchedule,
-    deleteSchedule,
-    getMovieSchedule,
-    getScheduleSeats
+    deleteSchedule
 }

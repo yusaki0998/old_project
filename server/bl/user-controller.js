@@ -137,7 +137,6 @@ const login = async (req, res) => {
 
         const userObj = user.toObject();
         delete userObj.password;
-        delete userObj.__v;
 
         return res.status(200).json({
             message: "Login success!",
@@ -158,20 +157,20 @@ const login = async (req, res) => {
 
 const profile = async (req, res) => {
     try {
-        const id = req.userData._id;
-        const user = await User
-            .findById(id)
-            .exec();
+        // const id = req.userData._id;
+        // const user = await User
+        //     .findById(id)
+        //     .exec();
 
-        if (!user) {
-            return res.status(404).json({
-                message: "Failed to retrieve user info"
-            });
-        }
+        // if (!user) {
+        //     return res.status(404).json({
+        //         message: "Failed to retrieve user info"
+        //     });
+        // }
 
         return res.status(200).json({
             message: "Retrieved user info",
-            data: user
+            data: req.userData
         });
     } catch (error) {
         console.error(error.message);
