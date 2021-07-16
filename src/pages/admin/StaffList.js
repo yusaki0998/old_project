@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { getUserBySearchInputRequest } from "../../store/api/admin";
 import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
+import { Helmet } from "react-helmet";
 
 const StaffList = () => {
   const dispatch = useDispatch();
@@ -61,6 +62,9 @@ const StaffList = () => {
 
   return (
     <main className="main">
+      <Helmet>
+        <title> Danh sách nhân viên </title>
+      </Helmet>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">

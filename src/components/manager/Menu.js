@@ -6,7 +6,7 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { checkCondition } from "../../utils/helper";
 import userImg from "../../template/styles/main/img/user.svg";
 import { logout } from "../../store/actions/authActions";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
 import { hideSidebar } from "../../store/actions/uiActions";

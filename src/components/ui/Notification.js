@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 const options = {
   onOpen: (props) => console.log(props.foo),
   onClose: (props) => console.log(props.foo),
-  autoClose: 5000,
+  autoClose: 2000,
   position: toast.POSITION.TOP_CENTER,
 };
 

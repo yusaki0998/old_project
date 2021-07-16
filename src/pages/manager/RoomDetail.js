@@ -7,6 +7,7 @@ import { checkCondition } from "../../utils/helper";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import SeatMap from "../../components/manager/SeatMap";
 import SeatForm from "../../components/manager/SeatForm";
+import { Helmet } from "react-helmet";
 
 const RoomDetail = () => {
   const { search } = useLocation();
@@ -42,6 +43,9 @@ const RoomDetail = () => {
 
   return (
     <main className="pb-4">
+      <Helmet>
+        <title> Chỉnh sửa thông tin ghế </title>
+      </Helmet>
       <div className="admin__create-room__wrapper text-white mt-2r">
         <button
           className={`btn__outline-orange mb-4`}

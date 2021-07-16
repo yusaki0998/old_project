@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import Paginator from "../../components/shared/Paginator";
 import UsersTable from "../../components/admin/UsersTable";

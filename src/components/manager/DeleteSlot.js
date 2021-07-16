@@ -36,7 +36,7 @@ const DeleteSlot = ({ open, close, slotData }) => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
     }
   };
 

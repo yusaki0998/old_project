@@ -4,8 +4,9 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL:
-    //process.env.NODE_ENV === "development" ? 
-    // "http://localhost:8080/api/v1/" :
+    // process.env.NODE_ENV === "development"
+    //   ? "http://localhost:8080/api/v1/"
+    //   :
     "https://pure-beyond-32158.herokuapp.com/api/v1/",
 });
 
@@ -24,10 +25,14 @@ axiosInstance.interceptors.response.use(
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
+    console.log(error.response);
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("customerAuthToken");
       localStorage.removeItem("customerAuthData");
-      window.location.href = "/signin";
+      if (!window.location.pathname.includes("/signin")) {
+        window.location.href = "/signin";
+      }
+      axiosInstance.defaults.headers.common["token"] = "";
     }
     // Do something with response error
     return Promise.reject(error);

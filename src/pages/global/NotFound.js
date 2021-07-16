@@ -1,11 +1,15 @@
 /** @format */
 
 import React from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
     <div className="page-404 section--bg" data-bg="img/section/section.jpg">
+      <Helmet>
+        <title> 404 </title>
+      </Helmet>
       <div className="container">
         <div className="row">
           <div className="col-12">

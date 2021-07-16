@@ -7,6 +7,7 @@ import logo from "../../template/styles/main/img/logo.svg";
 import { Link, useHistory } from "react-router-dom";
 import { signup } from "../../store/actions/authActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
+import { Helmet } from "react-helmet";
 
 const SignUp = () => {
   const {
@@ -53,6 +54,9 @@ const SignUp = () => {
 
   return (
     <div className="sign">
+      <Helmet>
+        <title> Đăng ký </title>
+      </Helmet>
       <div className="container">
         <div className="row">
           <div className="col-12">

@@ -36,7 +36,7 @@ const DeleteRoom = ({ open, close, roomData }) => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
     }
   };
 

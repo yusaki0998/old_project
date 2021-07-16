@@ -25,7 +25,7 @@ const RoomList = ({ list, isLoading }) => {
   return (
     <div className="admin__manager-list__wrapper">
       <div className="main__table-wrap">
-        <table className="main__table room__list">
+        <table className="main__table">
           <thead>
             <tr>
               <th>ID</th>

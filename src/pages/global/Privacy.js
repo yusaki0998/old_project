@@ -1,8 +1,14 @@
+/** @format */
+
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const Privacy = () => {
   return (
     <>
+      <Helmet>
+        <title> Privacy policy </title>
+      </Helmet>
       <section
         className="section section--first section--bg"
         data-bg="img/section/section.jpg"

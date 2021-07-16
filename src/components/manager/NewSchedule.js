@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../ui/Modal";
 import Backdrop from "../ui/Backdrop";
-import { updateScheduleInfoRequest } from "../../store/api/manager";
+import { createScheduleRequest } from "../../store/api/manager";
 import { useDispatch } from "react-redux";
 import {
   addNotification,
@@ -13,7 +13,7 @@ import { v4 as uuid_v4 } from "uuid";
 import OutsideHandler from "../shared/ClickWrapper";
 import { dayInWeeks } from "../../utils/helper";
 
-const ScheduleEditForm = ({
+const NewScheduleForm = ({
   open,
   close,
   scheduleData,
@@ -33,19 +33,16 @@ const ScheduleEditForm = ({
   const onValid = async () => {
     setIsLoading(true);
     try {
-      const { data: dataRes } = await updateScheduleInfoRequest(
-        scheduleData?._id,
-        {
-          movieId: filmId,
-        }
-      );
+      const { data: dataRes } = await createScheduleRequest({
+        movieId: filmId,
+      });
       console.log(dataRes);
       setIsLoading(false);
       close();
       const newNoti = {
         id: uuid_v4(),
         type: "success",
-        message: "Cập nhật lịch chiếu thành công!",
+        message: "Taoj mới lịch chiếu thành công!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -59,7 +56,7 @@ const ScheduleEditForm = ({
         type: "error",
         message:
           error?.response?.data?.message ||
-          "Cập nhật lịch chiếu thất bại. Vui lòng thử lại!",
+          "Taoj mới lịch chiếu thất bại. Vui lòng thử lại!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -73,7 +70,7 @@ const ScheduleEditForm = ({
       <Modal
         open={open}
         close={close}
-        title={"Thay đổi phim cho lịch chiếu"}
+        title={"Tạo mới lịch chiếu"}
         body={null}
         onConfirm={onValid}
         isLoading={isLoading}
@@ -148,4 +145,4 @@ const ScheduleEditForm = ({
   );
 };
 
-export default ScheduleEditForm;
+export default NewScheduleForm;

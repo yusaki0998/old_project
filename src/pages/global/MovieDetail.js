@@ -2,15 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import MoviePhotos from "../../components/main/MoviePhotos";
 import MovieSuggestion from "../../components/main/MovieSuggestion";
 import TopMovieDetail from "../../components/main/TopMovieDetail";
-import MovieDetailNav from "../../components/main/MovieDetailNav";
 import { scrollToTop } from "../../utils/scrollToTopPos";
 import { getFilmDetailRequest } from "../../store/api/global";
 import { useHistory, useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { getListSlotRequest } from "../../store/api/manager";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  globalGetListComingFilm,
+  globalGetListCurrentFilm,
+} from "../../store/actions/globalActions";
 
 const MovieDetail = () => {
   const [movieDetail, setMovieDetail] = useState(null);
@@ -18,6 +21,8 @@ const MovieDetail = () => {
   const [listSlot, setListSlot] = useState([]);
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const { comingFilm, currentFilm } = useSelector((state) => state.global);
 
   useEffect(() => {
     scrollToTop();
@@ -52,6 +57,15 @@ const MovieDetail = () => {
     // eslint-disable-next-line
   }, [id]);
 
+  useEffect(() => {
+    if (!isLoading && movieDetail?.status === 0) {
+      dispatch(globalGetListComingFilm());
+    }
+    if (!isLoading && movieDetail?.status === 1) {
+      dispatch(globalGetListCurrentFilm());
+    }
+  }, [dispatch, movieDetail?.status, isLoading]);
+
   return (
     <>
       <Helmet>
@@ -71,20 +85,21 @@ const MovieDetail = () => {
             </div>
           </section>
           <section className="content">
-            <div className="content__head">
-              <div className="container">
-                <MovieDetailNav />
-              </div>
-            </div>
             <div className="container">
               <div className="row">
-                <div className="col-12 col-lg-8 col-xl-8">
-                  <div className="tab-content">
-                    <MoviePhotos />
-                  </div>
-                </div>
-                <div className="col-12 col-lg-4 col-xl-4">
-                  <MovieSuggestion />
+                <div className="col-12">
+                  <MovieSuggestion
+                    isLoading={
+                      movieDetail?.status === 0
+                        ? comingFilm.isLoading
+                        : currentFilm.isLoading
+                    }
+                    list={
+                      movieDetail?.status === 0
+                        ? comingFilm.list
+                        : currentFilm.list
+                    }
+                  />
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
   removeNotification,
 } from "../../store/actions/uiActions";
 import { v4 as uuid_v4 } from "uuid";
+import { Helmet } from "react-helmet";
 
 const EditPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ const EditPassword = () => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
     } catch (error) {
       const newNoti = {
         id: uuid_v4(),
@@ -47,7 +48,7 @@ const EditPassword = () => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
     } finally {
       setLoading(false);
     }
@@ -55,6 +56,9 @@ const EditPassword = () => {
 
   return (
     <div className="edit__customer-profile__wrapper my-5">
+      <Helmet>
+        <title> Đổi mật khẩu </title>
+      </Helmet>
       <div className="d-flex">
         <div className="edit__form">
           <form

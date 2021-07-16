@@ -999,7 +999,7 @@ ul {
 .section__title {
   color: #fff;
   font-weight: 400;
-  font-size: 30px;
+  font-size: 32px;
   line-height: 130%;
   margin-bottom: 20px;
 }
@@ -1159,7 +1159,7 @@ ul {
     align-items: center;
   }
   .section__title {
-    font-size: 34px;
+    font-size: 32px;
     margin-bottom: 0;
   }
   .section__title--mb {
@@ -1186,7 +1186,7 @@ ul {
 }
 @media (min-width: 1200px) {
   .section__title {
-    font-size: 36px;
+    font-size: 32px;
   }
 }
 /*==============================
@@ -1343,6 +1343,8 @@ ul {
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
+  color: #f6f6f6;
+  font-size: 14px;
 }
 .card__category a {
   font-size: 14px;

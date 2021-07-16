@@ -5,6 +5,7 @@ import Paginator from "../../components/shared/Paginator";
 import { getUserTicketOrderHistoryRequest } from "../../store/api/user";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
+import { Helmet } from "react-helmet";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,9 @@ const OrderHistory = () => {
 
   return (
     <div className="customer__order-history__wrapper my-5">
+      <Helmet>
+        <title> Lịch sử đặt vé </title>
+      </Helmet>
       {loading && <LoadingSpinner />}
       {!loading && (
         <div className="col-12">

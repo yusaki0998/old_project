@@ -104,3 +104,10 @@ export const updateScheduleInfoRequest = async (scheduleId, data) =>
       "Content-type": "application/json",
     },
   });
+
+export const createScheduleRequest = async (data) =>
+  axios.post("/schedules", data, {
+    headers: {
+      "Content-type": "application/json",
+    },
+  });

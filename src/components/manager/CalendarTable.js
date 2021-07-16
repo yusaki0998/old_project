@@ -7,6 +7,7 @@ import OutsideHandler from "../shared/ClickWrapper";
 import ScheduleSkeleton from "../../skeleton/ScheduleSkeleton";
 import ScheduleEditForm from "./ScheduleEditForm";
 import { useSelector } from "react-redux";
+import NewScheduleForm from "./NewSchedule";
 
 const convertDateString = (daysArr) => {
   const convertedDates = [];
@@ -38,6 +39,7 @@ const CalendarTable = ({
   const [days, setDays] = useState([]);
   const [weekNum, setWeekNum] = useState();
   const [openEdit, setOpenEdit] = useState(false);
+  const [openNewSchedule, setOpenNewSchedule] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState({});
   const [dayInWeekNum, setDayInWeekNum] = useState(0);
 
@@ -49,14 +51,18 @@ const CalendarTable = ({
     const scheduleItem = listSchedules.find(
       (item) => item?.slot?._id === slotId && item?.showDate?.includes(dateStr)
     );
-    return scheduleItem?.movie?.movieName || "-";
+    return scheduleItem?.movie?.movieName || "+";
   };
 
   const onEditSchedule = (slotId, dateStr, dayInWeek) => {
     const scheduleItem = listSchedules.find(
       (item) => item?.slot?._id === slotId && item?.showDate?.includes(dateStr)
     );
+    if (!convertedDates.length) {
+      return "";
+    }
     if (!scheduleItem) {
+      setOpenNewSchedule(true);
       return "";
     }
     setSelectedSchedule(scheduleItem);
@@ -214,6 +220,13 @@ const CalendarTable = ({
         dayInWeekNum={dayInWeekNum}
         allFilm={allFilm}
         fetchListScheduleAfterUpdate={() => fetchListScheduleHandler(weekNum)}
+      />
+      <NewScheduleForm
+        open={openNewSchedule}
+        close={() => {
+          setOpenNewSchedule(false);
+        }}
+        allFilm={allFilm}
       />
     </div>
   );

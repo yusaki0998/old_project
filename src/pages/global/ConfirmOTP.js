@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/global.css";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import logo from "../../template/styles/main/img/logo.svg";
+import { Helmet } from "react-helmet";
 
 const ConfirmOTP = () => {
   const { search } = useLocation();
@@ -21,6 +22,9 @@ const ConfirmOTP = () => {
 
   return (
     <div className="confirm__otp">
+      <Helmet>
+        <title> Xác nhận mã OTP </title>
+      </Helmet>
       <div className="container">
         <div className="row">
           <div className="col-12 col-lg-4 col-md-6 col-sm-8 mx-auto">
