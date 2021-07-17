@@ -252,6 +252,16 @@ const updateTicketStatus = async (req, res) => {
     try {
         session.startTransaction();
 
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'staff') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
@@ -266,16 +276,19 @@ const updateTicketStatus = async (req, res) => {
 
         const { status } = req.body;
 
-        const updateTicket = await Ticket.findByIdAndUpdate(id, { status: status }, { session }).exec();
+        const updateTicket = await Ticket.updateOne(
+            { _id: id },
+            { status: status }, 
+            { session }
+        ).exec();
 
-        await Schedule.updateMany(
-            { _id: findTicket.schedule },
-            { $set: { 'roomSeats.$[item].status': "sold" } },
+        await Schedule.updateOne(
             {
-                multi: true,
-                arrayFilters: [{ 'item.seatNo': { $in: findTicket.seat.seatNo } }],
-                session
-            }
+                _id: findTicket.schedule,
+                'roomSeats.seatNo': findTicket.seat.seatNo
+            },
+            { $set: { 'roomSeats.$.status': "sold" } },
+            { session }
         ).exec();
 
         await session.commitTransaction();
@@ -297,7 +310,10 @@ const updateTicketStatus = async (req, res) => {
 }
 
 const deleteTicket = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
+        session.startTransaction();
+
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
@@ -312,12 +328,26 @@ const deleteTicket = async (req, res) => {
 
         const deleteTicket = await Ticket.findByIdAndDelete(id).exec();
 
+        await Schedule.updateOne(
+            {
+                _id: findTicket.schedule,
+                'roomSeats.seatNo': findTicket.seat.seatNo
+            },
+            { $set: { 'roomSeats.$.status': "empty" } },
+            { session }
+        ).exec();
+
+        await session.commitTransaction();
+        session.endSession();
+        
         return res.status(200).json({
             message: "Ticket deleted",
             data: deleteTicket
         });
     } catch (error) {
         console.error(error);
+        await session.abortTransaction();
+        session.endSession();
         res.status(500).json({
             message: "Internal server error",
             error: error

@@ -642,33 +642,31 @@ const search = async (req, res) => {
         const checkUser = await User.findById(currentUser).exec();
 
         let findUsers
-        if (checkUser.role === 'manager') {
-            findUsers = await User.find({
-                $and: [
-                    {
-                        $or: [
-                            { fullname: new RegExp(input, 'i') }
-                        ]
-                    },
-                    {
-                        _id: { $ne: req.userData._id.toString() }
-                    }
-                ]
-            }).limit(10).exec();
+        if (checkUser.role === 'admin') {
+            findUsers = await User.find(
+                {
+                    $and: [
+                        {
+                            $or: [
+                                { role: 'staff' },
+                                { role: 'manager' }
+                            ]
+                        },
+                        { $text: { $search: input } }
+                    ]
+                }
+            ).exec();
         }
         else if (checkUser.role === 'staff') {
             findUsers = await User.find({
                 $and: [
-                    {
-                        $or: [
-                            { fullname: new RegExp(input, 'i') }
-                        ]
-                    },
+                    { role: 'customer' },
+                    { $text: { $search: input } },
                     {
                         _id: { $ne: req.userData._id.toString() }
                     }
                 ]
-            }).limit(10).exec();
+            }).exec();
         }
         else {
             return res.status(403).json({
