@@ -44,6 +44,8 @@ router.get('/get-managers', checkAuth, UserController.getManagers);
 router.get('/get-managers/:managerId', checkAuth, UserController.getManager);
 router.delete('/delete-account/:accountId', checkAuth, UserController.deleteAccount);
 router.put('/edit-account/:accountId', checkAuth, UserController.editAccount);
+router.get('/get-customers', checkAuth, UserController.getCustomers);
+router.get('/get-customers/:customerId', checkAuth, UserController.getCustomer);
 router.post('/search', checkAuth, UserController.search);
 
 module.exports = router;

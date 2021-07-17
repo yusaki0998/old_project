@@ -633,6 +633,68 @@ const editAccount = async (req, res) => {
     }
 }
 
+const getCustomers = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'staff') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const findCustomers = await User.find({
+            role: 'customer'
+        }).exec();
+
+        return res.status(200).json({
+            message: "All customers found",
+            data: findCustomers
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getCustomer = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'staff') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const id = req.params.customerId;
+
+        const findCustomer = await User.findOne({
+            _id: id,
+            role: 'customer'
+        }).exec();
+
+        return res.status(200).json({
+            message: "Customer information found",
+            data: findCustomer
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 const search = async (req, res) => {
     try {
         const input = req.query.input;
@@ -684,7 +746,7 @@ const search = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -705,5 +767,7 @@ module.exports = {
     getManager,
     deleteAccount,
     editAccount,
+    getCustomers,
+    getCustomer,
     search
 }
