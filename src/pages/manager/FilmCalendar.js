@@ -10,6 +10,7 @@ import {
 } from "../../store/actions/managerActions";
 import CalendarTable from "../../components/manager/CalendarTable";
 import { getListScheduleRequest } from "../../store/api/manager";
+import { Helmet } from "react-helmet";
 
 const FilmCalendar = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,9 @@ const FilmCalendar = () => {
 
   return (
     <div className="tab-pane">
+      <Helmet>
+        <title> Lịch chiếu </title>
+      </Helmet>
       <div className="d-flex justify-content-between align-items-center my-4"></div>
       <CalendarTable
         fetchListScheduleHandler={fetchListScheduleHandler}

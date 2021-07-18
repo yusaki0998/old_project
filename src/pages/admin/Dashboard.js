@@ -1,8 +1,14 @@
+/** @format */
+
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const Dashboard = () => {
   return (
     <main className="main">
+      <Helmet>
+        <title> Dashboard </title>
+      </Helmet>
       <div className="container-fluid">
         <div className="row row--grid">
           <div className="col-12">

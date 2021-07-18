@@ -9,6 +9,7 @@ import { editUserProfile } from "../../store/actions/userActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import { checkCondition, getBirhDate } from "../../utils/helper";
+import { Helmet } from "react-helmet";
 
 const EditProfile = () => {
   const { loginData } = useSelector((state) => state.auth);
@@ -45,6 +46,9 @@ const EditProfile = () => {
 
   return (
     <div className="edit__customer-profile__wrapper my-5">
+      <Helmet>
+        <title> Chỉnh sửa thông tin cá nhân </title>
+      </Helmet>
       <div className="d-flex">
         <div className="image__placeholder mr-4">
           <img

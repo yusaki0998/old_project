@@ -59,7 +59,7 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
       dispatch(
         createSlotSuccess({
           data: dataRes.data,
@@ -81,7 +81,7 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
     }
   };
 

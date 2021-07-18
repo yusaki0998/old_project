@@ -23,7 +23,7 @@ function* editUserProfileWorker(action) {
       message: "Cập nhật thông tin thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -34,7 +34,7 @@ function* editUserProfileWorker(action) {
         "Cập nhật thông tin thất bại. Vui lòng kiểm tra & thử lại",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(editUserProfileFailed(error));
   }

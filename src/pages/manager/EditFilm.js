@@ -13,6 +13,7 @@ import { checkCondition } from "../../utils/helper";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import OutsideHandler from "../../components/shared/ClickWrapper";
 import { AGE_THRESHOLD, showAgeThreshold } from "../../utils/age";
+import { Helmet } from "react-helmet";
 
 const EditFilm = () => {
   const [status, setStatus] = useState("");
@@ -75,6 +76,9 @@ const EditFilm = () => {
 
   return (
     <main className="pb-4">
+      <Helmet>
+        <title> Chỉnh sửa phim </title>
+      </Helmet>
       <div className="admin__create-account__wrapper text-white">
         <h3 className="border-bottom d-inline-block pb-1 border-white mb-4">
           Chỉnh sửa thông tin phim

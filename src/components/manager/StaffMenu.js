@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { checkCondition } from "../../utils/helper";
-import userImg from "../../template/styles/main/img/user.svg";
+import userImg from "../../assets/logo.png";
 import { logout } from "../../store/actions/authActions";
 import logo from "../../template/styles/main/img/logo.svg";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
@@ -82,7 +82,7 @@ const StaffMenu = () => {
                 to="/staff/booking-ticket"
               >
                 <i className="icon ion-ios-contacts"></i>
-                <span>Đặt vé</span>
+                <span>Đặt phim</span>
               </Link>
             </li>
           </ul>

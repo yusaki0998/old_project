@@ -28,7 +28,7 @@ function* signupWorker(action) {
       message: "Đăng ký thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -39,7 +39,7 @@ function* signupWorker(action) {
         "Đăng ký thất bại! Vui lòng kiểm tra lại",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(signupFailed(error));
   }
@@ -63,7 +63,7 @@ function* loginWorker(action) {
       message: "Đăng nhập thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -74,7 +74,7 @@ function* loginWorker(action) {
         "Đăng nhập thất bại! Vui lòng kiểm tra lại",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(loginFailed(error));
   }

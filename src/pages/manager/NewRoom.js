@@ -12,6 +12,7 @@ import {
 import { getListSeatMapRequest } from "../../store/api/manager";
 import seatMap from "../../assets/seat-map.jpg";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { Helmet } from "react-helmet";
 
 const NewRoom = () => {
   const { createRoom: createRoomData } = useSelector((state) => state.manager);
@@ -34,12 +35,13 @@ const NewRoom = () => {
       setSelectedSeatMap("");
       const timer = setTimeout(() => {
         dispatch(resetCreateRoomState());
+        history.push("/manager/room");
       }, 500);
       return () => {
         clearTimeout(timer);
       };
     }
-  }, [createRoomData?.success, reset, dispatch]);
+  }, [createRoomData?.success, reset, dispatch, history]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -57,9 +59,12 @@ const NewRoom = () => {
 
   return (
     <main className="pb-4">
+      <Helmet>
+        <title> Tạo mới phòng chiếu </title>
+      </Helmet>
       <div className="admin__create-room__wrapper text-white mt-2r">
         <button
-          className={`btn__outline-orange mb-4`}
+          className={`btn__outline-orange mb-4 ml-0`}
           onClick={() => history.push("/manager/room")}
         >
           <i className="fas fa-chevron-left mr-2"></i> Quay lại danh sách

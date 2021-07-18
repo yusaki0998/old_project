@@ -62,7 +62,7 @@ function* createAccountWorker(action) {
       message: "Tạo mới tài khoản thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -71,7 +71,7 @@ function* createAccountWorker(action) {
       message: error?.response?.data?.message || "Tạo mới tài khoản thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(createAccountFailed(error));
   }
@@ -88,7 +88,7 @@ function* updateAccountWorker(action) {
       message: "Cập nhật tài khoản thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -97,7 +97,7 @@ function* updateAccountWorker(action) {
       message: error?.response?.data?.message || "Cập nhật tài khoản thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(updateAccountInfoFailed(error));
   }

@@ -473,3 +473,15 @@ code {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.font-weight-bold {
+  font-weight: bold;
+}
+.movie__name {
+  text-transform: uppercase;
+}
+.card__title-movie a {
+  color: #f9ab00 !important;
+}
+.f-14 {
+  font-size: 14px;
+}

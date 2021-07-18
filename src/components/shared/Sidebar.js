@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import "../styles/sidebar.css";
 import logo from "../../template/styles/main/img/logo.svg";
-import userImg from "../../template/styles/main/img/user.svg";
+import userImg from "../../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";

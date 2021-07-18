@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import "../../template/styles/main/index.css";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 import { checkCondition } from "../../utils/helper";

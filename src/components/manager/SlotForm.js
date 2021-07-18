@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import Backdrop from "../ui/Backdrop";
 import { createSlotRequest } from "../../store/api/manager";
@@ -23,7 +23,14 @@ const SlotForm = ({ open, close, slotData }) => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm();
+
+  useEffect(() => {
+    if (slotData._id) {
+      setValue("slotName", slotData.slotName, { shouldDirty: true });
+    }
+  }, [setValue, slotData?._id, slotData.slotName]);
 
   const onValid = async (data) => {
     setIsLoading(true);
@@ -51,7 +58,7 @@ const SlotForm = ({ open, close, slotData }) => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
       dispatch(
         createSlotSuccess({
           data: dataRes.data,
@@ -73,7 +80,7 @@ const SlotForm = ({ open, close, slotData }) => {
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
-      }, 5000);
+      }, 2000);
     }
   };
 
@@ -82,6 +89,8 @@ const SlotForm = ({ open, close, slotData }) => {
       <Modal
         open={open}
         close={() => {
+          reset();
+          setValue("slotName", "", { shouldDirty: true });
           close();
         }}
         title={
@@ -139,7 +148,7 @@ const SlotForm = ({ open, close, slotData }) => {
                   )}
                   {...register("startTime", {
                     required: {
-                      value: true,
+                      value: slotData._id ? false : true,
                       message: "Đây là mục bắt buộc",
                     },
                   })}
@@ -168,7 +177,7 @@ const SlotForm = ({ open, close, slotData }) => {
                   )}
                   {...register("endTime", {
                     required: {
-                      value: true,
+                      value: slotData._id ? false : true,
                       message: "Đây là mục bắt buộc",
                     },
                   })}

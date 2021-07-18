@@ -7,6 +7,7 @@ import { searchFilmRequest } from "../../store/api/manager";
 import FilmList from "../../components/manager/FilmList";
 import Paginator from "../../components/shared/Paginator";
 import { MAX_ITEMS_PER_PAGE } from "./FilmRoom";
+import { Helmet } from "react-helmet";
 
 const CurrentFilm = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,9 @@ const CurrentFilm = () => {
 
   return (
     <div className="tab-pane">
+      <Helmet>
+        <title> Phim đang chiếu </title>
+      </Helmet>
       <div className="d-flex justify-content-between align-items-center my-4">
         <form className="table__search">
           <input

@@ -1,6 +1,7 @@
 /** @format */
 
 import React from "react";
+import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import userImg from "../../template/styles/main/img/user.svg";
@@ -12,6 +13,9 @@ const Profile = () => {
   const history = useHistory();
   return (
     <div className="customer__profile-wrapper my-5">
+      <Helmet>
+        <title> Thông tin cá nhân </title>
+      </Helmet>
       <div className="d-flex align-items-center">
         <div className="mr-4">
           <div className="">

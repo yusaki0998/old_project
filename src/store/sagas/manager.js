@@ -82,7 +82,7 @@ function* createNewFilmWorker(action) {
       message: "Tạo mới phim thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -91,7 +91,7 @@ function* createNewFilmWorker(action) {
       message: error?.response?.data?.message || "Tạo mới phim thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(createNewFilmFailed(error));
   }
@@ -118,7 +118,7 @@ function* updateFilmInfoWorker(action) {
       message: "Cập nhật phim thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -127,7 +127,7 @@ function* updateFilmInfoWorker(action) {
       message: error?.response?.data?.message || "Cập nhật phim thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(updateFilmInfoFailed(error));
   }
@@ -154,7 +154,7 @@ function* createNewRoomWorker(action) {
       message: "Tạo mới phòng thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -163,7 +163,7 @@ function* createNewRoomWorker(action) {
       message: error?.response?.data?.message || "Tạo mới phòng thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(createRoomFailed(error));
   }
@@ -180,7 +180,7 @@ function* updateRoomInfoWorker(action) {
       message: "Cập nhật phòng chiếu thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -190,7 +190,7 @@ function* updateRoomInfoWorker(action) {
         error?.response?.data?.message || "Cập nhật phòng chiếu thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(updateRoomInfoFailed(error));
   }
@@ -217,7 +217,7 @@ function* createNewSlotWorker(action) {
       message: "Tạo mới slot thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -226,7 +226,7 @@ function* createNewSlotWorker(action) {
       message: error?.response?.data?.message || "Tạo mới slot thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(createSlotFailed(error));
   }
@@ -243,7 +243,7 @@ function* updateSlotInfoWorker(action) {
       message: "Cập nhật phòng chiếu thành công!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
   } catch (error) {
     const newNoti = {
@@ -253,7 +253,7 @@ function* updateSlotInfoWorker(action) {
         error?.response?.data?.message || "Cập nhật phòng chiếu thất bại!",
     };
     yield put(addNotification(newNoti));
-    yield delay(5000);
+    yield delay(2000);
     yield put(removeNotification(newNoti.id));
     yield put(updateSlotInfoFailed(error));
   }

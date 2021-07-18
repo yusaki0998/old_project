@@ -13,6 +13,7 @@ import {
 import { checkCondition } from "../../utils/helper";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import seatMap from "../../assets/seat-map.jpg";
+import { Helmet } from "react-helmet";
 
 const EditRoom = () => {
   const { updateRoom: updateRoomData } = useSelector((state) => state.manager);
@@ -69,6 +70,9 @@ const EditRoom = () => {
 
   return (
     <main className="pb-4">
+      <Helmet>
+        <title> Chỉnh sửa phòng chiếu </title>
+      </Helmet>
       <div className="admin__create-room__wrapper text-white mt-2r">
         <button
           className={`btn__outline-orange mb-4`}

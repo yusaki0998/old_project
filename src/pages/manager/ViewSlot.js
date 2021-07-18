@@ -8,6 +8,7 @@ import SlotList from "../../components/manager/SlotList";
 import SlotForm from "../../components/manager/SlotForm";
 import Paginator from "../../components/shared/Paginator";
 import { MAX_ITEMS_PER_PAGE } from "./FilmRoom";
+import { Helmet } from "react-helmet";
 
 const ViewSlot = () => {
   const dispatch = useDispatch();
@@ -49,55 +50,64 @@ const ViewSlot = () => {
 
   const onClose = () => {
     setOpenSlotForm(false);
-    setTimeout(() => {
-      setSelectedSlot({});
-    }, 200);
+    setSelectedSlot({});
   };
 
   return (
     <div className="tab-pane">
-      <div className="d-flex justify-content-between align-items-center my-4">
-        <form className="table__search">
-          <input
-            className="header__search-input"
-            type="text"
-            placeholder="Tìm kiếm..."
-            value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-              setIsTouched(true);
-              if (!e.target.value.trim()) {
-                setFilteredList(slot.list);
-              }
-            }}
+      <Helmet>
+        <title> Slot chiếu </title>
+      </Helmet>
+      <div className="row">
+        <div className="col-12 col-sm-10">
+          <div className="d-flex justify-content-between align-items-center my-4">
+            <form className="table__search">
+              <input
+                className="header__search-input"
+                type="text"
+                placeholder="Tìm kiếm..."
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  setIsTouched(true);
+                  if (!e.target.value.trim()) {
+                    setFilteredList(slot.list);
+                  }
+                }}
+              />
+              <button
+                className="table__search-button"
+                type="button"
+                onClick={onSearchSlot}
+              >
+                <i className="icon ion-ios-search"></i>
+              </button>
+            </form>
+            <button className="btn__outline-orange" onClick={() => onOpen({})}>
+              Tạo mới Slot
+            </button>
+          </div>
+          <SlotList
+            isLoading={slot.isLoading}
+            list={filteredList.slice(
+              curPage * MAX_ITEMS_PER_PAGE,
+              (curPage + 1) * MAX_ITEMS_PER_PAGE
+            )}
+            onEditSlot={onOpen}
           />
-          <button
-            className="table__search-button"
-            type="button"
-            onClick={onSearchSlot}
-          >
-            <i className="icon ion-ios-search"></i>
-          </button>
-        </form>
-        <button className="btn__outline-orange" onClick={() => onOpen({})}>
-          Tạo mới Slot
-        </button>
+          <Paginator
+            curPage={curPage}
+            maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
+            setCurPage={setCurPage}
+            totalItems={filteredList.length}
+          />
+          <SlotForm
+            open={openSlotForm}
+            close={onClose}
+            slotData={selectedSlot}
+          />
+        </div>
       </div>
-      <SlotList
-        isLoading={slot.isLoading}
-        list={filteredList.slice(
-          curPage * MAX_ITEMS_PER_PAGE,
-          (curPage + 1) * MAX_ITEMS_PER_PAGE
-        )}
-        onEditSlot={onOpen}
-      />
-      <Paginator
-        curPage={curPage}
-        maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
-        setCurPage={setCurPage}
-        totalItems={filteredList.length}
-      />
-      <SlotForm open={openSlotForm} close={onClose} slotData={selectedSlot} />
     </div>
   );
 };

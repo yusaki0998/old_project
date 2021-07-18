@@ -32,7 +32,7 @@ const FilmList = ({ list, isLoading, from }) => {
               <th>Tên phim</th>
               <th>Đạo diễn</th>
               <th>Thể loại</th>
-              <th></th>
+              <th>Sửa / Xóa</th>
             </tr>
           </thead>
           <tbody>

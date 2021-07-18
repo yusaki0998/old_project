@@ -7,6 +7,7 @@ import { searchFilmRequest } from "../../store/api/manager";
 import RoomList from "../../components/manager/RoomList";
 import Paginator from "../../components/shared/Paginator";
 import { useHistory } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export const MAX_ITEMS_PER_PAGE = 10;
 
@@ -44,50 +45,57 @@ const FilmRoom = () => {
 
   return (
     <div className="tab-pane">
-      <div className="d-flex justify-content-between align-items-center my-4">
-        <form className="table__search">
-          <input
-            className="header__search-input"
-            type="text"
-            placeholder="Tìm kiếm..."
-            value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-              setIsTouched(true);
-              if (!e.target.value.trim()) {
-                setFilteredList(roomData.list);
-              }
-            }}
+      <Helmet>
+        <title> Phòng chiếu </title>
+      </Helmet>
+      <div className="row">
+        <div className="col-12 col-sm-10 col-md-9 col-lg-8">
+          <div className="d-flex justify-content-between align-items-center my-4">
+            <form className="table__search">
+              <input
+                className="header__search-input"
+                type="text"
+                placeholder="Tìm kiếm..."
+                value={searchInput}
+                onChange={(e) => {
+                  setSearchInput(e.target.value);
+                  setIsTouched(true);
+                  if (!e.target.value.trim()) {
+                    setFilteredList(roomData.list);
+                  }
+                }}
+              />
+              <button
+                className="table__search-button"
+                type="button"
+                onClick={onSearchFilm}
+              >
+                <i className="icon ion-ios-search"></i>
+              </button>
+            </form>
+            <button
+              className="btn__outline-orange"
+              onClick={() => history.push("/manager/new-room")}
+            >
+              Tạo phòng
+            </button>
+          </div>
+          <RoomList
+            isLoading={roomData.isLoading}
+            list={filteredList.slice(
+              curPage * MAX_ITEMS_PER_PAGE,
+              (curPage + 1) * MAX_ITEMS_PER_PAGE
+            )}
           />
-          <button
-            className="table__search-button"
-            type="button"
-            onClick={onSearchFilm}
-          >
-            <i className="icon ion-ios-search"></i>
-          </button>
-        </form>
-        <button
-          className="btn__outline-orange"
-          onClick={() => history.push("/manager/new-room")}
-        >
-          Tạo phòng
-        </button>
-      </div>
-      <RoomList
-        isLoading={roomData.isLoading}
-        list={filteredList.slice(
-          curPage * MAX_ITEMS_PER_PAGE,
-          (curPage + 1) * MAX_ITEMS_PER_PAGE
-        )}
-      />
-      <div className="room__paginator">
-        <Paginator
-          curPage={curPage}
-          maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
-          setCurPage={setCurPage}
-          totalItems={filteredList.length}
-        />
+          <div className="room__paginator">
+            <Paginator
+              curPage={curPage}
+              maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
+              setCurPage={setCurPage}
+              totalItems={filteredList.length}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

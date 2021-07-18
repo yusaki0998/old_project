@@ -12,6 +12,7 @@ import {
 } from "../../store/actions/managerActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
 import { AGE_THRESHOLD, showAgeThreshold } from "../../utils/age";
+import { Helmet } from "react-helmet";
 
 const NewFilm = () => {
   const [status, setStatus] = useState("");
@@ -73,6 +74,9 @@ const NewFilm = () => {
 
   return (
     <main className="pb-4">
+      <Helmet>
+        <title> Tạo mới phim </title>
+      </Helmet>
       <div className="admin__create-account__wrapper text-white">
         <h3 className="border-bottom d-inline-block pb-1 border-white mb-4">
           Tạo mới phim

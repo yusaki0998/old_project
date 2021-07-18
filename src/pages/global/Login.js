@@ -1,6 +1,7 @@
 /** @format */
 
 import React from "react";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
@@ -24,6 +25,9 @@ const Login = () => {
 
   return (
     <div className="sign section--bg" data-bg={section}>
+      <Helmet>
+        <title> Đăng nhập </title>
+      </Helmet>
       <div className="container">
         <div className="row">
           <div className="col-12">
@@ -69,11 +73,6 @@ const Login = () => {
                   {errors.password && (
                     <p className="input-required">{errors.password.message}</p>
                   )}
-                </div>
-
-                <div className="sign__group sign__group--checkbox">
-                  <input id="remember" name="remember" type="checkbox" />
-                  <label htmlFor="remember">Nhớ mật khẩu</label>
                 </div>
 
                 <button

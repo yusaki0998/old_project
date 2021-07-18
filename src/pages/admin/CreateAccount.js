@@ -13,6 +13,7 @@ import {
   resetCreateAccountState,
 } from "../../store/actions/adminActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
+import { Helmet } from "react-helmet";
 
 const CreateAccount = () => {
   const [gender, setGender] = useState("");
@@ -76,6 +77,9 @@ const CreateAccount = () => {
 
   return (
     <main className="main">
+      <Helmet>
+        <title> Tạo mới tài khoản </title>
+      </Helmet>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
