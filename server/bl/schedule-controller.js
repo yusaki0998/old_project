@@ -46,6 +46,24 @@ const createSchedule = async (req, res) => {
         const startDay = moment().isoWeek(weekNumber).startOf('isoWeek');
         const endDay = moment().isoWeek(weekNumber).endOf('isoWeek');
 
+        const checkSchedule = await Schedule.findOne(
+            { 
+                movie: movieId,
+                room: roomId,
+                slot: slotId,
+                showDate: showDate,
+                week: weekNumber,
+                startDay: startDay,
+                endDay: endDay
+            }
+        ).exec();
+
+        if(checkSchedule !== null) {
+            return res.status(409).json({
+                message: "This schedule already exist (Schedule duplicate)"
+            });
+        }
+
         const schedule = new Schedule({
             _id: new mongoose.Types.ObjectId(),
             movie: movieId, //findMovie._id,
@@ -61,17 +79,9 @@ const createSchedule = async (req, res) => {
 
         await schedule.save();
 
-        const findSchedule = await Schedule
-            .findById(schedule._id)
-            .populate('movie', 'movieName')
-            .populate('room', 'roomName')
-            .populate('slot')
-            .populate('seatMap', 'name')
-            .exec();
-
         return res.status(201).json({
             message: "Schedule created",
-            data: findSchedule
+            data: schedule
         });
 
     } catch (error) {
