@@ -23,23 +23,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-// cors middleware
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-
-app.get("/", (req, res) => {
-  return res.json({
-    msg: "Api is ready",
-  });
-});
-
 //routes
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/movies', movieRoutes);
