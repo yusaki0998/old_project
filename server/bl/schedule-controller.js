@@ -35,7 +35,7 @@ const createSchedule = async (req, res) => {
             });
         }
 
-        if (!moment(showDate).isValid()) {
+        if (!moment(showDate, 'MM/DD/YYYY', true).isValid()) {
             return res.status(301).json({
                 message: "Show date is in invalid format"
             });
@@ -48,7 +48,7 @@ const createSchedule = async (req, res) => {
 
         const checkSchedule = await Schedule.findOne(
             { 
-                movie: movieId,
+                //movie: movieId,
                 room: roomId,
                 slot: slotId,
                 showDate: showDate,
@@ -66,9 +66,9 @@ const createSchedule = async (req, res) => {
 
         const schedule = new Schedule({
             _id: new mongoose.Types.ObjectId(),
-            movie: movieId, //findMovie._id,
-            room: roomId, //findRoom._id,
-            slot: slotId, //findSlot._id,
+            movie: movieId, 
+            room: roomId, 
+            slot: slotId, 
             seatMap: findMap._id,
             roomSeats: findMap.seats,
             showDate: showDate,
@@ -171,7 +171,7 @@ const editSchedule = async (req, res) => {
 
         const id = req.params.scheduleId;
 
-        const { movieId } = req.body
+        const { movieId, roomId } = req.body
 
         const schedule = await Schedule
             .findById(id)
@@ -185,6 +185,24 @@ const editSchedule = async (req, res) => {
 
         if (movieId) {
             schedule.movie = movieId
+        }
+
+        if (roomId) {
+            schedule.room = roomId
+        }
+        const checkSchedule = await Schedule.findOne(
+            { 
+                movie: movieId,
+                room: roomId,
+                slot: schedule.slot,
+                showDate: schedule.showDate,
+            }
+        ).exec();
+
+        if(checkSchedule !== null) {
+            return res.status(409).json({
+                message: "This schedule already exist (Schedule duplicate)"
+            });
         }
 
         await schedule.save();
