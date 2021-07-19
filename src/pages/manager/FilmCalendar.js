@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getListComingFilm,
   getListCurrentFilm,
+  getListRoom,
   getListSlot,
 } from "../../store/actions/managerActions";
 import CalendarTable from "../../components/manager/CalendarTable";
@@ -14,7 +15,7 @@ import { Helmet } from "react-helmet";
 
 const FilmCalendar = () => {
   const dispatch = useDispatch();
-  const { slot } = useSelector((state) => state.manager);
+  const { slot, room } = useSelector((state) => state.manager);
   const [loadingSchedules, setLoadingSchedules] = useState(false);
   const [listSchedules, setListSchedules] = useState([]);
 
@@ -22,6 +23,7 @@ const FilmCalendar = () => {
     dispatch(getListSlot());
     dispatch(getListCurrentFilm());
     dispatch(getListComingFilm());
+    dispatch(getListRoom());
   }, [dispatch]);
 
   const fetchListScheduleHandler = async (weekNum) => {
@@ -47,6 +49,7 @@ const FilmCalendar = () => {
         slotList={slot.list}
         loadingSchedules={loadingSchedules}
         listSchedules={listSchedules}
+        listRoom={room.list}
       />
     </div>
   );

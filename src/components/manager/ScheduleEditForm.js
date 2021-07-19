@@ -20,14 +20,18 @@ const ScheduleEditForm = ({
   dayInWeekNum,
   allFilm,
   fetchListScheduleAfterUpdate,
+  listRoom,
 }) => {
   const [showFilmList, setShowFilmList] = useState(false);
   const [filmId, setFilm] = useState("");
   const [isLoading, setIsLoading] = useState();
   const dispatch = useDispatch();
+  const [showRoomList, setShowRoomList] = useState(false);
+  const [roomId, setRoomId] = useState("");
 
   useEffect(() => {
     setFilm(scheduleData?.movie?._id);
+    setRoomId(scheduleData?.room?._id);
   }, [scheduleData]);
 
   const onValid = async () => {
@@ -37,6 +41,7 @@ const ScheduleEditForm = ({
         scheduleData?._id,
         {
           movieId: filmId,
+          roomId,
         }
       );
       console.log(dataRes);
@@ -126,6 +131,48 @@ const ScheduleEditForm = ({
                       <i
                         className={`fas fa-chevron-${
                           showFilmList ? "up" : "down"
+                        }`}
+                      ></i>
+                    </button>
+                  </div>
+                </OutsideHandler>
+              </div>
+            </div>
+          </div>
+          <div className="row align-items-center">
+            <div className="col-md-4">
+              <p>Chọn phòng chiếu</p>
+            </div>
+            <div className="col-md-8">
+              <div className="sign__group">
+                <OutsideHandler callback={() => setShowRoomList(false)}>
+                  <div
+                    className={`sign-custom__select ${
+                      showRoomList ? "show" : ""
+                    }`}
+                    onClick={() => setShowRoomList((prevState) => !prevState)}
+                  >
+                    <li className="gender__text">
+                      {roomId
+                        ? listRoom?.find((item) => item._id === roomId)
+                            ?.roomName
+                        : "Vui lòng chọn"}
+                    </li>
+                    <ul
+                      className={`h-250 overflow-y-scr ${
+                        showRoomList ? "show" : ""
+                      }`}
+                    >
+                      {listRoom?.map((room) => (
+                        <li key={room._id} onClick={() => setRoomId(room._id)}>
+                          {room.roomName}
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="sign__select-icon">
+                      <i
+                        className={`fas fa-chevron-${
+                          showRoomList ? "up" : "down"
                         }`}
                       ></i>
                     </button>

@@ -33,6 +33,7 @@ const CalendarTable = ({
   fetchListScheduleHandler,
   listSchedules,
   loadingSchedules,
+  listRoom,
 }) => {
   const { comingFilm, currentFilm } = useSelector((state) => state.manager);
   const [isShowWeekPicker, setIsShowWeekPicker] = useState(false);
@@ -42,6 +43,8 @@ const CalendarTable = ({
   const [openNewSchedule, setOpenNewSchedule] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState({});
   const [dayInWeekNum, setDayInWeekNum] = useState(0);
+  const [selectedSlotId, setSelectedSlotId] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   const convertedDates = convertDateString(days);
 
@@ -54,15 +57,26 @@ const CalendarTable = ({
     return scheduleItem?.movie?.movieName || "+";
   };
 
-  const onEditSchedule = (slotId, dateStr, dayInWeek) => {
+  const onEditSchedule = (slotData, dateStr, dayInWeek) => {
     const scheduleItem = listSchedules.find(
-      (item) => item?.slot?._id === slotId && item?.showDate?.includes(dateStr)
+      (item) =>
+        item?.slot?._id === slotData?._id && item?.showDate?.includes(dateStr)
     );
     if (!convertedDates.length) {
       return "";
     }
     if (!scheduleItem) {
       setOpenNewSchedule(true);
+      setSelectedSlotId(slotData);
+      setDayInWeekNum(dayInWeek);
+      const dateStrArr = dateStr?.split("-");
+      if (!dateStr.length) {
+        setSelectedDate(dateStr);
+        return "";
+      }
+      setSelectedDate(
+        `${dateStrArr?.[2]}/${dateStrArr?.[1]}/${dateStrArr?.[0]}`
+      );
       return "";
     }
     setSelectedSchedule(scheduleItem);
@@ -93,12 +107,6 @@ const CalendarTable = ({
             </OutsideHandler>
           )}
         </div>
-        <button
-          className="btn__outline-orange"
-          onClick={() => setIsShowWeekPicker((prevState) => !prevState)}
-        >
-          Lịch chiếu mới
-        </button>
       </div>
       <div className="main__table-wrap">
         <table className="border_table">
@@ -137,7 +145,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[0], 0)
+                            onEditSchedule(slot, convertedDates?.[0], 0)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[0])}
@@ -147,7 +155,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[1], 1)
+                            onEditSchedule(slot, convertedDates?.[1], 1)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[1])}
@@ -157,7 +165,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[2], 2)
+                            onEditSchedule(slot, convertedDates?.[2], 2)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[2])}
@@ -167,7 +175,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[3], 3)
+                            onEditSchedule(slot, convertedDates?.[3], 3)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[3])}
@@ -177,7 +185,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[4], 4)
+                            onEditSchedule(slot, convertedDates?.[4], 4)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[4])}
@@ -187,7 +195,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[5], 5)
+                            onEditSchedule(slot, convertedDates?.[5], 5)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[5])}
@@ -197,7 +205,7 @@ const CalendarTable = ({
                         <div
                           className="text-schedule"
                           onClick={() =>
-                            onEditSchedule(slot._id, convertedDates?.[6], 6)
+                            onEditSchedule(slot, convertedDates?.[6], 6)
                           }
                         >
                           {findSchedule(slot._id, convertedDates?.[6])}
@@ -220,13 +228,21 @@ const CalendarTable = ({
         dayInWeekNum={dayInWeekNum}
         allFilm={allFilm}
         fetchListScheduleAfterUpdate={() => fetchListScheduleHandler(weekNum)}
+        listRoom={listRoom}
       />
       <NewScheduleForm
         open={openNewSchedule}
         close={() => {
           setOpenNewSchedule(false);
+          setSelectedDate("");
+          setSelectedSlotId("");
         }}
         allFilm={allFilm}
+        listRoom={listRoom}
+        slotId={selectedSlotId}
+        selectedDate={selectedDate}
+        fetchListScheduleHandler={() => fetchListScheduleHandler(weekNum)}
+        dayInWeekNum={dayInWeekNum}
       />
     </div>
   );

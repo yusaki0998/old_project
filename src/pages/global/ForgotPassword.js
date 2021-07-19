@@ -4,7 +4,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 
 const ForgotPassword = () => {
   const {

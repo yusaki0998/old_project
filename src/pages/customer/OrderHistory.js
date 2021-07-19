@@ -6,13 +6,17 @@ import { getUserTicketOrderHistoryRequest } from "../../store/api/user";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
+import CancelBooking from "../../components/customer/CancelBooking";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(false);
   const [ticketList, setTicketList] = useState([]);
   const [curPage, setCurPage] = useState(0);
+  const [selectedTicket, setSelectedTicket] = useState({});
+  const [isCancelling, setIsCancelling] = useState(false);
 
-  useEffect(() => {
+  const fetchOrderHistory = () => {
     setLoading(true);
     getUserTicketOrderHistoryRequest()
       .then(({ data }) => {
@@ -22,7 +26,17 @@ const OrderHistory = () => {
         console.log(err);
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchOrderHistory();
   }, []);
+
+  // Create our number formatter.
+  const formatter = new Intl.NumberFormat("vi-ve", {
+    style: "currency",
+    currency: "VND",
+  });
 
   return (
     <div className="customer__order-history__wrapper my-5">
@@ -48,39 +62,57 @@ const OrderHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <div className="main__table-text">23</div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">
-                      <a href="/">I Dream in Another Language</a>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">24-05-2020</div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">11:21:35</div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">Rom 5</div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">C7</div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">VIP</div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">50,000đ</div>
-                  </td>
-                  <td>
-                    <button className="main__table-btn main__table-btn--delete open-modal">
-                      <i className="icon ion-ios-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+                {ticketList.map((item, index) => (
+                  <tr key={item._id}>
+                    <td>
+                      <div className="main__table-text"> {index + 1} </div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">
+                        <Link to={`/details/${item?.schedule?.movie?._id}`}>
+                          {item?.schedule?.movie?.movieName}
+                        </Link>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">-</div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">-</div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">
+                        {item?.schedule?.room?.roomName}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">
+                        {item?.seat?.seatNo}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">
+                        {item?.seat?.seatType}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="main__table-text">
+                        {formatter.format(item?.seat?.price)}
+                      </div>
+                    </td>
+                    <td>
+                      <button
+                        className="main__table-btn main__table-btn--delete open-modal"
+                        onClick={() => {
+                          setIsCancelling(true);
+                          setSelectedTicket(item);
+                        }}
+                      >
+                        <i className="icon ion-ios-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -91,6 +123,15 @@ const OrderHistory = () => {
         curPage={curPage}
         setCurPage={setCurPage}
         totalItems={ticketList.length}
+      />
+      <CancelBooking
+        open={isCancelling}
+        close={() => {
+          setSelectedTicket({});
+          setIsCancelling(false);
+        }}
+        ticketData={selectedTicket}
+        callback={fetchOrderHistory}
       />
     </div>
   );

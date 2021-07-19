@@ -19,10 +19,15 @@ const NewScheduleForm = ({
   scheduleData,
   dayInWeekNum,
   allFilm,
-  fetchListScheduleAfterUpdate,
+  listRoom,
+  slotId,
+  selectedDate,
+  fetchListScheduleHandler,
 }) => {
   const [showFilmList, setShowFilmList] = useState(false);
   const [filmId, setFilm] = useState("");
+  const [showRoomList, setShowRoomList] = useState(false);
+  const [roomId, setRoomId] = useState("");
   const [isLoading, setIsLoading] = useState();
   const dispatch = useDispatch();
 
@@ -35,20 +40,23 @@ const NewScheduleForm = ({
     try {
       const { data: dataRes } = await createScheduleRequest({
         movieId: filmId,
+        roomId,
+        slotId: slotId?._id,
+        showDate: selectedDate,
       });
       console.log(dataRes);
       setIsLoading(false);
+      fetchListScheduleHandler();
       close();
       const newNoti = {
         id: uuid_v4(),
         type: "success",
-        message: "Taoj mới lịch chiếu thành công!",
+        message: "Tạo mới lịch chiếu thành công!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
       }, 2000);
-      fetchListScheduleAfterUpdate();
     } catch (error) {
       setIsLoading(false);
       const newNoti = {
@@ -56,7 +64,7 @@ const NewScheduleForm = ({
         type: "error",
         message:
           error?.response?.data?.message ||
-          "Taoj mới lịch chiếu thất bại. Vui lòng thử lại!",
+          "Tạo mới lịch chiếu thất bại. Vui lòng thử lại!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -81,12 +89,10 @@ const NewScheduleForm = ({
               <p> {dayInWeeks?.[dayInWeekNum]} </p>
             </div>
             <div className="col-md-4">
-              <div className="sign__group">
-                {scheduleData?.showDate?.substr(0, 10)}
-              </div>
+              <div className="sign__group">{selectedDate}</div>
             </div>
             <div className="col-md-4">
-              <div className="sign__group">{scheduleData?.slot?.slotName}</div>
+              <div className="sign__group">{slotId?.slotName}</div>
             </div>
           </div>
           <div className="row align-items-center">
@@ -123,6 +129,48 @@ const NewScheduleForm = ({
                       <i
                         className={`fas fa-chevron-${
                           showFilmList ? "up" : "down"
+                        }`}
+                      ></i>
+                    </button>
+                  </div>
+                </OutsideHandler>
+              </div>
+            </div>
+          </div>
+          <div className="row align-items-center">
+            <div className="col-md-4">
+              <p>Chọn phòng chiếu</p>
+            </div>
+            <div className="col-md-8">
+              <div className="sign__group">
+                <OutsideHandler callback={() => setShowRoomList(false)}>
+                  <div
+                    className={`sign-custom__select ${
+                      showRoomList ? "show" : ""
+                    }`}
+                    onClick={() => setShowRoomList((prevState) => !prevState)}
+                  >
+                    <li className="gender__text">
+                      {roomId
+                        ? listRoom?.find((item) => item._id === roomId)
+                            ?.roomName
+                        : "Vui lòng chọn"}
+                    </li>
+                    <ul
+                      className={`h-250 overflow-y-scr ${
+                        showRoomList ? "show" : ""
+                      }`}
+                    >
+                      {listRoom?.map((room) => (
+                        <li key={room._id} onClick={() => setRoomId(room._id)}>
+                          {room.roomName}
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="sign__select-icon">
+                      <i
+                        className={`fas fa-chevron-${
+                          showRoomList ? "up" : "down"
                         }`}
                       ></i>
                     </button>

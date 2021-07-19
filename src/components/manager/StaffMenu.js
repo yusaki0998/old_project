@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { checkCondition } from "../../utils/helper";
-import userImg from "../../assets/logo.png";
+import userImg from "../../template/styles/main/img/user.svg";
 import { logout } from "../../store/actions/authActions";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
 

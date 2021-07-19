@@ -86,22 +86,16 @@ const MovieDetail = () => {
           </section>
           <section className="content">
             <div className="container">
-              <div className="row">
-                <div className="col-12">
-                  <MovieSuggestion
-                    isLoading={
-                      movieDetail?.status === 0
-                        ? comingFilm.isLoading
-                        : currentFilm.isLoading
-                    }
-                    list={
-                      movieDetail?.status === 0
-                        ? comingFilm.list
-                        : currentFilm.list
-                    }
-                  />
-                </div>
-              </div>
+              <MovieSuggestion
+                isLoading={
+                  movieDetail?.status === 0
+                    ? comingFilm.isLoading
+                    : currentFilm.isLoading
+                }
+                list={
+                  movieDetail?.status === 0 ? comingFilm.list : currentFilm.list
+                }
+              />
             </div>
           </section>
         </>

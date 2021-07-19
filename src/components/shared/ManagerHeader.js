@@ -3,7 +3,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { showSidebar, hideSidebar } from "../../store/actions/uiActions";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 
 const ManagerHeader = () => {
   const { sidebar } = useSelector((state) => state.ui);

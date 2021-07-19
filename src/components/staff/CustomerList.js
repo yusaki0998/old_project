@@ -3,6 +3,7 @@
 import React from "react";
 import { useHistory } from "react-router";
 import CustomerListSkeleton from "../../skeleton/CustomerListSkeleton";
+
 const CustomerList = ({ list, isLoading, from }) => {
   const history = useHistory();
 
@@ -47,9 +48,7 @@ const CustomerList = ({ list, isLoading, from }) => {
                       <button
                         className="main__table-btn main__table-btn--edit"
                         onClick={() =>
-                          history.push(
-                            `/staff/edit-customer?customerId=${customer._id}&from=${from}`
-                          )
+                          history.push(`/staff/customer-detail/${customer._id}`)
                         }
                       >
                         <i className="icon ion-ios-search"></i>
