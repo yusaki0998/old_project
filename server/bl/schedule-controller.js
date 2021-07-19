@@ -24,7 +24,7 @@ const createSchedule = async (req, res) => {
         // const findMovie = await Movie.findById(movieId).exec();
 
         const findRoom = await Room.findById(roomId).exec();
-        
+
         const findMap = await SeatMap.findOne({ _id: findRoom.seatMap }).exec();
 
         // const findSlot = await Slot.findById(slotId).exec();
@@ -35,7 +35,7 @@ const createSchedule = async (req, res) => {
             });
         }
 
-        if (!moment(showDate).isValid()) {
+        if (!moment(showDate, 'MM/DD/YYYY', true).isValid()) {
             return res.status(301).json({
                 message: "Show date is in invalid format"
             });
@@ -46,11 +46,29 @@ const createSchedule = async (req, res) => {
         const startDay = moment().isoWeek(weekNumber).startOf('isoWeek');
         const endDay = moment().isoWeek(weekNumber).endOf('isoWeek');
 
+        const checkSchedule = await Schedule.findOne(
+            { 
+                //movie: movieId,
+                room: roomId,
+                slot: slotId,
+                showDate: showDate,
+                week: weekNumber,
+                startDay: startDay,
+                endDay: endDay
+            }
+        ).exec();
+
+        if(checkSchedule !== null) {
+            return res.status(409).json({
+                message: "This schedule already exist (Schedule duplicate)"
+            });
+        }
+
         const schedule = new Schedule({
             _id: new mongoose.Types.ObjectId(),
-            movie: movieId, //findMovie._id,
-            room: roomId, //findRoom._id,
-            slot: slotId, //findSlot._id,
+            movie: movieId, 
+            room: roomId, 
+            slot: slotId, 
             seatMap: findMap._id,
             roomSeats: findMap.seats,
             showDate: showDate,
@@ -61,17 +79,9 @@ const createSchedule = async (req, res) => {
 
         await schedule.save();
 
-        const findSchedule = await Schedule
-            .findById(schedule._id)
-            .populate('movie', 'movieName')
-            .populate('room', 'roomName')
-            .populate('slot')
-            .populate('seatMap', 'name')
-            .exec();
-
         return res.status(201).json({
             message: "Schedule created",
-            data: findSchedule
+            data: schedule
         });
 
     } catch (error) {
@@ -105,45 +115,6 @@ const getSchedules = async (req, res) => {
         return res.status(200).json({
             message: "Schedules found",
             data: findSchedules
-        });
-
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).json({
-            message: "Internal server error",
-            error: error
-        });
-    }
-}
-
-const getMovieSchedule = async (req, res) => {
-    try {
-        const id = req.params.movieId;
-
-        const findMovie = await Movie
-        .findById(id)
-        .exec();
-
-        if (!findMovie) {
-            return res.status(404).json({
-                message: "Invalid id, movie not found"
-            });
-        }
-
-        const findSchedule = await Schedule.find({
-            movie: id
-        })
-            .select('-roomSeats')
-            .populate('room', 'roomName')
-            .populate('slot')
-            .exec();
-
-        return res.status(200).json({
-            message: "Movie schedule found",
-            data: {
-                movie: findMovie,
-                schedule: findSchedule
-            }
         });
 
     } catch (error) {
@@ -200,7 +171,7 @@ const editSchedule = async (req, res) => {
 
         const id = req.params.scheduleId;
 
-        const { movieId } = req.body
+        const { movieId, roomId } = req.body
 
         const schedule = await Schedule
             .findById(id)
@@ -214,6 +185,24 @@ const editSchedule = async (req, res) => {
 
         if (movieId) {
             schedule.movie = movieId
+        }
+
+        if (roomId) {
+            schedule.room = roomId
+        }
+        const checkSchedule = await Schedule.findOne(
+            { 
+                movie: movieId,
+                room: roomId,
+                slot: schedule.slot,
+                showDate: schedule.showDate,
+            }
+        ).exec();
+
+        if(checkSchedule !== null) {
+            return res.status(409).json({
+                message: "This schedule already exist (Schedule duplicate)"
+            });
         }
 
         await schedule.save();
@@ -279,6 +268,5 @@ module.exports = {
     getSchedules,
     getSchedule,
     editSchedule,
-    deleteSchedule,
-    getMovieSchedule
+    deleteSchedule
 }

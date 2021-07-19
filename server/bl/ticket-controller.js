@@ -1,10 +1,78 @@
 const mongoose = require('mongoose');
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
-const Movie = require('../dbaccess/movie-model');
-const Room = require('../dbaccess/room-model');
-const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
+const Movie = require('../dbaccess/movie-model');
+
+const getMovieSchedule = async (req, res) => {
+    try {
+        const id = req.params.movieId;
+
+        const findMovie = await Movie
+            .findById(id)
+            .exec();
+
+        if (!findMovie) {
+            return res.status(404).json({
+                message: "Invalid id, movie not found"
+            });
+        }
+
+        const findSchedule = await Schedule.find({
+            movie: id
+        })
+            .select('-roomSeats')
+            .populate('room', 'roomName')
+            .populate('slot')
+            .exec();
+
+        return res.status(200).json({
+            message: "Movie schedule found",
+            data: {
+                movie: findMovie,
+                schedule: findSchedule
+            }
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getScheduleSeats = async (req, res) => {
+    try {
+        const id = req.params.scheduleId;
+
+        const findSchedule = await Schedule
+            .findById(id)
+            .select('+roomSeats')
+            .populate('movie', 'movieName')
+            .populate('room', 'roomName')
+            .populate('slot')
+            .exec();
+
+        if (!findSchedule) {
+            return res.status(404).json({
+                message: "Schedule not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Schedule found",
+            data: findSchedule
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
 
 const createTicket = async (req, res) => {
     const session = await mongoose.startSession();
@@ -19,21 +87,21 @@ const createTicket = async (req, res) => {
 
         const seatChosens = req.body.seats;
 
-        if(!seatChosens) {
+        if (!seatChosens) {
             return res.status(301).json({
                 message: "Seat chosen is not valid",
                 data: null
             });
         }
 
-        if(!Array.isArray(seatChosens)) {
+        if (!Array.isArray(seatChosens)) {
             return res.status(409).json({
                 message: "Seat chosen is not an array",
                 data: null
             });
         }
 
-        if(seatChosens.length > 8) {
+        if (seatChosens.length > 8) {
             return res.status(301).json({
                 message: "You cannot choose more than 8 seats"
             });
@@ -41,23 +109,50 @@ const createTicket = async (req, res) => {
 
         const findSchedule = await Schedule.findById(id).exec();
 
-        seatChosens.forEach(async (seatChosen) => {
-            const newTicket = await Ticket.create({
+        let buyTicket = [];
+        seatChosens.forEach(seat => {
+            buyTicket.push({
                 _id: new mongoose.Types.ObjectId(),
-                movie: findSchedule.movie,
-                room: findSchedule.room,
-                slot: findSchedule.slot,
-                seat: seatChosen,
+                schedule: findSchedule._id,
+                seat: seat,
                 user: checkUser._id
-            }, { session });
+            })
         });
+
+        const data = await Ticket.insertMany(buyTicket, { session });
+
+        const checkTicket = await Ticket.findOne({
+            seat: seatChosens.seatNo,
+            schedule: findSchedule
+        }).exec();
+
+        if(checkTicket !== null) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(409).json({
+                message: "Ticket already reserved"
+            });
+        }
+
+        const seatNumber = seatChosens.map(seat => seat.seatNo);
+
+        //update seats status in current schedule
+        await Schedule.updateMany(
+            { _id: findSchedule._id },
+            { $set: { 'roomSeats.$[item].status': "pending" } },
+            {
+                multi: true,
+                arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
+                session
+            }
+        ).exec();
 
         await session.commitTransaction();
         session.endSession();
 
         return res.status(201).json({
-            message: "All ticket booked, check your history",
-            ///data: addTicket
+            message: "All ticket booked",
+            data: data
         });
 
     } catch (error) {
@@ -78,16 +173,29 @@ const getTickets = async (req, res) => {
         const checkUser = await User.findById(currentUser).exec();
 
         const findTickets = await Ticket
-        .find({
-            user: checkUser._id
-        })
-        .populate('movie', 'movieName')
-        .populate('room', 'roomName')
-        .populate('slot')
-        .populate('user', 'fullname phone')
-        .exec();
+            .find({
+                user: checkUser._id
+            })
+            .populate({
+                path: 'schedule',
+                model: 'Schedule',
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
+            })
+            .populate('user', 'fullname phone')
+            .exec();
 
-        if(!findTickets) {
+        if (!findTickets) {
             return res.status(404).json({
                 message: "All tickets not found",
             });
@@ -112,14 +220,27 @@ const getTicket = async (req, res) => {
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
-        .findById(id)
-        .populate('movie', 'movieName')
-        .populate('room', 'roomName')
-        .populate('slot')
-        .populate('user', 'fullname phone')
-        .exec();
+            .findById(id)
+            .populate({
+                path: 'schedule',
+                model: 'Schedule',
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
+            })
+            .populate('user', 'fullname phone')
+            .exec();
 
-        if(!findTicket) {
+        if (!findTicket) {
             return res.status(404).json({
                 message: "Ticket not found"
             });
@@ -140,14 +261,27 @@ const getTicket = async (req, res) => {
 }
 
 const updateTicketStatus = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
+        session.startTransaction();
+
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'staff') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
-        .findById(id)
-        .exec();
+            .findById(id)
+            .exec();
 
-        if(!findTicket) {
+        if (!findTicket) {
             return res.status(404).json({
                 message: "Ticket not found"
             });
@@ -155,14 +289,32 @@ const updateTicketStatus = async (req, res) => {
 
         const { status } = req.body;
 
-        const updateTicket = await Ticket.findByIdAndUpdate(id, { status: status}).exec();
+        const updateTicket = await Ticket.updateOne(
+            { _id: id },
+            { status: status }, 
+            { session }
+        ).exec();
+
+        await Schedule.updateOne(
+            {
+                _id: findTicket.schedule,
+                'roomSeats.seatNo': findTicket.seat.seatNo
+            },
+            { $set: { 'roomSeats.$.status': "sold" } },
+            { session }
+        ).exec();
+
+        await session.commitTransaction();
+        session.endSession();
 
         return res.status(200).json({
             message: "Ticket status updated",
             data: updateTicket
         });
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        await session.abortTransaction();
+        session.endSession();
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -171,14 +323,17 @@ const updateTicketStatus = async (req, res) => {
 }
 
 const deleteTicket = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
+        session.startTransaction();
+
         const id = req.params.ticketId;
 
         const findTicket = await Ticket
-        .findById(id)
-        .exec();
+            .findById(id)
+            .exec();
 
-        if(!findTicket) {
+        if (!findTicket) {
             return res.status(404).json({
                 message: "Ticket not found"
             });
@@ -186,12 +341,26 @@ const deleteTicket = async (req, res) => {
 
         const deleteTicket = await Ticket.findByIdAndDelete(id).exec();
 
+        await Schedule.updateOne(
+            {
+                _id: findTicket.schedule,
+                'roomSeats.seatNo': findTicket.seat.seatNo
+            },
+            { $set: { 'roomSeats.$.status': "empty" } },
+            { session }
+        ).exec();
+
+        await session.commitTransaction();
+        session.endSession();
+        
         return res.status(200).json({
             message: "Ticket deleted",
             data: deleteTicket
         });
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        await session.abortTransaction();
+        session.endSession();
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -200,9 +369,11 @@ const deleteTicket = async (req, res) => {
 }
 
 module.exports = {
+    getMovieSchedule,
+    getScheduleSeats,
     createTicket,
     getTickets,
     getTicket,
     updateTicketStatus,
-    deleteTicket
+    deleteTicket,
 }

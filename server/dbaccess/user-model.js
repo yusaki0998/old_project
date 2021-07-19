@@ -31,4 +31,9 @@ const userSchema = mongoose.Schema({
     }
 });
 
+userSchema.index({
+    fullname: 'text',
+    phone: 'text'
+})
+
 module.exports = mongoose.model('User', userSchema);

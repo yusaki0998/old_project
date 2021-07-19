@@ -8,12 +8,14 @@ const storage = multer.diskStorage({
         return cb(null, './uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname);
+        cb(null, file.originalname);
     }
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg'
+        || file.mimetype === 'image/png'
+        || file.mimetype === 'image/jpg') {
         cb(null, true);
     } else {
         cb(null, false);
@@ -42,6 +44,8 @@ router.get('/get-managers', checkAuth, UserController.getManagers);
 router.get('/get-managers/:managerId', checkAuth, UserController.getManager);
 router.delete('/delete-account/:accountId', checkAuth, UserController.deleteAccount);
 router.put('/edit-account/:accountId', checkAuth, UserController.editAccount);
+router.get('/get-customers', checkAuth, UserController.getCustomers);
+router.get('/get-customers/:customerId', checkAuth, UserController.getCustomer);
 router.post('/search', checkAuth, UserController.search);
 
 module.exports = router;

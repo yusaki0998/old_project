@@ -48,7 +48,7 @@ const createMovie = async (req, res) => {
             amountOfTime: amountOfTime,
             showtimes: showtimes,
             description: description,
-            coverImage: req.file.originalname,
+            coverImage: req.file.path,
             status: status
         });
 
@@ -164,7 +164,7 @@ const updateMovie = async (req, res) => {
             showtimes, description, status } = req.body;
 
         if (req.file) {
-            movie.coverImage = req.file.originalname;
+            movie.coverImage = req.file.path;
         }
 
         if (movieName) {

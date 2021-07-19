@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const db = require('../config/db');
-const Seat = require('../dbaccess/seat-model');
+const User = require('../dbaccess/user-model');
 const SeatMap = require('../dbaccess/seat-map-model');
 const Schedule = require('../dbaccess/schedule-model');
 
@@ -114,6 +113,16 @@ const getSeatInMap = async (req, res) => {
 const editSeatInMap = async (req, res) => {
     const session = await mongoose.startSession();
     try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'manager') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
         session.startTransaction();
 
         const mapId = req.params.mapId;
@@ -121,9 +130,7 @@ const editSeatInMap = async (req, res) => {
         const { type, price } = req.body;
 
         await SeatMap.updateMany(
-            {
-                _id: mapId,
-            },
+            { _id: mapId, },
             { $set: { 'seats.$[item].price': price } },
             {
                 multi: true,
@@ -133,11 +140,11 @@ const editSeatInMap = async (req, res) => {
         ).exec();
 
         await Schedule.updateMany(
-            { seatMap: mapId},
+            { seatMap: mapId },
             { $set: { 'roomSeats.$[item].price': price } },
             {
                 multi: true,
-                arrayFilters: [{'item.seatType': type}],
+                arrayFilters: [{ 'item.seatType': type }],
                 session
             }
         ).exec();

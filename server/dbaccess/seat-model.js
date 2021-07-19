@@ -15,10 +15,9 @@ const seatSchema = mongoose.Schema({
         type: Number,
     },
 
-    //0:empty, 1:pending, 2:sold
     status: {
         type: String,
-        enum: ['empty', 'pending', 'sold'],
+        enum: ['empty', 'pending', 'sold', 'chosen'],
         default: 'empty'
     },
 

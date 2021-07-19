@@ -58,6 +58,7 @@ const getRooms = async (req, res) => {
     try {
         const findRooms = await Room
         .find()
+        .populate('seatMap')
         .exec();
 
         if(!findRooms) {
@@ -197,7 +198,7 @@ const deleteRoom = async (req, res) => {
         });
         
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
