@@ -58,6 +58,7 @@ const getRooms = async (req, res) => {
     try {
         const findRooms = await Room
         .find()
+        .populate('seatMap')
         .exec();
 
         if(!findRooms) {

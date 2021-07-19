@@ -121,6 +121,19 @@ const createTicket = async (req, res) => {
 
         const data = await Ticket.insertMany(buyTicket, { session });
 
+        const checkTicket = await Ticket.findOne({
+            seat: seatChosens.seatNo,
+            schedule: findSchedule
+        }).exec();
+
+        if(checkTicket !== null) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(409).json({
+                message: "Ticket already reserved"
+            });
+        }
+
         const seatNumber = seatChosens.map(seat => seat.seatNo);
 
         //update seats status in current schedule
