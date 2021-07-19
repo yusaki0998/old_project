@@ -198,7 +198,7 @@ const deleteRoom = async (req, res) => {
         });
         
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
