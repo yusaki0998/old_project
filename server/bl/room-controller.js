@@ -58,10 +58,10 @@ const getRooms = async (req, res) => {
     try {
         const findRooms = await Room
         .find()
-        .populate('seatMap')
+        .populate('seatMap', 'name')
         .exec();
 
-        if(!findRooms) {
+        if(!findRooms || findRooms.length === 0) {
             return res.status(404).json({
                 message: "Rooms not found"
             });
