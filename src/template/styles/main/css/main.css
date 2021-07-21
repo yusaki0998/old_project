@@ -1320,15 +1320,10 @@ ul {
 }
 .card__title {
   font-size: 18px;
-  line-height: 30px;
+  line-height: 25px;
   font-weight: 400;
   color: #fff;
   margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  word-wrap: break-word;
 }
 .card__title a {
   color: #fff;
@@ -1338,11 +1333,6 @@ ul {
   color: #f9ab00;
 }
 .card__category {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
   color: #f6f6f6;
   font-size: 14px;
 }
@@ -1453,6 +1443,7 @@ ul {
   border-radius: 6px;
   background-color: #222028;
   padding: 15px 30px 15px 20px;
+  min-width: 100%;
 }
 .card__trailer {
   display: flex;

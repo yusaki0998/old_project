@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { login } from "../../store/actions/authActions";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 import section from "../../template/styles/main/img/section/section.jpg";
 
 const Login = () => {

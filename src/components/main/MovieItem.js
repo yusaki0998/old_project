@@ -27,8 +27,12 @@ const MovieItem = ({ movieItem }) => {
         <h3 className="card__title card__title-movie">
           <Link to={`/details/${movieItem?._id}`}>{movieItem?.movieName}</Link>
         </h3>
-        <span className="card__category">{movieItem?.genre}</span>
+        <p>
+          <strong className="text-white">Thể loại : </strong>
+          <span className="card__category">{movieItem?.genre}</span>
+        </p>
         <p className="text-white f-14 mt-1">
+          <strong className="text-white">Thời lượng : </strong>{" "}
           {showTotalTime(movieItem?.amountOfTime)}
         </p>
       </div>

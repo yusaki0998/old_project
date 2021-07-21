@@ -101,7 +101,7 @@ const login = async (req, res) => {
         const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (!regexp.test(email)) {
-            return res.status(401).json({
+            return res.status(301).json({
                 message: "Email is invalid",
                 data: null
             });
@@ -114,7 +114,7 @@ const login = async (req, res) => {
             .exec();
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "User not found"
             });
         }
@@ -122,7 +122,7 @@ const login = async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
-            return res.status(401).json({
+            return res.status(301).json({
                 message: "Password does not match",
                 data: null
             });
@@ -137,7 +137,6 @@ const login = async (req, res) => {
 
         const userObj = user.toObject();
         delete userObj.password;
-        delete userObj.__v;
 
         return res.status(200).json({
             message: "Login success!",
@@ -158,20 +157,20 @@ const login = async (req, res) => {
 
 const profile = async (req, res) => {
     try {
-        const id = req.userData._id;
-        const user = await User
-            .findById(id)
-            .exec();
+        // const id = req.userData._id;
+        // const user = await User
+        //     .findById(id)
+        //     .exec();
 
-        if (!user) {
-            return res.status(404).json({
-                message: "Failed to retrieve user info"
-            });
-        }
+        // if (!user) {
+        //     return res.status(404).json({
+        //         message: "Failed to retrieve user info"
+        //     });
+        // }
 
         return res.status(200).json({
             message: "Retrieved user info",
-            data: user
+            data: req.userData
         });
     } catch (error) {
         console.error(error.message);
@@ -195,7 +194,7 @@ const updateProfile = async (req, res) => {
         }).exec()
 
         if (req.file) {
-            user.avatar = req.file.originalname;
+            user.avatar = req.file.path;
         }
 
         if (fullname) {
@@ -634,22 +633,108 @@ const editAccount = async (req, res) => {
     }
 }
 
+const getCustomers = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'staff') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const findCustomers = await User.find({
+            role: 'customer'
+        }).exec();
+
+        return res.status(200).json({
+            message: "All customers found",
+            data: findCustomers
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const getCustomer = async (req, res) => {
+    try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        if (checkUser.role !== 'staff') {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
+
+        const id = req.params.customerId;
+
+        const findCustomer = await User.findOne({
+            _id: id,
+            role: 'customer'
+        }).exec();
+
+        return res.status(200).json({
+            message: "Customer information found",
+            data: findCustomer
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 const search = async (req, res) => {
     try {
         const input = req.query.input;
 
-        const findUsers = await User.find({
-            $and: [
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
+        let findUsers
+        if (checkUser.role === 'admin') {
+            findUsers = await User.find(
                 {
-                    $or: [
-                        { fullname: new RegExp(input, 'i') }
+                    $and: [
+                        {
+                            $or: [
+                                { role: 'staff' },
+                                { role: 'manager' }
+                            ]
+                        },
+                        { $text: { $search: input } }
                     ]
-                },
-                {
-                    _id: { $ne: req.userData._id.toString() }
                 }
-            ]
-        }).limit(10).exec();
+            ).exec();
+        }
+        else if (checkUser.role === 'staff') {
+            findUsers = await User.find({
+                $and: [
+                    { role: 'customer' },
+                    { $text: { $search: input } },
+                    {
+                        _id: { $ne: req.userData._id.toString() }
+                    }
+                ]
+            }).exec();
+        }
+        else {
+            return res.status(403).json({
+                message: "You don't have permission to access this"
+            })
+        }
 
         if (!findUsers || findUsers.length === 0) {
             return res.json([]);
@@ -661,7 +746,7 @@ const search = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -682,5 +767,7 @@ module.exports = {
     getManager,
     deleteAccount,
     editAccount,
+    getCustomers,
+    getCustomer,
     search
 }

@@ -59,3 +59,28 @@
   background-color: #df8103;
   color: #fff;
 }
+.seat__list .seat__item.isChosen .seat__head {
+  background-color: rgb(19, 167, 19);
+  color: #fff;
+}
+
+.seat__list .seat__item.isChosen .seat__body {
+  background-color: rgb(19, 167, 19);
+  color: #fff;
+}
+.min-w-200 {
+  min-width: 200px;
+}
+.seat__list .seat__item.unavailable .seat__head {
+  background-color: rgb(245, 23, 23);
+  color: #fff;
+}
+
+.seat__list .seat__item.unavailable .seat__body {
+  background-color: rgb(245, 23, 23);
+  color: #fff;
+}
+.seat__list .seat__item.unavailable {
+  user-select: none;
+  pointer-events: none;
+}

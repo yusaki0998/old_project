@@ -1,15 +1,35 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getUserBySearchInputRequest } from "../../store/api/admin";
 import { Helmet } from "react-helmet";
 import CustomerList from "../../components/staff/CustomerList";
+import { getCustomerListRequest } from "../../store/api/user";
+import Paginator from "../../components/shared/Paginator";
+import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
 
 const CustomerTable = () => {
   const [searchInput, setSearchInput] = useState("");
   const [isTouched, setIsTouched] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [curPage, setCurPage] = useState(0);
+
+  const fetchListCustomer = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await getCustomerListRequest();
+      setFilteredList(data?.data || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchListCustomer();
+  }, []);
 
   const onSearchCustomer = () => {
     if (isTouched && searchInput.trim()) {
@@ -57,12 +77,20 @@ const CustomerTable = () => {
           </button>
         </form>
       </div>
-      <div className="d-flex justify-content-center align-items-center my-4">
-        {!isLoading && filteredList.length === 0 && (
-          <p className="text-center text-white">Vui lòng nhập vào ô tìm kiếm</p>
+      <CustomerList
+        isLoading={isLoading}
+        list={filteredList.slice(
+          curPage * MAX_ITEMS_PER_PAGE,
+          (curPage + 1) * MAX_ITEMS_PER_PAGE
         )}
-      </div>
-      <CustomerList isLoading={isLoading} list={filteredList} from="current" />
+        from="current"
+      />
+      <Paginator
+        curPage={curPage}
+        maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
+        setCurPage={setCurPage}
+        totalItems={filteredList.length}
+      />
     </div>
   );
 };

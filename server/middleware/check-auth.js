@@ -1,6 +1,6 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const User = require('../dbaccess/user-model');
-require('dotenv').config();
 
 module.exports = async (req, res, next) => {
     const token = req.header('token');
@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
             message: "Unauthorized"
         });
     }
-    
+        
     const payload = jwt.verify(token, process.env.REFRESH_SECRET);
 
     try {
@@ -25,7 +25,6 @@ module.exports = async (req, res, next) => {
         }
 
         req.userData = user;
-        req.userToken = token;
         next();
 
     } catch (error) {

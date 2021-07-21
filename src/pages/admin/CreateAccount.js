@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import logo from "../../template/styles/main/img/logo.svg";
 import {
   convertGenderToVietnamese,
   convertRoleToVietnamese,
@@ -84,7 +83,7 @@ const CreateAccount = () => {
         <div className="row">
           <div className="col-12">
             <div className="admin__create-account__wrapper text-white">
-              <img src={logo} alt="Hotflix" className="d-block mx-auto my-4" />
+              <h3 className="text-center">TẠO MỚI TÀI KHOẢN</h3>
               <form onSubmit={handleSubmit(onValid)}>
                 <div className="row align-items-center">
                   <div className="col-md-2">

@@ -21,6 +21,7 @@ const Contact = lazy(() => import("./pages/global/Contact"));
 const SignUp = lazy(() => import("./pages/global/SignUp"));
 const NotFound = lazy(() => import("./pages/global/NotFound"));
 const MovieDetail = lazy(() => import("./pages/global/MovieDetail"));
+const SelectSeat = lazy(() => import("./pages/global/SelectSeat"));
 const CustomerProfile = lazy(() => import("./pages/main/CustomerProfile"));
 const ForgotPassword = lazy(() => import("./pages/global/ForgotPassword"));
 const FAQ = lazy(() => import("./pages/global/FAQ"));
@@ -94,6 +95,13 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}>
               <PublicLayout>
                 <MovieDetail />
+              </PublicLayout>
+            </Suspense>
+          </Route>
+          <Route path="/select-seat/:id">
+            <Suspense fallback={<LoadingSpinner />}>
+              <PublicLayout>
+                <SelectSeat />
               </PublicLayout>
             </Suspense>
           </Route>

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 import { Link, useHistory } from "react-router-dom";
 import { signup } from "../../store/actions/authActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";

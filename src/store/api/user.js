@@ -25,3 +25,11 @@ export const updateUserPasswordRequest = async (data) => {
 export const getUserTicketOrderHistoryRequest = async () => {
   return axios.get("/tickets");
 };
+
+export const getCustomerListRequest = async () => {
+  return axios.get("/users/get-customers");
+};
+
+export const getCustomerInfoRequest = async (customerId) => {
+  return axios.get(`/users/get-customers/${customerId}`);
+};

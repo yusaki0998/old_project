@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/global.css";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import logo from "../../template/styles/main/img/logo.svg";
+import logo from "../../assets/logo.png";
 import { Helmet } from "react-helmet";
 
 const ConfirmOTP = () => {
