@@ -43,6 +43,8 @@ const FilmRoom = () => {
     }
   };
 
+  console.log(filteredList);
+
   return (
     <div className="tab-pane">
       <Helmet>

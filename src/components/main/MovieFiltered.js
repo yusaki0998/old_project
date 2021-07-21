@@ -4,7 +4,12 @@ import React from "react";
 import MovieItem from "./MovieItem";
 import MovieListSkeleton from "../../skeleton/end-user/MovieListSkeleton";
 
-const MovieFiltered = ({ isLoading, list, hideFiltered }) => {
+const MovieFiltered = ({
+  isLoading,
+  list,
+  hideFiltered,
+  filmItemClassName,
+}) => {
   return (
     <section className="content">
       {!hideFiltered && (
@@ -165,7 +170,9 @@ const MovieFiltered = ({ isLoading, list, hideFiltered }) => {
               {!isLoading &&
                 list?.map((item) => (
                   <div
-                    className="col-6 col-sm-4 col-md-3 col-xl-2"
+                    className={`col-6 col-sm-4 col-md-3 ${
+                      filmItemClassName ? filmItemClassName : "col-xl-2"
+                    }`}
                     key={item._id}
                   >
                     <MovieItem movieItem={item} />

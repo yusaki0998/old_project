@@ -36,7 +36,7 @@ const getSeatMaps = async (req, res) => {
             // .populate('seat')
             .exec();
 
-        if (!seatMap) {
+        if (!seatMap || seatMap.length === 0) {
             return res.status(404).json({
                 message: "Seat maps not found"
             });
@@ -139,6 +139,7 @@ const editSeatInMap = async (req, res) => {
             }
         ).exec();
 
+        //update schedule seat map at the same time
         await Schedule.updateMany(
             { seatMap: mapId },
             { $set: { 'roomSeats.$[item].price': price } },

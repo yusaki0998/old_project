@@ -9,7 +9,9 @@ const SeatItem = ({ seatItem, clicked, seatList }) => {
         seatList && seatList.find((item) => item._id === seatItem._id)
           ? "isChosen"
           : ""
-      } ${seatItem.status === "pending" ? "unavailable" : ""}`}
+      } ${seatItem.status === "pending" ? "unavailable" : ""} ${
+        seatItem.seatType === "sold" ? "sold" : ""
+      }`}
       onClick={() => clicked(seatItem)}
     >
       <div className="seat__head"></div>

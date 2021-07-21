@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+//let urlHost = `${process.env.PROTOCOL}://${process.env.HOST_NAME}:${process.env.PORT}`;
+
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
 
@@ -20,7 +22,7 @@ const userSchema = mongoose.Schema({
 
     dob: { type: Date, required: true },
 
-    avatar: { type: String, default: `../uploads/sample.png` },
+    avatar: { type: String, default: `uploads/sample.png` /*`${urlHost}/uploads/sample.png`*/ },
 
     //0:admin, 1:manager, 2:staff, 3:customer
     //access enum values user.schema.path('values').enumValues

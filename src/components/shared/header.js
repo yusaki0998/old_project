@@ -14,8 +14,10 @@ const Header = ({ hideCenterDiv, isActive }) => {
   const { loginData, isAuthenticated } = useSelector((state) => state.auth);
   const { sidebar } = useSelector((state) => state.ui);
   const history = useHistory();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const dispatch = useDispatch();
+  const query = new URLSearchParams(search);
+  const fromField = query.get("from");
 
   const [showLogout, setShowLogout] = useState(false);
 
@@ -52,7 +54,7 @@ const Header = ({ hideCenterDiv, isActive }) => {
                   <li className="header__nav-item">
                     <Link
                       className={`header__nav-link ${
-                        pathname.includes("/current-film")
+                        pathname.includes("/current-film") || fromField === "1"
                           ? "header__nav-link--active"
                           : ""
                       }`}
@@ -66,7 +68,7 @@ const Header = ({ hideCenterDiv, isActive }) => {
                     <Link
                       to="/coming-film"
                       className={`header__nav-link ${
-                        pathname.includes("/coming-film")
+                        pathname.includes("/coming-film") || fromField === "0"
                           ? "header__nav-link--active"
                           : ""
                       }`}
@@ -104,7 +106,11 @@ const Header = ({ hideCenterDiv, isActive }) => {
                         </button>
                       )}
                       <button
-                        className="header__nav-link text-white"
+                        className={`header__nav-link text-white ${checkCondition(
+                          window.location.pathname.includes("/customer/info"),
+                          "header__nav-link--active",
+                          ""
+                        )}`}
                         onClick={() => history.push("/customer/info")}
                       >
                         <i className="icon ion-ios-contact f-22 mr-2"></i>

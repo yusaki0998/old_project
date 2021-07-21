@@ -13,15 +13,15 @@ const convertDateString = (daysArr) => {
   const convertedDates = [];
   daysArr.forEach((date) => {
     const dateItem = new Date(date);
-    const dateStr = `${dateItem.getFullYear()}-${
+    const monthStr =
       dateItem.getMonth() + 1 > 9
-        ? dateItem.getMonth() + 1
-        : `0${dateItem.getMonth() + 1}-${
-            dateItem.getDate() > 9
-              ? dateItem.getDate()
-              : `0${dateItem.getDate()}`
-          }`
-    }`;
+        ? `${dateItem.getMonth() + 1}`
+        : `0${dateItem.getMonth() + 1}`;
+    const dayStr =
+      dateItem.getDate() > 9
+        ? `${dateItem.getDate()}`
+        : `0${dateItem.getDate()}`;
+    const dateStr = `${dateItem.getFullYear()}-${monthStr}-${dayStr}`;
     convertedDates.push(dateStr);
   });
   return convertedDates;
@@ -75,7 +75,7 @@ const CalendarTable = ({
         return "";
       }
       setSelectedDate(
-        `${dateStrArr?.[2]}/${dateStrArr?.[1]}/${dateStrArr?.[0]}`
+        `${dateStrArr?.[1]}/${dateStrArr?.[2]}/${dateStrArr?.[0]}`
       );
       return "";
     }
@@ -108,7 +108,12 @@ const CalendarTable = ({
           )}
         </div>
       </div>
-      <div className="main__table-wrap">
+      <div
+        className="main__table-wrap"
+        style={{
+          borderRadius: 3,
+        }}
+      >
         <table className="border_table">
           <thead>
             <tr className="text-white">

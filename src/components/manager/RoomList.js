@@ -52,7 +52,7 @@ const RoomList = ({ list, isLoading }) => {
                   </td>
                   <td>
                     <div className="main__table-text">
-                      {room?.seatMap || "Not yet"}
+                      {room?.seatMap?.name || "Not yet"}
                     </div>
                   </td>
                   <td>

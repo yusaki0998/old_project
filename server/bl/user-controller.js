@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('../dbaccess/user-model');
+const Ticket = require('../dbaccess/ticket-model');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -400,6 +401,12 @@ const getStaffs = async (req, res) => {
             role: 'staff'
         }).exec();
 
+        if(!findStaffs || findStaffs.length === 0){
+            return res.status(404).json({
+                message: "Staffs not found"
+            });
+        }
+
         return res.status(200).json({
             message: "All staffs found",
             data: findStaffs
@@ -433,6 +440,12 @@ const getStaff = async (req, res) => {
             role: 'staff'
         }).exec();
 
+        if(!findStaff) {
+            return res.status(404).json({
+                message: "Staff not found"
+            });
+        }
+
         return res.status(200).json({
             message: "Staff information found",
             data: findStaff
@@ -462,6 +475,12 @@ const getManagers = async (req, res) => {
         const findManagers = await User.find({
             role: 'manager'
         }).exec();
+
+        if(!findManagers || findManagers.length === 0){
+            return res.status(404).json({
+                message: "Managers not found"
+            });
+        }
 
         return res.status(200).json({
             message: "All managers found",
@@ -495,6 +514,12 @@ const getManager = async (req, res) => {
             _id: id,
             role: 'manager'
         }).exec();
+
+        if(!findManager) {
+            return res.status(404).json({
+                message: "Manager not found"
+            });
+        }
 
         return res.status(200).json({
             message: "Manager information found",
@@ -649,6 +674,12 @@ const getCustomers = async (req, res) => {
             role: 'customer'
         }).exec();
 
+        if(!findCustomers || findCustomers.length === 0){
+            return res.status(404).json({
+                message: "Customers not found"
+            });
+        }
+
         return res.status(200).json({
             message: "All customers found",
             data: findCustomers
@@ -681,9 +712,22 @@ const getCustomer = async (req, res) => {
             role: 'customer'
         }).exec();
 
+        if(!findCustomer) {
+            return res.status(404).json({
+                message: "Invalid id, customer not found"
+            });
+        }
+
+        const findCustomerTicket = await Ticket.find({
+            user: findCustomer._id
+        }).exec();
+
         return res.status(200).json({
             message: "Customer information found",
-            data: findCustomer
+            data: {
+                customer: findCustomer,
+                ticket: findCustomerTicket
+            }
         });
 
     } catch (error) {
