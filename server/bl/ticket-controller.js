@@ -115,7 +115,7 @@ const createTicket = async (req, res) => {
             });
         }
 
-        if (seatChosens.length > 8) {
+        if (seatChosens.length > 5) {
             return res.status(301).json({
                 message: "You cannot choose more than 8 seats"
             });

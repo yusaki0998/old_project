@@ -4,6 +4,16 @@ const Ticket = require('../dbaccess/ticket-model');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+require("dotenv").config();
+
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PW,
+    }
+});
 
 const register = async (req, res) => {
     try {
@@ -81,13 +91,69 @@ const register = async (req, res) => {
 
         await user.save();
 
-        return res.status(200).json({
-            message: "Account created",
-            data: user
+        const verifyToken = jwt.sign({
+            _id: user._id
+        }, process.env.VERIFY_SECRET, {
+            expiresIn: "24h"
+        });
+
+        const url =
+            `${process.env.PROTOCOL}://
+        ${process.env.HOST_NAME}:
+        ${process.env.PORT}/api/v1/users/verify/${verifyToken}`;
+        //${process.env.PROTOCOL}://${process.env.HOST_NAME}
+
+        transporter.sendMail({
+            to: email,
+            subject: 'Welcome to OT-BM cinema, please verify your account',
+            html: `Click <a href = '${url}'>here</a> to confirm your email.`
+        })
+
+        return res.status(201).json({
+            message: `Verification mail sent to ${email}`,
+            data: verifyToken
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const verify = async (req, res) => {
+    try {
+        const token = req.params.id;
+
+        if(!token) {
+            return res.status(404).json({
+                message: "Token missing"
+            });
+        }
+        
+        const payload = jwt.verify(token, process.env.VERIFY_SECRET);
+
+        const user = await User.findOne({
+            _id: payload._id
+        }).exec();
+
+        if(!user) {
+            return res.status(404).json({
+                message: "User does not exist"
+            });
+        }
+
+        user.verified = true;
+        await user.save();
+
+        return res.status(200).json({
+            message: "Account verified"
+        });
+
+    } catch (error) {
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -126,6 +192,12 @@ const login = async (req, res) => {
             return res.status(301).json({
                 message: "Password does not match",
                 data: null
+            });
+        }
+
+        if (!user.verified) {
+            return res.status(403).json({
+                message: "Please verify your email first before login"
             });
         }
 
@@ -401,7 +473,7 @@ const getStaffs = async (req, res) => {
             role: 'staff'
         }).exec();
 
-        if(!findStaffs || findStaffs.length === 0){
+        if (!findStaffs || findStaffs.length === 0) {
             return res.status(404).json({
                 message: "Staffs not found"
             });
@@ -440,7 +512,7 @@ const getStaff = async (req, res) => {
             role: 'staff'
         }).exec();
 
-        if(!findStaff) {
+        if (!findStaff) {
             return res.status(404).json({
                 message: "Staff not found"
             });
@@ -476,7 +548,7 @@ const getManagers = async (req, res) => {
             role: 'manager'
         }).exec();
 
-        if(!findManagers || findManagers.length === 0){
+        if (!findManagers || findManagers.length === 0) {
             return res.status(404).json({
                 message: "Managers not found"
             });
@@ -515,7 +587,7 @@ const getManager = async (req, res) => {
             role: 'manager'
         }).exec();
 
-        if(!findManager) {
+        if (!findManager) {
             return res.status(404).json({
                 message: "Manager not found"
             });
@@ -674,7 +746,7 @@ const getCustomers = async (req, res) => {
             role: 'customer'
         }).exec();
 
-        if(!findCustomers || findCustomers.length === 0){
+        if (!findCustomers || findCustomers.length === 0) {
             return res.status(404).json({
                 message: "Customers not found"
             });
@@ -712,7 +784,7 @@ const getCustomer = async (req, res) => {
             role: 'customer'
         }).exec();
 
-        if(!findCustomer) {
+        if (!findCustomer) {
             return res.status(404).json({
                 message: "Invalid id, customer not found"
             });
@@ -800,6 +872,7 @@ const search = async (req, res) => {
 
 module.exports = {
     register,
+    verify,
     login,
     profile,
     updateProfile,
