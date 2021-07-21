@@ -55,7 +55,7 @@ function* loginWorker(action) {
       "customerAuthData",
       JSON.stringify(data.data.user)
     );
-    axiosInstance.defaults.headers.common["token"] = `${data.data.accessToken}`;
+    axiosInstance.defaults.headers.common["token"] = `${data.data.refreshToken}`;
 
     const newNoti = {
       id: uuid_v4(),
