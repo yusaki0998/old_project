@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
         match: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     },
 
-    phone: { type: String, required: true, unique: true, limit: 10},
+    phone: { type: String, required: true, unique: true, limit: 10 },
 
     password: { type: String, required: true, select: false },
 
@@ -30,7 +30,9 @@ const userSchema = mongoose.Schema({
         type: String,
         enum: ['admin', 'manager', 'staff', 'customer'],
         default: 'customer'
-    }
+    },
+
+    verified: { type: Boolean, default: false },
 });
 
 userSchema.index({
