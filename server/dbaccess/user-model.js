@@ -37,6 +37,12 @@ const userSchema = mongoose.Schema({
 
 userSchema.index({
     fullname: 'text',
+    phone: 'text',
+    email: 'text'
+});
+
+userSchema.index({
+    fullname: 'text',
     phone: 'text'
 })
 

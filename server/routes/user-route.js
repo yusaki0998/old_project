@@ -1,40 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        return cb(null, './uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/:/g, "-") + "-" 
-        + file.originalname);
-    }
-});
-
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg'
-        || file.mimetype === 'image/png'
-        || file.mimetype === 'image/jpg') {
-        cb(null, true);
-    } else {
-        cb(null, false);
-    }
-};
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5
-    },
-    fileFilter: fileFilter
-});
+const upload = require('../utils/multer');
 
 const UserController = require('../bl/user-controller');
 
 router.post('/register', UserController.register);
 router.patch('/verify/:id', UserController.verify);
+router.patch('/reset-password', UserController.resetPassword);
 router.post('/login', UserController.login);
 router.get('/profile', checkAuth, UserController.profile);
 router.put('/update-profile', checkAuth, upload.single('avatar'), UserController.updateProfile);
