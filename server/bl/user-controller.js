@@ -128,7 +128,7 @@ const register = async (req, res) => {
 
 const verify = async (req, res) => {
     try {
-        const token = req.params.id;
+        const { token } = req.params;
 
         if (!token) {
             return res.status(404).json({
