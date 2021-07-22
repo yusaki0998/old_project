@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Movie = require('../dbaccess/movie-model');
 const User = require('../dbaccess/user-model');
-const Schedule = require('../dbaccess/schedule-model');
+//const Schedule = require('../dbaccess/schedule-model');
+const cloudinary = require('../utils/cloudinary');
 const moment = require('moment');
 
 const createMovie = async (req, res) => {
@@ -15,6 +16,8 @@ const createMovie = async (req, res) => {
                 message: "You don't have permission to access this"
             })
         }
+
+        const cloud = await cloudinary.uploader.upload(req.file.path);
 
         const { movieName, director, actor, genre, nation, ageRating, amountOfTime,
             showtimes, description, status } = req.body;
@@ -48,7 +51,7 @@ const createMovie = async (req, res) => {
             amountOfTime: amountOfTime,
             showtimes: showtimes,
             description: description,
-            coverImage: req.file.path,
+            coverImage: cloud.secure_url,
             status: status
         });
 

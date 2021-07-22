@@ -7,9 +7,10 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require("dotenv").config();
 const generateString = require('../utils/randomString');
+const cloudinary = require('../utils/cloudinary');
 
 const transporter = nodemailer.createTransport({
-    service: "Gmail",
+    service: "Hotmail",
     auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PW,
@@ -92,18 +93,12 @@ const register = async (req, res) => {
 
         await user.save();
 
-        const verifyToken = jwt.sign({
-            _id: user._id
-        }, process.env.VERIFY_SECRET, {
-            expiresIn: "24h"
-        });
-
         let url;
         if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify/${verifyToken}`
+            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify/${user._id}`
         }
         else {
-            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify/${verifyToken}`;
+            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify/${user._id}`;
         }
 
         transporter.sendMail({
@@ -114,7 +109,6 @@ const register = async (req, res) => {
 
         return res.status(201).json({
             message: `Verification mail sent to ${email}`,
-            data: verifyToken
         });
 
     } catch (error) {
@@ -128,17 +122,18 @@ const register = async (req, res) => {
 
 const verify = async (req, res) => {
     try {
-        const { token } = req.params;
+        const userId = req.params.id;
 
-        if (!token) {
+        console.log(userId);
+
+        if (!userId) {
             return res.status(404).json({
                 message: "Token missing"
             });
         }
-        const payload = jwt.verify(token, process.env.VERIFY_SECRET);
 
         const user = await User.findOne({
-            _id: payload._id
+            _id: userId
         }).exec();
 
         if (!user) {
@@ -148,6 +143,7 @@ const verify = async (req, res) => {
         }
 
         user.verified = true;
+
         await user.save();
 
         return res.status(200).json({
@@ -275,17 +271,6 @@ const login = async (req, res) => {
 
 const profile = async (req, res) => {
     try {
-        // const id = req.userData._id;
-        // const user = await User
-        //     .findById(id)
-        //     .exec();
-
-        // if (!user) {
-        //     return res.status(404).json({
-        //         message: "Failed to retrieve user info"
-        //     });
-        // }
-
         return res.status(200).json({
             message: "Retrieved user info",
             data: req.userData
@@ -311,8 +296,10 @@ const updateProfile = async (req, res) => {
             _id: id
         }).exec()
 
+        let cloud;
         if (req.file) {
-            user.avatar = req.file.path;
+            cloud = await cloudinary.uploader.upload(req.file.path);
+            user.avatar = cloud.secure_url;
         }
 
         if (fullname) {
