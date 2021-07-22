@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require("dotenv").config();
 const generateString = require('../utils/randomString');
+const cloudinary = require('../utils/cloudinary');
 
 const transporter = nodemailer.createTransport({
     service: "Hotmail",
@@ -295,8 +296,10 @@ const updateProfile = async (req, res) => {
             _id: id
         }).exec()
 
+        let cloud;
         if (req.file) {
-            user.avatar = req.file.path;
+            cloud = await cloudinary.uploader.upload(req.file.path);
+            user.avatar = cloud.secure_url;
         }
 
         if (fullname) {
