@@ -100,19 +100,16 @@ const register = async (req, res) => {
 
         let url;
         if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://
-            ${process.env.DEPLOY_NAME}/api/v1/users/verify/${verifyToken}`
+            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify/${verifyToken}`
         }
         else {
-            url = `${process.env.PROTOCOL}://
-            ${process.env.LOCAL_NAME}:
-            ${process.env.PORT}/api/v1/users/verify/${verifyToken}`;
+            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify/${verifyToken}`;
         }
 
         transporter.sendMail({
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
-            html: `Click <a href = '${url}'>here</a> to confirm your email. Test ${url}`
+            html: `Click <a href = '${url}'>here</a> to confirm your email.`
         });
 
         return res.status(201).json({
