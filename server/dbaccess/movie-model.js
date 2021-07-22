@@ -37,4 +37,10 @@ const movieSchema = mongoose.Schema({
     status: { type: Number, default: 0 },
 });
 
+movieSchema.index({
+    movieName: 'text',
+    director: 'text',
+    actor: 'text',
+});
+
 module.exports = mongoose.model('Movie', movieSchema);

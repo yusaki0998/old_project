@@ -74,7 +74,7 @@ const getOngoingMovies = async (req, res) => {
             status: 1
         }).exec();
 
-        if(!findMovies || findMovies.length === 0) {
+        if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
                 message: "Movies not found"
             });
@@ -100,7 +100,7 @@ const getComingSoonMovies = async (req, res) => {
             status: 0
         }).exec();
 
-        if(!findMovies || findMovies.length === 0) {
+        if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
                 message: "Movies not found"
             });
@@ -285,17 +285,11 @@ const deleteMovie = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.body.input;
+        const input = req.query.input;
 
         const findMovies = await Movie.find({
-            $and: [
-                {
-                    $or: [
-                        { movieName: new RegExp(input, 'i') }
-                    ]
-                }
-            ]
-        }).limit(5).exec();
+            $text: { $search: input }
+        }).exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.json([]);

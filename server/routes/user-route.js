@@ -35,6 +35,7 @@ const UserController = require('../bl/user-controller');
 
 router.post('/register', UserController.register);
 router.patch('/verify/:id', UserController.verify);
+router.patch('/reset-password', UserController.resetPassword);
 router.post('/login', UserController.login);
 router.get('/profile', checkAuth, UserController.profile);
 router.put('/update-profile', checkAuth, upload.single('avatar'), UserController.updateProfile);

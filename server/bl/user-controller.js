@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require("dotenv").config();
+const generateString = require('../utils/randomString');
 
 const transporter = nodemailer.createTransport({
     service: "Gmail",
@@ -97,17 +98,22 @@ const register = async (req, res) => {
             expiresIn: "24h"
         });
 
-        const url =
-            `${process.env.PROTOCOL}://
-        ${process.env.HOST_NAME}:
-        ${process.env.PORT}/api/v1/users/verify/${verifyToken}`;
-        //${process.env.PROTOCOL}://${process.env.HOST_NAME}
+        let url;
+        if (process.env.NODE_ENV === 'production') {
+            url = `${process.env.PROTOCOL}s://
+            ${process.env.DEPLOY_NAME}/api/v1/users/verify/${verifyToken}`
+        }
+        else {
+            url = `${process.env.PROTOCOL}://
+            ${process.env.LOCAL_NAME}:
+            ${process.env.PORT}/api/v1/users/verify/${verifyToken}`;
+        }
 
         transporter.sendMail({
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
-            html: `Click <a href = '${url}'>here</a> to confirm your email.`
-        })
+            html: `Click <a href = '${url}'>here</a> to confirm your email. Test ${url}`
+        });
 
         return res.status(201).json({
             message: `Verification mail sent to ${email}`,
@@ -127,19 +133,19 @@ const verify = async (req, res) => {
     try {
         const token = req.params.id;
 
-        if(!token) {
+        if (!token) {
             return res.status(404).json({
                 message: "Token missing"
             });
         }
-        
+
         const payload = jwt.verify(token, process.env.VERIFY_SECRET);
 
         const user = await User.findOne({
             _id: payload._id
         }).exec();
 
-        if(!user) {
+        if (!user) {
             return res.status(404).json({
                 message: "User does not exist"
             });
@@ -150,6 +156,48 @@ const verify = async (req, res) => {
 
         return res.status(200).json({
             message: "Account verified"
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const userMail = await User.findOne({
+            email: email,
+            verified: true
+        }).exec();
+
+        if (!userMail) {
+            return res.status(404).json({
+                message: "Email not found"
+            });
+        }
+
+        const randomString = generateString(8);
+
+        const hashString = await bcrypt.hash(randomString, 10);
+
+        userMail.password = hashString;
+
+        await userMail.save();
+
+        transporter.sendMail({
+            to: email,
+            subject: 'Password reset',
+            html: `Your new password is ${randomString}. Besure to change it immediately after you login`
+        });
+
+        return res.status(200).json({
+            message: "Reset password success, an email with a new password just sent to you"
         });
 
     } catch (error) {
@@ -195,11 +243,12 @@ const login = async (req, res) => {
             });
         }
 
-        if (!user.verified) {
-            return res.status(403).json({
-                message: "Please verify your email first before login"
-            });
-        }
+        //Verify ok thi gỡ cái này ra
+        // if (!user.verified) {
+        //     return res.status(403).json({
+        //         message: "Please verify your email first before login"
+        //     });
+        // }
 
         const refreshToken = jwt.sign({
             _id: user._id,
@@ -873,6 +922,7 @@ const search = async (req, res) => {
 module.exports = {
     register,
     verify,
+    resetPassword,
     login,
     profile,
     updateProfile,
