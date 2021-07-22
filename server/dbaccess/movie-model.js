@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+//let urlHost = `${process.env.PROTOCOL}://${process.env.HOST_NAME}:${process.env.PORT}`;
+
 const movieSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
 
@@ -29,10 +31,16 @@ const movieSchema = mongoose.Schema({
 
     description: { type: String },
 
-    coverImage: { type: String, default: `../uploads/coversample.jpg` },
+    coverImage: { type: String, default: `uploads/coversample.png` /*`${urlHost}/uploads/coversample.png`*/ },
 
     //0: phim sap chieu, 1: phim dang chieu
     status: { type: Number, default: 0 },
+});
+
+movieSchema.index({
+    movieName: 'text',
+    director: 'text',
+    actor: 'text',
 });
 
 module.exports = mongoose.model('Movie', movieSchema);

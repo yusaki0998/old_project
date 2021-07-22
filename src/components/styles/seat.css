@@ -76,6 +76,16 @@
   color: #fff;
 }
 
+.seat__list .seat__item.sold .seat__head {
+  background-color: rgb(175, 14, 187);
+  color: #fff;
+}
+
+.seat__list .seat__item.sold .seat__body {
+  background-color: rgb(175, 14, 187);
+  color: #fff;
+}
+
 .seat__list .seat__item.unavailable .seat__body {
   background-color: rgb(245, 23, 23);
   color: #fff;
@@ -83,4 +93,7 @@
 .seat__list .seat__item.unavailable {
   user-select: none;
   pointer-events: none;
+}
+.mw-92 {
+  max-width: 92% !important;
 }

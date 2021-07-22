@@ -35,8 +35,16 @@ const BookingSummary = ({ bookingDetail, selectedSeats }) => {
       }));
       setIsBooking(true);
       bookTicketRequest(bookingDetail?._id, reqData)
-        .then(({ data }) => {
-          console.log(data);
+        .then(() => {
+          const newNoti = {
+            id: uuid_v4(),
+            type: "success",
+            message: "Đặt vé thành công. Vui lòng kiểm tra lịch sử đặt vé",
+          };
+          dispatch(addNotification(newNoti));
+          setTimeout(() => {
+            dispatch(removeNotification(newNoti.id));
+          }, 2000);
           history.push(`/customer/history-transactions`);
         })
         .catch((err) => {

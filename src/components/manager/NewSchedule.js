@@ -45,6 +45,8 @@ const NewScheduleForm = ({
         showDate: selectedDate,
       });
       console.log(dataRes);
+      setFilm("");
+      setRoomId("");
       setIsLoading(false);
       fetchListScheduleHandler();
       close();

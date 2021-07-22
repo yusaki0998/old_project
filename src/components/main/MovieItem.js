@@ -3,10 +3,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import poster from "../../assets/poster.jpg";
-import { PROD_REST_API_IMG_URL } from "../../utils/constants";
+import {
+  getRandomRatingForMovie,
+  PROD_REST_API_IMG_URL,
+} from "../../utils/constants";
 import { showTotalTime } from "./TopMovieDetail";
 
+export const getRatingColor = (rating) => {
+  if (rating < 5) return "red";
+  if (rating < 8) return "yellow";
+  if (rating < 10) return "green";
+};
+
 const MovieItem = ({ movieItem }) => {
+  const rating = getRandomRatingForMovie();
   return (
     <div className="card card--big">
       <div className="card__cover">
@@ -18,14 +28,21 @@ const MovieItem = ({ movieItem }) => {
           }
           alt={movieItem?.movieName}
         />
-        <Link to={`/details/${movieItem?._id}`} className="card__play">
+        <Link
+          to={`/details/${movieItem?._id}?from=${movieItem?.status}`}
+          className="card__play"
+        >
           <i className="icon ion-ios-play"></i>
         </Link>
-        <span className="card__rate card__rate--green">8.4</span>
+        <span className={`card__rate card__rate--${getRatingColor(rating)}`}>
+          {rating}
+        </span>
       </div>
       <div className="card__content">
         <h3 className="card__title card__title-movie">
-          <Link to={`/details/${movieItem?._id}`}>{movieItem?.movieName}</Link>
+          <Link to={`/details/${movieItem?._id}?from=${movieItem?.status}`}>
+            {movieItem?.movieName}
+          </Link>
         </h3>
         <p>
           <strong className="text-white">Thể loại : </strong>

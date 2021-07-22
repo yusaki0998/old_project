@@ -6,6 +6,14 @@ const Movie = require('../dbaccess/movie-model');
 
 const getMovieSchedule = async (req, res) => {
     try {
+        const checkUser = req.userData
+
+        if(checkUser === null) {
+            return res.status(401).json({
+                message: "You must login to book ticket"
+            });
+        }
+
         const id = req.params.movieId;
 
         const findMovie = await Movie
@@ -26,16 +34,22 @@ const getMovieSchedule = async (req, res) => {
             .populate('slot')
             .exec();
 
+        let scheduleDate = [];
+        findSchedule.forEach(schedule => {
+            scheduleDate.push({showDate: schedule.showDate});
+        });
+
         return res.status(200).json({
             message: "Movie schedule found",
             data: {
                 movie: findMovie,
-                schedule: findSchedule
+                schedule: findSchedule,
+                date: scheduleDate
             }
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -101,7 +115,7 @@ const createTicket = async (req, res) => {
             });
         }
 
-        if (seatChosens.length > 8) {
+        if (seatChosens.length > 5) {
             return res.status(301).json({
                 message: "You cannot choose more than 8 seats"
             });
@@ -197,7 +211,7 @@ const getTickets = async (req, res) => {
 
         if (!findTickets) {
             return res.status(404).json({
-                message: "All tickets not found",
+                message: "Tickets not found",
             });
         }
 
@@ -357,6 +371,7 @@ const deleteTicket = async (req, res) => {
             message: "Ticket deleted",
             data: deleteTicket
         });
+        
     } catch (error) {
         console.error(error);
         await session.abortTransaction();

@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
-const multer = require('multer');
+const upload = require('../utils/multer');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         return cb(null, './uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        cb(null, new Date().toISOString().replace(/:/g, "-") + "-" 
+        + file.originalname);
     }
 });
 

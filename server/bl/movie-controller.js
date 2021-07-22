@@ -60,7 +60,7 @@ const createMovie = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -74,13 +74,19 @@ const getOngoingMovies = async (req, res) => {
             status: 1
         }).exec();
 
+        if (!findMovies || findMovies.length === 0) {
+            return res.status(404).json({
+                message: "Movies not found"
+            });
+        }
+
         return res.status(200).json({
             message: "All ongoing movies found",
             data: findMovies
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -94,13 +100,19 @@ const getComingSoonMovies = async (req, res) => {
             status: 0
         }).exec();
 
+        if (!findMovies || findMovies.length === 0) {
+            return res.status(404).json({
+                message: "Movies not found"
+            });
+        }
+
         return res.status(200).json({
             message: "All coming soon movies found",
             data: findMovies
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -273,17 +285,11 @@ const deleteMovie = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.body.input;
+        const input = req.query.input;
 
         const findMovies = await Movie.find({
-            $and: [
-                {
-                    $or: [
-                        { movieName: new RegExp(input, 'i') }
-                    ]
-                }
-            ]
-        }).limit(5).exec();
+            $text: { $search: input }
+        }).exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.json([]);

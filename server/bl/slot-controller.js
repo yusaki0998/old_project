@@ -72,6 +72,12 @@ const getSlots = async (req, res) => {
     try {
         const findSlots = await Slot.find().exec();
 
+        if(!findSlots || findSlots.length ===0) {
+            return res.status(404).json({
+                message: "Slots not found"
+            });
+        }
+
         return res.status(200).json({
             message: "Slots found",
             data: findSlots
@@ -91,6 +97,12 @@ const getSlot = async (req, res) => {
         const id = req.params.slotId;
 
         const findSlot = await Slot.findById(id).exec();
+
+        if(!findSlot) {
+            return res.status(404).json({
+                message: "Invalid id, slot not found"
+            });
+        }
 
         return res.status(200).json({
             message: "Slot found",

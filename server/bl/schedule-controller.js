@@ -85,7 +85,7 @@ const createSchedule = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -106,7 +106,7 @@ const getSchedules = async (req, res) => {
             .populate('slot')
             .exec();
 
-        if (!findSchedules) {
+        if (!findSchedules || findSchedules.length === 0) {
             return res.status(404).json({
                 message: "Schedules not found"
             });
@@ -118,7 +118,7 @@ const getSchedules = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -149,7 +149,7 @@ const getSchedule = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -219,7 +219,7 @@ const editSchedule = async (req, res) => {
             data: updatedSchedule
         });
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error
@@ -255,7 +255,7 @@ const deleteSchedule = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
         res.status(500).json({
             message: "Internal server error",
             error: error

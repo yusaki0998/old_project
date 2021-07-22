@@ -10,10 +10,10 @@ module.exports = async (req, res, next) => {
             message: "Unauthorized"
         });
     }
-        
-    const payload = jwt.verify(token, process.env.REFRESH_SECRET);
 
     try {
+        const payload = jwt.verify(token, process.env.REFRESH_SECRET);
+
         const user = await User
         .findById(payload._id)
         .exec();

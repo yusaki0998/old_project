@@ -10,6 +10,8 @@ import { showAgeThreshold } from "../../utils/age";
 import { useSelector } from "react-redux";
 import { getMovieScheduleRequest } from "../../store/api/global";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { getRandomRatingForMovie } from "../../utils/constants";
+import { getRatingColor } from "./MovieItem";
 
 export const showTotalTime = (time) => {
   if (!time) {
@@ -29,6 +31,8 @@ const TopMovieDetail = ({ movieDetail }) => {
   const [loadingSchedule, setLoadingSchedule] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
   const history = useHistory();
+
+  const rating = getRandomRatingForMovie();
 
   useEffect(() => {
     if (isShowBooking) {
@@ -65,7 +69,13 @@ const TopMovieDetail = ({ movieDetail }) => {
           <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-2">
             <div className="card__cover">
               <img src={poster} alt="poster" />
-              <span className="card__rate card__rate--green">8.4</span>
+              <span
+                className={`card__rate card__rate--green ${getRatingColor(
+                  rating
+                )}`}
+              >
+                {rating}
+              </span>
             </div>
           </div>
           <div className="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
@@ -83,6 +93,7 @@ const TopMovieDetail = ({ movieDetail }) => {
                   {movieDetail?.actor?.split(", ").map((name, index) => (
                     <span key={index}>{name},</span>
                   ))}
+                  ...
                 </li>
                 <li>
                   <span className="font-weight-bold">Thể loại:</span>
@@ -153,13 +164,19 @@ const TopMovieDetail = ({ movieDetail }) => {
                       key={item._id}
                       onClick={() => history.push(`/select-seat/${item._id}`)}
                     >
-                      <span className="slot__badge">
-                        {item?.slot?.slotName}
-                      </span>
-                      <span className="slot__text">
-                        {convertTime(item?.slot?.startTime)} -{" "}
-                        {convertTime(item?.slot?.endTime)}
-                      </span>
+                      <div>
+                        <span className="slot__badge">
+                          {item?.slot?.slotName}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="slot__text">
+                          {convertTime(item?.slot?.startTime)} -{" "}
+                          {convertTime(item?.slot?.endTime)}
+                          <br />
+                        </span>
+                        <span className="text-sm">{item?.room?.roomName}</span>
+                      </div>
                     </div>
                   ))}
               </div>

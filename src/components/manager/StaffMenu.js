@@ -9,6 +9,7 @@ import { logout } from "../../store/actions/authActions";
 import logo from "../../assets/logo.png";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
+import { hideSidebar } from "../../store/actions/uiActions";
 
 const StaffMenu = () => {
   const { sidebar } = useSelector((state) => state.ui);
@@ -67,6 +68,7 @@ const StaffMenu = () => {
                   ""
                 )}`}
                 to="/staff/customers"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-contacts"></i>
                 <span> Khách hàng</span>
@@ -80,6 +82,7 @@ const StaffMenu = () => {
                   ""
                 )}`}
                 to="/staff/booking-ticket"
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-contacts"></i>
                 <span>Đặt phim</span>

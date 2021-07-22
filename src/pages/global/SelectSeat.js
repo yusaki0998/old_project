@@ -9,12 +9,6 @@ import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import SeatMap from "../../components/manager/SeatMap";
 import BookingSeatTypes from "../../components/main/BookingSeatTypes";
 import BookingSummary from "../../components/main/BookingSummary";
-import {
-  addNotification,
-  removeNotification,
-} from "../../store/actions/uiActions";
-import { v4 as uuid_v4 } from "uuid";
-import { useDispatch } from "react-redux";
 
 const SelectSeat = () => {
   const [bookingDetail, setBookingDetail] = useState(null);
@@ -22,7 +16,6 @@ const SelectSeat = () => {
   const { id } = useParams();
   const history = useHistory();
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     scrollToTop();
@@ -43,6 +36,9 @@ const SelectSeat = () => {
 
   useEffect(() => {
     fetchMovieSeatMap();
+    return () => {
+      setBookingDetail({});
+    };
     // eslint-disable-next-line
   }, [id]);
 
@@ -54,15 +50,6 @@ const SelectSeat = () => {
       setSelectedSeats((prevState) =>
         prevState.filter((item) => item._id !== seat._id)
       );
-      const newNoti = {
-        id: uuid_v4(),
-        type: "success",
-        message: "Bỏ chọn ghế thành công",
-      };
-      dispatch(addNotification(newNoti));
-      setTimeout(() => {
-        dispatch(removeNotification(newNoti.id));
-      }, 2000);
     }
   };
 
