@@ -102,6 +102,7 @@ const register = async (req, res) => {
         }
 
         transporter.sendMail({
+            from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
             html: `Click <a href = '${url}'>here</a> to confirm your email.`
@@ -183,6 +184,7 @@ const resetPassword = async (req, res) => {
         await userMail.save();
 
         transporter.sendMail({
+            from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Password reset',
             html: `Your new password is ${randomString}. Besure to change it immediately after you login`
