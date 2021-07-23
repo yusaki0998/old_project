@@ -128,7 +128,7 @@ const verify = async (req, res) => {
 
         if (!userId) {
             return res.status(404).json({
-                message: "Token missing"
+                message: "Cannot find registered user"
             });
         }
 
@@ -242,7 +242,7 @@ const login = async (req, res) => {
         //     });
         // }
 
-        const refreshToken = jwt.sign({
+        const token = jwt.sign({
             _id: user._id,
         },
             process.env.REFRESH_SECRET, {
@@ -255,7 +255,7 @@ const login = async (req, res) => {
         return res.status(200).json({
             message: "Login success!",
             data: {
-                refreshToken: refreshToken,
+                token: token,
                 user: userObj
             }
         });
