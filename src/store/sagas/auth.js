@@ -50,12 +50,12 @@ function* loginWorker(action) {
   try {
     const { data } = yield loginRequest(action.data);
     yield put(loginSuccess(data.data));
-    yield localStorage.setItem("customerAuthToken", data.data.refreshToken);
+    yield localStorage.setItem("customerAuthToken", data.data.token);
     yield localStorage.setItem(
       "customerAuthData",
       JSON.stringify(data.data.user)
     );
-    axiosInstance.defaults.headers.common["token"] = `${data.data.accessToken}`;
+    axiosInstance.defaults.headers.common["token"] = `${data.data.token}`;
 
     const newNoti = {
       id: uuid_v4(),

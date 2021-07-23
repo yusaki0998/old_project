@@ -85,7 +85,7 @@ const reducer = (state = initialState, { type, payload }) => {
           data: payload.user,
         },
         isAuthenticated: true,
-        token: payload.accessToken,
+        token: payload.token,
       };
     case LOGIN_FAILED:
       return {
