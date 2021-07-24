@@ -826,7 +826,24 @@ const getCustomer = async (req, res) => {
 
         const findCustomerTicket = await Ticket.find({
             user: findCustomer._id
-        }).exec();
+        })
+        .populate({
+            path: 'schedule',
+            model: 'Schedule',
+            populate: [{
+                path: 'movie',
+                model: 'Movie',
+                select: 'movieName'
+            }, {
+                path: 'room',
+                model: 'Room',
+                select: 'roomName'
+            }, {
+                path: 'slot',
+                model: 'Slot'
+            }]
+        })
+        .exec();
 
         return res.status(200).json({
             message: "Customer information found",
