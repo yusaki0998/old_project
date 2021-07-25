@@ -1,0 +1,531 @@
+/** @format */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+.section__premier-list .card__cover,
+.section__premier-list .card__content {
+  margin: 0 10px;
+}
+
+.divDisable {
+  pointer-events: none;
+  /* for "disabled" effect */
+  opacity: 0.7;
+  background: rgba(0, 0, 0, 0.7);
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* custom select */
+.sign__row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.sign__row .sign__col {
+  width: 100%;
+}
+.sign__row .sign__label {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.sign-custom__select {
+  cursor: pointer;
+  position: relative;
+  height: 46px;
+  background-color: #222028;
+  border-radius: 6px;
+  border: 2px solid transparent;
+}
+
+.sign-custom__select.show {
+  border-color: #f9ab00;
+}
+
+.sign-custom__select .sign__select-icon {
+  color: #fff;
+  position: absolute;
+  top: 12px;
+  right: 11px;
+}
+
+.sign-custom__select li {
+  color: #fff;
+  padding: 11px 12px;
+  list-style: none;
+}
+.sign-custom__select ul {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  display: none;
+  z-index: 5;
+  background-color: #222028;
+}
+.sign-custom__select ul.show {
+  display: block;
+}
+.sign-custom__select ul li {
+  transition: all 0.3s ease-in-out;
+}
+.sign-custom__select ul li:hover {
+  color: #f9ab00;
+}
+.react-datepicker__input-container {
+  height: 46px;
+}
+.react-datepicker__input-container input {
+  height: 100%;
+  padding-left: 11px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  background-color: #222028;
+  border: 2px solid transparent;
+}
+.gender__text {
+  text-transform: capitalize;
+}
+.react-datepicker__input-container
+  input.react-datepicker-ignore-onclickoutside {
+  border-color: #f9ab00;
+}
+.input-error {
+  border-color: rgb(199, 8, 8) !important;
+}
+.input-required {
+  color: rgb(199, 8, 8);
+  margin-bottom: 0;
+  margin-top: 3px;
+  font-size: 13px;
+}
+.f-22 {
+  font-size: 22px !important;
+}
+.text-white {
+  color: #fff;
+}
+.customer__nav-menu {
+  margin-top: 6rem;
+}
+.text-center {
+  text-align: center;
+}
+.customer__nav-menu ul {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 10px;
+}
+.customer__nav-menu ul a {
+  display: block;
+  margin-right: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+}
+.customer__nav-menu ul a:hover,
+.customer__nav-menu ul a.active {
+  color: #f9ab00;
+}
+.btn__outline-orange {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  min-width: 120px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 2px solid #f9ab00;
+  margin-left: auto;
+  font-size: 14px;
+  color: #fff;
+  text-transform: uppercase;
+}
+.info__detail .info__row {
+  display: flex;
+  align-items: center;
+}
+.info__detail .info__row .label {
+  flex: 0.2;
+}
+.border__bottom-white {
+  border-bottom: 1px solid #fff;
+  padding-bottom: 5px;
+}
+.edit__customer-profile__wrapper .edit__form {
+  flex: 1;
+}
+.edit__customer-profile__wrapper .react-datepicker__input-container input {
+  width: 100%;
+}
+.edit__customer-profile__wrapper .react-datepicker-wrapper {
+  display: block;
+}
+.unvisible {
+  visibility: hidden;
+}
+.btn__block {
+  display: block !important;
+  width: 100%;
+}
+.customer__order-history__wrapper thead th {
+  padding: 0 !important;
+}
+.sidebar__user-name {
+  font-size: 14px !important;
+}
+.admin__create-account__wrapper {
+  max-width: 70%;
+  margin: 2rem auto;
+}
+.mt-2r {
+  margin-top: 2rem;
+}
+.admin__manager-list__wrapper th {
+  padding: 0 !important;
+}
+.ui__loading-spinner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.ui__loading-spinner img {
+  max-width: 65px;
+}
+.table__search {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  padding: 0;
+  top: auto;
+  right: auto;
+  left: auto;
+  bottom: auto;
+  background-color: transparent;
+  width: 300px;
+  margin-right: 10px;
+}
+.table__search-button {
+  position: absolute;
+  height: 40px;
+  color: #fff;
+  font-size: 22px;
+  top: 50%;
+  margin-top: -20px;
+  right: 15px;
+}
+.border-bottom {
+  border-bottom: 2px solid #fff;
+}
+.sign_textarea {
+  min-height: 120px;
+  padding-top: 10px !important;
+}
+.admin-header {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1a191f;
+  z-index: 100;
+  border-bottom: 1px solid #222028;
+}
+.admin-header__content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  position: relative;
+  padding: 0 15px;
+  width: 100%;
+}
+.admin-header__logo {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 70px;
+  background-color: #1a191f;
+  width: auto;
+}
+.admin-header__logo img {
+  width: 110px;
+  display: block;
+}
+.admin-header__btn {
+  display: block;
+  width: 22px;
+  height: 20px;
+  position: relative;
+}
+.admin-header__btn.admin-header__btn-admin {
+  top: 6%;
+}
+.admin-header__btn span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 22px;
+  background: #000;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: 0.4s ease;
+  top: 0px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+.admin-header__btn span:nth-child(2) {
+  top: 8px;
+}
+.admin-header__btn span:nth-child(3) {
+  top: 16px;
+}
+.admin-header__btn:hover span {
+  background-color: #f9ab00;
+}
+.admin-header__btn--active span {
+  background-color: #f9ab00;
+}
+.admin-header__btn--active span:nth-child(1) {
+  top: 8px;
+  transform: rotate(45deg);
+}
+.admin-header__btn--active span:nth-child(2) {
+  opacity: 0;
+}
+.admin-header__btn--active span:nth-child(3) {
+  top: 8px;
+  transform: rotate(-45deg);
+}
+@media (min-width: 768px) {
+  .admin-header__logo img {
+    width: 120px;
+  }
+}
+@media (min-width: 1200px) {
+  .admin-header {
+    display: none;
+  }
+}
+.header__nav-link {
+  min-width: fit-content;
+  font-weight: 600;
+}
+.user__img-wrapper {
+  max-width: 100px;
+  margin: auto;
+}
+.slick-next {
+  right: -20px !important;
+}
+.slick-prev {
+  left: -20px !important;
+}
+.w-100 {
+  width: 100%;
+}
+.seat__map-item img {
+  border-radius: 10px;
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+.seat__map-item.active img {
+  border-color: #f9ab00;
+}
+.seat__map-item p {
+  text-align: center;
+  margin: 10px 0;
+}
+.seat__map-item.active p {
+  color: #f9ab00;
+}
+.seat__types {
+  display: block !important;
+}
+.room__list {
+  width: 60% !important;
+}
+.room__paginator {
+  width: 60%;
+}
+.min-height-80vh {
+  min-height: 80vh;
+}
+.edit__profile--form {
+  max-width: 40%;
+}
+.mw-50 {
+  max-width: 50%;
+}
+.back__btn {
+  display: flex;
+  justify-content: flex-start;
+}
+.back__btn button {
+  margin-left: 0;
+  font-size: 12px;
+  border: 1px solid #222028;
+}
+.slot__badge {
+  background-color: #f9ab00;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+.slot__list-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.slot__list-row .slot__item {
+  margin: 20px;
+  margin-left: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+}
+.slot__list-row .slot__item.active .slot__text {
+  color: #f9ab00;
+}
+.slot__list-row .slot__item:hover .slot__text {
+  color: #f9ab00;
+}
+.week__picker-container {
+  position: relative;
+}
+.week__date-inner {
+  position: absolute;
+  top: 45px;
+  left: 0px;
+  height: 312px;
+  width: fit-content;
+}
+.btn-sm {
+  font-size: 13px;
+  min-width: 100px;
+  height: 30px;
+}
+.text-schedule {
+  font-size: 14px;
+  max-width: 125px;
+  padding: 8px 12px;
+  color: #fff;
+  cursor: pointer;
+}
+.f-13 {
+  font-size: 14px;
+}
+.border_table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.border_table td,
+.border_table th {
+  border: 1px solid #dddddd !important;
+  text-align: left !important;
+  padding: 8px;
+}
+.border_table th {
+  padding: 8px !important;
+}
+.SelectedWeekExample {
+  position: absolute;
+  z-index: 5;
+}
+.h-250 {
+  height: 250px !important;
+}
+.overflow-y-scr {
+  overflow-y: scroll;
+}
+.img__preview img {
+  max-width: 150px;
+  margin-bottom: 0.75rem;
+}
+.card--details .card__description {
+  overflow-y: scroll;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.card--details .card__description::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.card--details .card__description {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.font-weight-bold {
+  font-weight: bold;
+}
+.movie__name {
+  text-transform: uppercase;
+}
+.card__title-movie a {
+  color: #f9ab00 !important;
+  text-transform: uppercase;
+}
+.card__title-movie {
+  min-height: 60px;
+}
+.f-14 {
+  font-size: 14px;
+}
+.customer__profile-wrapper .info__detail .label {
+  font-weight: bold;
+}
+.booking__summary {
+  background-color: #f5f5f5;
+  position: fixed;
+  width: 100%;
+  height: 150px;
+  bottom: 0;
+  left: 0;
+  z-index: 500;
+  padding: 10px 20px;
+}
+.text-yellow {
+  color: #f9ab00 !important;
+}
+.booking__summary img {
+  max-height: 110px;
+}
+.flex-col {
+  flex-direction: column;
+}
+.text-sm {
+  font-size: smaller;
+}
+.text-green {
+  color: #29b474;
+}
+.ticket__list .main__table thead th {
+  padding-left: 0;
+}
+.btn-delete {
+  border: 2px solid #eb5757;
+}

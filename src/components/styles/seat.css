@@ -1,0 +1,103 @@
+/** @format */
+.seat__list {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 69%;
+  margin: 10px auto;
+}
+.seat__list .seat__item {
+  width: 48px;
+  height: 40px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+}
+.seat__list .seat__item .seat__body {
+  width: 100%;
+  height: 70%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: #a7a7a7;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.seat__list .seat__item .seat__head {
+  width: 60%;
+  height: 50%;
+  position: absolute;
+  left: 20%;
+  top: 0;
+  background-color: #a7a7a7;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+.seat__list .seat__item:hover .seat__body {
+  background-color: #fff;
+}
+.seat__list .seat__item:hover .seat__head {
+  background-color: #fff;
+}
+.seat__list .seat__item .seat__text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+}
+.seat__list .seat__item:hover .seat__text {
+  color: #333;
+}
+.seat__list .seat__item.vip .seat__head {
+  background-color: #df8103;
+  color: #fff;
+}
+.seat__list .seat__item.vip .seat__body {
+  background-color: #df8103;
+  color: #fff;
+}
+.seat__list .seat__item.isChosen .seat__head {
+  background-color: rgb(19, 167, 19);
+  color: #fff;
+}
+
+.seat__list .seat__item.isChosen .seat__body {
+  background-color: rgb(19, 167, 19);
+  color: #fff;
+}
+.min-w-200 {
+  min-width: 200px;
+}
+.seat__list .seat__item.unavailable .seat__head {
+  background-color: rgb(245, 23, 23);
+  color: #fff;
+}
+
+.seat__list .seat__item.sold .seat__head {
+  background-color: rgb(175, 14, 187);
+  color: #fff;
+}
+
+.seat__list .seat__item.sold .seat__body {
+  background-color: rgb(175, 14, 187);
+  color: #fff;
+}
+
+.seat__list .seat__item.unavailable .seat__body {
+  background-color: rgb(245, 23, 23);
+  color: #fff;
+}
+.seat__list .seat__item.unavailable {
+  user-select: none;
+  pointer-events: none;
+}
+.seat__list .seat__item.sold {
+  user-select: none;
+  pointer-events: none;
+}
+.mw-92 {
+  max-width: 92% !important;
+}

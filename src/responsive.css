@@ -1,0 +1,94 @@
+/** @format */
+
+@media (max-width: 1024px) {
+  .nav-tabs.content__tabs li a {
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 54px;
+    color: #fff;
+    position: relative;
+    text-transform: uppercase;
+  }
+  .nav-tabs.content__tabs li a.active {
+    color: #f9ab00;
+  }
+  .main__table td {
+    font-size: 13px;
+  }
+  .main__table a {
+    font-size: 13px;
+  }
+  .main__table div {
+    font-size: 13px;
+  }
+  .slot__list-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-tabs.content__tabs {
+    justify-content: space-between;
+  }
+  .info__detail .info__row .label {
+    flex: 0.45;
+  }
+  .edit__customer-profile__wrapper .sign__row {
+    flex-direction: column !important;
+  }
+  .edit__customer-profile__wrapper .sign__row .sign__col.mr-3 {
+    margin-right: 0 !important;
+    margin-bottom: 0.75rem;
+  }
+  .edit__profile--form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .edit__customer-profile__wrapper .d-flex {
+    flex-direction: column;
+  }
+  .edit__customer-profile__wrapper .d-flex .image__placeholder button {
+    margin: 10px auto;
+  }
+  .customer__nav-menu ul a {
+    margin-right: 0.8rem;
+    font-weight: 500;
+  }
+  .admin__create-account__wrapper {
+    max-width: 98%;
+  }
+  .nav-tabs.content__tabs li a {
+    font-size: 11px;
+  }
+  .slick-next {
+    right: -10px !important;
+  }
+  .slick-prev {
+    left: -10px !important;
+  }
+  .mw-50 {
+    max-width: 100%;
+  }
+  .header__nav-link {
+    font-size: 12px !important;
+    font-weight: 400;
+  }
+  .header__logo img {
+    width: 60px !important;
+    position: relative;
+    left: -25px;
+  }
+  .header__sign-in {
+    height: 30px !important;
+    width: 30px !important;
+    min-width: 30px !important;
+  }
+  .slot__list-row {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
