@@ -8,7 +8,7 @@ const getMovieSchedule = async (req, res) => {
     try {
         const checkUser = req.userData
 
-        if(checkUser === null) {
+        if (checkUser === null) {
             return res.status(401).json({
                 message: "You must login to book ticket"
             });
@@ -29,6 +29,7 @@ const getMovieSchedule = async (req, res) => {
         const findSchedule = await Schedule.find({
             movie: id
         })
+            .sort({showDate: -1})
             .select('-roomSeats')
             .populate('room', 'roomName')
             .populate('slot')
@@ -36,7 +37,7 @@ const getMovieSchedule = async (req, res) => {
 
         let scheduleDate = [];
         findSchedule.forEach(schedule => {
-            scheduleDate.push({showDate: schedule.showDate});
+            scheduleDate.push({ showDate: schedule.showDate });
         });
 
         return res.status(200).json({
@@ -140,7 +141,7 @@ const createTicket = async (req, res) => {
             schedule: findSchedule
         }).exec();
 
-        if(checkTicket !== null) {
+        if (checkTicket !== null) {
             await session.abortTransaction();
             session.endSession();
             return res.status(409).json({
@@ -305,7 +306,7 @@ const updateTicketStatus = async (req, res) => {
 
         const updateTicket = await Ticket.updateOne(
             { _id: id },
-            { status: status }, 
+            { status: status },
             { session }
         ).exec();
 
@@ -366,12 +367,12 @@ const deleteTicket = async (req, res) => {
 
         await session.commitTransaction();
         session.endSession();
-        
+
         return res.status(200).json({
             message: "Ticket deleted",
             data: deleteTicket
         });
-        
+
     } catch (error) {
         console.error(error);
         await session.abortTransaction();

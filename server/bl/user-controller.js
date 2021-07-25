@@ -102,6 +102,7 @@ const register = async (req, res) => {
         }
 
         transporter.sendMail({
+            from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
             html: `Click <a href = '${url}'>here</a> to confirm your email.`
@@ -183,6 +184,7 @@ const resetPassword = async (req, res) => {
         await userMail.save();
 
         transporter.sendMail({
+            from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Password reset',
             html: `Your new password is ${randomString}. Besure to change it immediately after you login`
@@ -824,7 +826,24 @@ const getCustomer = async (req, res) => {
 
         const findCustomerTicket = await Ticket.find({
             user: findCustomer._id
-        }).exec();
+        })
+        .populate({
+            path: 'schedule',
+            model: 'Schedule',
+            populate: [{
+                path: 'movie',
+                model: 'Movie',
+                select: 'movieName'
+            }, {
+                path: 'room',
+                model: 'Room',
+                select: 'roomName'
+            }, {
+                path: 'slot',
+                model: 'Slot'
+            }]
+        })
+        .exec();
 
         return res.status(200).json({
             message: "Customer information found",
