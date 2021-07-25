@@ -4,14 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import poster from "../../assets/poster.jpg";
 import { convertTime, justContainNumber } from "../../utils/helper";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { showAgeThreshold } from "../../utils/age";
 import { useSelector } from "react-redux";
 import { getMovieScheduleRequest } from "../../store/api/global";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { getRandomRatingForMovie } from "../../utils/constants";
 import { getRatingColor } from "./MovieItem";
+import OutsideHandler from "../shared/ClickWrapper";
 
 export const showTotalTime = (time) => {
   if (!time) {
@@ -26,10 +25,12 @@ export const showTotalTime = (time) => {
 const TopMovieDetail = ({ movieDetail }) => {
   const [unvailableFilm, setUnAvailableFilm] = useState(false);
   const [scheduleDetail, setScheduleDetail] = useState(null);
-  const [ticketDate, setTicketDate] = useState(new Date());
+  const [dateDetail, setDateDetail] = useState([]);
+  const [ticketDate, setTicketDate] = useState("");
   const [isShowBooking, setIsShowBooking] = useState(false);
   const [loadingSchedule, setLoadingSchedule] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const [viewDate, setViewDate] = useState(false);
   const history = useHistory();
 
   const rating = getRandomRatingForMovie();
@@ -53,6 +54,7 @@ const TopMovieDetail = ({ movieDetail }) => {
           setUnAvailableFilm(true);
         } else {
           setScheduleDetail(data?.data?.schedule || []);
+          setDateDetail(data?.data?.date);
         }
       })
       .catch((err) => {
@@ -68,7 +70,14 @@ const TopMovieDetail = ({ movieDetail }) => {
         <div className="row w-100">
           <div className="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-2">
             <div className="card__cover">
-              <img src={poster} alt="poster" />
+              <img
+                src={
+                  movieDetail?.coverImage?.includes("cloudinary")
+                    ? movieDetail?.coverImage
+                    : poster
+                }
+                alt="poster"
+              />
               <span
                 className={`card__rate card__rate--green ${getRatingColor(
                   rating
@@ -142,11 +151,39 @@ const TopMovieDetail = ({ movieDetail }) => {
         <div className="booking__ticket my-5 text-white">
           <div className="row">
             <div className="col-md-3 mb-3">
-              <p>Ngày mua vé</p>
-              <DatePicker
-                selected={ticketDate}
-                onChange={(date) => setTicketDate(date)}
-              />
+              <p>Ngày chiếu phim</p>
+              <OutsideHandler callback={() => setViewDate(false)}>
+                <div
+                  className={`sign-custom__select ${viewDate ? "show" : ""}`}
+                  onClick={() => setViewDate((prevState) => !prevState)}
+                >
+                  <li className="gender__text">
+                    {ticketDate ? ticketDate : "Vui lòng chọn"}
+                  </li>
+                  <ul
+                    className={`${viewDate ? "show" : ""}`}
+                    style={{
+                      height: "auto",
+                    }}
+                  >
+                    {dateDetail?.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() =>
+                          setTicketDate(item?.showDate?.substr(0, 10))
+                        }
+                      >
+                        {item?.showDate?.substr(0, 10)}
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="sign__select-icon">
+                    <i
+                      className={`fas fa-chevron-${viewDate ? "up" : "down"}`}
+                    ></i>
+                  </button>
+                </div>
+              </OutsideHandler>
             </div>
             <div className="col-md-9">
               <p>Khung giờ</p>
@@ -158,27 +195,35 @@ const TopMovieDetail = ({ movieDetail }) => {
               )}
               <div className="slot__list-row">
                 {scheduleDetail?.length > 0 &&
-                  scheduleDetail?.map((item) => (
-                    <div
-                      className={`slot__item`}
-                      key={item._id}
-                      onClick={() => history.push(`/select-seat/${item._id}`)}
-                    >
-                      <div>
-                        <span className="slot__badge">
-                          {item?.slot?.slotName}
-                        </span>
+                  scheduleDetail
+                    ?.filter((scheduleItem) =>
+                      !!ticketDate
+                        ? scheduleItem?.showDate?.includes(ticketDate)
+                        : !!scheduleItem.showDate
+                    )
+                    ?.map((item) => (
+                      <div
+                        className={`slot__item`}
+                        key={item._id}
+                        onClick={() => history.push(`/select-seat/${item._id}`)}
+                      >
+                        <div>
+                          <span className="slot__badge">
+                            {item?.slot?.slotName}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="slot__text">
+                            {convertTime(item?.slot?.startTime)} -{" "}
+                            {convertTime(item?.slot?.endTime)}
+                            <br />
+                          </span>
+                          <span className="text-sm">
+                            {item?.room?.roomName}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="slot__text">
-                          {convertTime(item?.slot?.startTime)} -{" "}
-                          {convertTime(item?.slot?.endTime)}
-                          <br />
-                        </span>
-                        <span className="text-sm">{item?.room?.roomName}</span>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
               </div>
             </div>
           </div>

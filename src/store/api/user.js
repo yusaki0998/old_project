@@ -33,3 +33,17 @@ export const getCustomerListRequest = async () => {
 export const getCustomerInfoRequest = async (customerId) => {
   return axios.get(`/users/get-customers/${customerId}`);
 };
+
+export const updateCustomerTicketInfoRequest = async (ticketId) => {
+  return axios.patch(
+    `/tickets/${ticketId}`,
+    {
+      status: 1,
+    },
+    {
+      headers: {
+        "Content-type": "application/json",
+      },
+    }
+  );
+};

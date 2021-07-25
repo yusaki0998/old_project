@@ -10,7 +10,7 @@ const SeatItem = ({ seatItem, clicked, seatList }) => {
           ? "isChosen"
           : ""
       } ${seatItem.status === "pending" ? "unavailable" : ""} ${
-        seatItem.seatType === "sold" ? "sold" : ""
+        seatItem.status === "sold" ? "sold" : ""
       }`}
       onClick={() => clicked(seatItem)}
     >

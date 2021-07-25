@@ -165,7 +165,9 @@ const MovieFiltered = ({
             role="tabpanel"
             aria-labelledby="1-tab"
           >
-            {isLoading && <MovieListSkeleton />}
+            {isLoading && (
+              <MovieListSkeleton filmItemClassName={filmItemClassName} />
+            )}
             <div className="row row--grid">
               {!isLoading &&
                 list?.map((item) => (

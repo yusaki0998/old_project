@@ -1,7 +1,8 @@
 /** @format */
 
-import React, { lazy, Suspense } from "react";
-import { useRouteMatch, Switch, Route } from "react-router-dom";
+import React, { lazy, Suspense, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouteMatch, Switch, Route, useHistory } from "react-router-dom";
 import Menu from "../../components/manager/Menu";
 import ManagerHeader from "../../components/shared/ManagerHeader";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
@@ -18,6 +19,14 @@ const FilmCalendar = lazy(() => import("../../pages/manager/FilmCalendar"));
 
 const ManagerLayout = () => {
   const router = useRouteMatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      history.push("/signin");
+    }
+  }, [history, isAuthenticated]);
 
   return (
     <>

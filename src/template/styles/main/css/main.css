@@ -1266,6 +1266,7 @@ ul {
 .card__cover img {
   width: 100%;
   transition: opacity 0.5s;
+  min-height: 288px;
 }
 .card__cover:hover img {
   opacity: 0.4;

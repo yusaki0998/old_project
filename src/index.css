@@ -406,6 +406,7 @@ code {
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin-top: 0;
 }
 .slot__list-row .slot__item.active .slot__text {
   color: #f9ab00;
@@ -518,4 +519,13 @@ code {
 }
 .text-sm {
   font-size: smaller;
+}
+.text-green {
+  color: #29b474;
+}
+.ticket__list .main__table thead th {
+  padding-left: 0;
+}
+.btn-delete {
+  border: 2px solid #eb5757;
 }

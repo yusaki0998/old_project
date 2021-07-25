@@ -1,12 +1,12 @@
 /** @format */
 
 import React, { useEffect, lazy, Suspense } from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 import "./../../template/styles/main/index.css";
 import Header from "../../components/shared/header";
 import Footer from "../../components/shared/footer";
 import CustomerNavMenu from "../../components/customer/CustomerNavMenu";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserGeneralInfoRequest } from "../../store/api/user";
 import { getUserProfileSuccess } from "../../store/actions/userActions";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
@@ -19,6 +19,15 @@ const Profile = lazy(() => import("../../pages/customer/Profile"));
 const CustomerLayout = ({ children }) => {
   const router = useRouteMatch();
   const dispatch = useDispatch();
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      history.push("/signin");
+    }
+  }, [history, isAuthenticated]);
 
   useEffect(() => {
     getUserGeneralInfoRequest()

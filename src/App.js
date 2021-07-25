@@ -27,6 +27,7 @@ const ForgotPassword = lazy(() => import("./pages/global/ForgotPassword"));
 const FAQ = lazy(() => import("./pages/global/FAQ"));
 const Privacy = lazy(() => import("./pages/global/Privacy"));
 const ConfirmOTP = lazy(() => import("./pages/global/ConfirmOTP"));
+const VerifyEmail = lazy(() => import("./pages/global/VerifyEmail"));
 const Login = lazy(() => import("./pages/global/Login"));
 
 function App() {
@@ -53,6 +54,13 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}>
               <UnAuthLayout>
                 <ConfirmOTP />
+              </UnAuthLayout>
+            </Suspense>
+          </Route>
+          <Route path="/verify-email">
+            <Suspense fallback={<LoadingSpinner />}>
+              <UnAuthLayout>
+                <VerifyEmail />
               </UnAuthLayout>
             </Suspense>
           </Route>

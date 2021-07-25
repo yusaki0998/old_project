@@ -111,3 +111,6 @@ export const createScheduleRequest = async (data) =>
       "Content-type": "application/json",
     },
   });
+
+export const deteleScheduleRequest = async (scheduleId) =>
+  axios.delete(`/schedules/${scheduleId}`);

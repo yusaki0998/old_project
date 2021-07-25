@@ -16,7 +16,7 @@ const EditAccountInfo = lazy(() => import("../../pages/admin/EditAccount"));
 const Dashboard = lazy(() => import("../../pages/admin/Dashboard.js"));
 
 const AdminLayout = ({ children }) => {
-  const { loginData } = useSelector((state) => state.auth);
+  const { loginData, isAuthenticated } = useSelector((state) => state.auth);
   const router = useRouteMatch();
   const history = useHistory();
 
@@ -24,7 +24,10 @@ const AdminLayout = ({ children }) => {
     if (loginData?.data?.role !== "admin") {
       history.push("/");
     }
-  }, [history, loginData?.data?.role]);
+    if (!isAuthenticated) {
+      history.push("/signin");
+    }
+  }, [history, loginData?.data?.role, isAuthenticated]);
 
   return (
     <>

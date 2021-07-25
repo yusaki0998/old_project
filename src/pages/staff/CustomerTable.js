@@ -90,6 +90,7 @@ const CustomerTable = () => {
         maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
         setCurPage={setCurPage}
         totalItems={filteredList.length}
+        scrollAfterClicking
       />
     </div>
   );

@@ -22,7 +22,9 @@ const MovieItem = ({ movieItem }) => {
       <div className="card__cover">
         <img
           src={
-            !movieItem?.coverImage
+            movieItem?.coverImage?.includes("cloudinary")
+              ? movieItem?.coverImage
+              : !movieItem?.coverImage
               ? `${PROD_REST_API_IMG_URL}/${movieItem?.coverImage}`
               : poster
           }

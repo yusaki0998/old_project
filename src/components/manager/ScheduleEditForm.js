@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../ui/Modal";
 import Backdrop from "../ui/Backdrop";
-import { updateScheduleInfoRequest } from "../../store/api/manager";
+import {
+  deteleScheduleRequest,
+  updateScheduleInfoRequest,
+} from "../../store/api/manager";
 import { useDispatch } from "react-redux";
 import {
   addNotification,
@@ -11,7 +14,7 @@ import {
 } from "../../store/actions/uiActions";
 import { v4 as uuid_v4 } from "uuid";
 import OutsideHandler from "../shared/ClickWrapper";
-import { dayInWeeks } from "../../utils/helper";
+import { checkCondition, dayInWeeks } from "../../utils/helper";
 
 const ScheduleEditForm = ({
   open,
@@ -65,6 +68,38 @@ const ScheduleEditForm = ({
         message:
           error?.response?.data?.message ||
           "Cập nhật lịch chiếu thất bại. Vui lòng thử lại!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
+    }
+  };
+
+  const deleteScheduleHandler = async () => {
+    setIsLoading(true);
+    try {
+      await deteleScheduleRequest(scheduleData?._id);
+      setIsLoading(false);
+      close();
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message: "Xóa lịch chiếu thành công!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
+      fetchListScheduleAfterUpdate();
+    } catch (error) {
+      setIsLoading(false);
+      const newNoti = {
+        id: uuid_v4(),
+        type: "error",
+        message:
+          error?.response?.data?.message ||
+          "Xóa lịch chiếu thất bại. Vui lòng thử lại!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -181,6 +216,23 @@ const ScheduleEditForm = ({
               </div>
             </div>
           </div>
+          {scheduleData?._id && (
+            <div className="row align-items-center">
+              <div className="col-md-4">
+                <button
+                  className={`btn__outline-orange ml-0 btn-sm btn-delete ${checkCondition(
+                    isLoading,
+                    "divDisable",
+                    ""
+                  )}`}
+                  onClick={deleteScheduleHandler}
+                >
+                  Xóa lịch chiếu
+                </button>
+              </div>
+              <div className="col-md-8"></div>
+            </div>
+          )}
         </div>
       </Modal>
       <Backdrop

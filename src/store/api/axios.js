@@ -8,6 +8,7 @@ const axiosInstance = axios.create({
     //   ? "http://localhost:8080/api/v1/"
     //   :
     "https://ot-bm.herokuapp.com/api/v1/",
+  // "https://pure-beyond-32158.herokuapp.com/api/v1/",
 });
 
 if (localStorage.getItem("customerAuthToken")) {

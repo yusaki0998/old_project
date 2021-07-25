@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import CancelBooking from "../../components/customer/CancelBooking";
 import { convertSeatTypeToVietnamese } from "../../utils/convertGender";
 import { useSelector } from "react-redux";
+import { convertTime } from "../../utils/helper";
 
 const OrderHistory = () => {
   const [loading, setLoading] = useState(false);
@@ -55,8 +56,8 @@ const OrderHistory = () => {
                 <tr>
                   <th>ID</th>
                   <th>Tên Phim</th>
-                  <th>Ngày Đặt</th>
-                  <th>Giờ Đặt</th>
+                  <th>Ngày chiếu</th>
+                  <th>Giờ chiếu</th>
                   <th>Phòng Chiếu</th>
                   <th>Số Ghế</th>
                   <th>Loại Ghế</th>
@@ -83,10 +84,15 @@ const OrderHistory = () => {
                         </div>
                       </td>
                       <td>
-                        <div className="main__table-text">-</div>
+                        <div className="main__table-text">
+                          {item?.schedule?.showDate?.substr(0, 10)}
+                        </div>
                       </td>
                       <td>
-                        <div className="main__table-text">-</div>
+                        <div className="main__table-text">
+                          {convertTime(item?.schedule?.slot?.startTime)} -{" "}
+                          {convertTime(item?.schedule?.slot?.endTime)}
+                        </div>
                       </td>
                       <td>
                         <div className="main__table-text">
@@ -111,7 +117,8 @@ const OrderHistory = () => {
                       <td>
                         <button
                           className={`main__table-btn main__table-btn--delete open-modal ${
-                            loginData?.data?.role === "staff"
+                            loginData?.data?.role === "staff" ||
+                            item.status === 1
                               ? "divDisable"
                               : ""
                           }`}
@@ -135,6 +142,8 @@ const OrderHistory = () => {
         curPage={curPage}
         setCurPage={setCurPage}
         totalItems={ticketList.length}
+        isLoading={loading}
+        scrollAfterClicking
       />
       <CancelBooking
         open={isCancelling}

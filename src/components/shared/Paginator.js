@@ -2,7 +2,17 @@
 
 import React from "react";
 
-const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
+const Paginator = ({
+  maxPage,
+  curPage,
+  setCurPage,
+  totalItems,
+  isLoading,
+  scrollAfterClicking,
+}) => {
+  if (isLoading) {
+    return null;
+  }
   if (!maxPage || maxPage <= 1) {
     return null;
   }
@@ -19,7 +29,16 @@ const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
             curPage === 0 ? "divDisable" : ""
           }`}
         >
-          <button onClick={() => setCurPage((prevState) => prevState - 1)}>
+          <button
+            onClick={() => {
+              setCurPage((prevState) => prevState - 1);
+              window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
             <i className="icon ion-ios-arrow-back"></i>
           </button>
         </li>
@@ -32,7 +51,21 @@ const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
                 curPage === index ? "paginator__item--active" : ""
               }`}
             >
-              <button onClick={() => setCurPage(index)}> {index + 1} </button>
+              <button
+                onClick={() => {
+                  setCurPage(index);
+                  if (scrollAfterClicking) {
+                    window.scrollTo({
+                      top: 0,
+                      left: 0,
+                      behavior: "smooth",
+                    });
+                  }
+                }}
+              >
+                {" "}
+                {index + 1}{" "}
+              </button>
             </li>
           ))}
         <li
@@ -40,7 +73,16 @@ const Paginator = ({ maxPage, curPage, setCurPage, totalItems }) => {
             curPage === maxPage - 1 ? "divDisable" : ""
           }`}
         >
-          <button onClick={() => setCurPage((prevState) => prevState + 1)}>
+          <button
+            onClick={() => {
+              setCurPage((prevState) => prevState + 1);
+              window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth",
+              });
+            }}
+          >
             <i className="icon ion-ios-arrow-forward"></i>
           </button>
         </li>

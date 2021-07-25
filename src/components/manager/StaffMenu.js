@@ -66,6 +66,11 @@ const StaffMenu = () => {
                   pathname.includes("/customers"),
                   "sidebar__nav-link--active",
                   ""
+                )} ${checkCondition(
+                  pathname.includes("/customer-detail") ||
+                    pathname === "/staff",
+                  "sidebar__nav-link--active",
+                  ""
                 )}`}
                 to="/staff/customers"
                 onClick={() => dispatch(hideSidebar())}
@@ -84,8 +89,22 @@ const StaffMenu = () => {
                 to="/staff/booking-ticket"
                 onClick={() => dispatch(hideSidebar())}
               >
-                <i className="icon ion-ios-contacts"></i>
+                <i className="icon ion-ios-videocam"></i>
                 <span>Đặt phim</span>
+              </Link>
+            </li>
+            <li className="sidebar__nav-item">
+              <Link
+                className={`sidebar__nav-link ${checkCondition(
+                  pathname.includes("/ticket-history"),
+                  "sidebar__nav-link--active",
+                  ""
+                )}`}
+                to="/staff/ticket-history"
+                onClick={() => dispatch(hideSidebar())}
+              >
+                <i className="icon ion-ios-calendar"></i>
+                <span>Lịch sử vé</span>
               </Link>
             </li>
           </ul>

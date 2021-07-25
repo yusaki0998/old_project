@@ -94,6 +94,10 @@
   user-select: none;
   pointer-events: none;
 }
+.seat__list .seat__item.sold {
+  user-select: none;
+  pointer-events: none;
+}
 .mw-92 {
   max-width: 92% !important;
 }

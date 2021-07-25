@@ -21,11 +21,11 @@ function* signupWorker(action) {
   try {
     const { data } = yield signupRequest(action.data);
     yield put(signupSuccess(data));
-    action.history.push("/signin");
+    action.history.push("/verify-email");
     const newNoti = {
       id: uuid_v4(),
       type: "success",
-      message: "Đăng ký thành công!",
+      message: "Đăng ký thành công! Vui lòng nhập mã xác thực",
     };
     yield put(addNotification(newNoti));
     yield delay(2000);
