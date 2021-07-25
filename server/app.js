@@ -17,6 +17,7 @@ const slotRoutes = require("./routes/slot-route");
 const scheduleRoutes = require("./routes/schedule-route");
 const seatRoutes = require("./routes/seat-route");
 const ticketRoutes = require("./routes/ticket-route");
+const reportRoutes = require("./routes/report-route");
 
 //middleware section
 app.use(morgan("dev"));
@@ -33,6 +34,7 @@ app.use("/api/v1/slots", slotRoutes);
 app.use("/api/v1/schedules", scheduleRoutes);
 app.use("/api/v1/seats", seatRoutes);
 app.use("/api/v1/tickets", ticketRoutes);
+app.use("/api/v1/reports", reportRoutes);
 
 //error handling
 app.use((req, res, next) => {
