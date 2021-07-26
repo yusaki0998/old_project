@@ -178,8 +178,10 @@ const updateMovie = async (req, res) => {
         const { movieName, director, actor, genre, nation, ageRating, amountOfTime,
             showtimes, description, status } = req.body;
 
+        let cloud;
         if (req.file) {
-            movie.coverImage = req.file.path;
+            cloud = await cloudinary.uploader.upload(req.file.path);
+            movie.coverImage = cloud.secure_url;
         }
 
         if (movieName) {
