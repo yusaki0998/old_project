@@ -6,6 +6,8 @@ const seatMapSchema = mongoose.Schema({
 
     name: { type: String },
 
+    image: { type: String },
+
     seats: { type: [Seat] }
 });
 

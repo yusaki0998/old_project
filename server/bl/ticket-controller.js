@@ -27,9 +27,12 @@ const getMovieSchedule = async (req, res) => {
         }
 
         const findSchedule = await Schedule.find({
-            movie: id
+            movie: id,
+            showDate: {
+                $gte: Date.now()
+            }
         })
-            .sort({showDate: -1})
+            .sort({ showDate: 1 })
             .select('-roomSeats')
             .populate('room', 'roomName')
             .populate('slot')
@@ -37,7 +40,15 @@ const getMovieSchedule = async (req, res) => {
 
         let scheduleDate = [];
         findSchedule.forEach(schedule => {
-            scheduleDate.push({ showDate: schedule.showDate });
+            scheduleDate.push(schedule.showDate);
+        });
+
+        const result = scheduleDate.map(function (date) {
+            return date.getTime()
+        }).filter(function (date, i, array) {
+            return array.indexOf(date) === i;
+        }).map(function (time) {
+            return new Date(time);
         });
 
         return res.status(200).json({
@@ -45,7 +56,7 @@ const getMovieSchedule = async (req, res) => {
             data: {
                 movie: findMovie,
                 schedule: findSchedule,
-                date: scheduleDate
+                date: result
             }
         });
 
@@ -116,7 +127,18 @@ const createTicket = async (req, res) => {
             });
         }
 
-        if (seatChosens.length > 5) {
+        const checkLimit = await Ticket.find({
+            user: currentUser,
+            schedule: id
+        }).exec();
+
+        if (checkLimit.length > 8 && checkUser.role === 'customer') {
+            return res.status(301).json({
+                message: "You have reached your limit (8) to book this movie ticket"
+            });
+        }
+
+        if (seatChosens.length > 8 && checkUser.role === 'customer') {
             return res.status(301).json({
                 message: "You cannot choose more than 8 seats"
             });
@@ -151,19 +173,35 @@ const createTicket = async (req, res) => {
 
         const seatNumber = seatChosens.map(seat => seat.seatNo);
 
-        //update seats status in current schedule
-        await Schedule.updateMany(
-            { _id: findSchedule._id },
-            { $set: { 'roomSeats.$[item].status': "pending" } },
-            {
-                multi: true,
-                arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
-                session
-            }
-        ).exec();
+        if (checkUser.role === 'customer') {
+            //update seats status in current schedule
+            await Schedule.updateMany(
+                { _id: findSchedule._id },
+                { $set: { 'roomSeats.$[item].status': "pending" } },
+                {
+                    multi: true,
+                    arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
+                    session
+                }
+            ).exec();
 
-        await session.commitTransaction();
-        session.endSession();
+            await session.commitTransaction();
+            session.endSession();
+        } else if (checkUser.role === 'staff') {
+            //update seats status in current schedule
+            await Schedule.updateMany(
+                { _id: findSchedule._id },
+                { $set: { 'roomSeats.$[item].status': "sold" } },
+                {
+                    multi: true,
+                    arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
+                    session
+                }
+            ).exec();
+
+            await session.commitTransaction();
+            session.endSession();
+        }
 
         return res.status(201).json({
             message: "All ticket booked",
