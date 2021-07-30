@@ -31,7 +31,7 @@ const movieSchema = mongoose.Schema({
 
     description: { type: String },
 
-    coverImage: { type: String, default: `uploads/coversample.png` /*`${urlHost}/uploads/coversample.png`*/ },
+    coverImage: { type: String, default: `../uploads/coversample.png` /*`${urlHost}/uploads/coversample.png`*/ },
 
     //0: phim sap chieu, 1: phim dang chieu
     status: { type: Number, default: 0 },

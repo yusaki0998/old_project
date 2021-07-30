@@ -5,6 +5,6 @@ const checkAuth = require('../middleware/check-auth');
 const ReportController = require('../bl/report-controller');
 
 router.get('/movies', ReportController.movieReports);
-router.get('/staffs', ReportController.staffReports);
+router.get('/staffs/:staffId', ReportController.staffReports);
 
 module.exports = router;

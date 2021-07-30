@@ -497,15 +497,16 @@ const getStaffs = async (req, res) => {
 
         const checkUser = await User.findById(currentUser).exec();
 
-        if (checkUser.role !== 'admin') {
+        let findStaffs
+        if (checkUser.role === 'admin' || checkUser.role === 'manager') {
+            findStaffs = await User.find({
+                role: 'staff'
+            }).exec();
+        } else {
             return res.status(403).json({
                 message: "You don't have permission to access this"
             })
         }
-
-        const findStaffs = await User.find({
-            role: 'staff'
-        }).exec();
 
         if (!findStaffs || findStaffs.length === 0) {
             return res.status(404).json({
@@ -533,18 +534,19 @@ const getStaff = async (req, res) => {
 
         const checkUser = await User.findById(currentUser).exec();
 
-        if (checkUser.role !== 'admin') {
+        const id = req.params.staffId;
+
+        let findStaff;
+        if (checkUser.role === 'admin' || checkUser.role === 'manager') {
+            findStaff = await User.findOne({
+                _id: id,
+                role: 'staff'
+            }).exec();
+        } else {
             return res.status(403).json({
                 message: "You don't have permission to access this"
             })
         }
-
-        const id = req.params.staffId;
-
-        const findStaff = await User.findOne({
-            _id: id,
-            role: 'staff'
-        }).exec();
 
         if (!findStaff) {
             return res.status(404).json({
@@ -827,23 +829,26 @@ const getCustomer = async (req, res) => {
         const findCustomerTicket = await Ticket.find({
             user: findCustomer._id
         })
-        .populate({
-            path: 'schedule',
-            model: 'Schedule',
-            populate: [{
-                path: 'movie',
-                model: 'Movie',
-                select: 'movieName'
-            }, {
-                path: 'room',
-                model: 'Room',
-                select: 'roomName'
-            }, {
-                path: 'slot',
-                model: 'Slot'
-            }]
-        })
-        .exec();
+            .populate({
+                path: 'schedule',
+                model: 'Schedule',
+                options: {
+                    sort: { 'showDate': -1 }
+                },
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
+            })
+            .exec();
 
         return res.status(200).json({
             message: "Customer information found",

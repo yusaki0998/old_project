@@ -146,35 +146,22 @@ const createTicket = async (req, res) => {
 
         const findSchedule = await Schedule.findById(id).exec();
 
-        let buyTicket = [];
-        seatChosens.forEach(seat => {
-            buyTicket.push({
-                _id: new mongoose.Types.ObjectId(),
-                schedule: findSchedule._id,
-                seat: seat,
-                user: checkUser._id
-            })
-        });
-
-        const data = await Ticket.insertMany(buyTicket, { session });
-
-        const checkTicket = await Ticket.findOne({
-            seat: seatChosens.seatNo,
-            schedule: findSchedule
-        }).exec();
-
-        if (checkTicket !== null) {
-            await session.abortTransaction();
-            session.endSession();
-            return res.status(409).json({
-                message: "Ticket already reserved"
-            });
-        }
-
         const seatNumber = seatChosens.map(seat => seat.seatNo);
 
-        if (checkUser.role === 'customer') {
-            //update seats status in current schedule
+        let buyTicket = [];
+        let result;
+        if(checkUser.role === 'customer') {
+            seatChosens.forEach(seat => {
+                buyTicket.push({
+                    _id: new mongoose.Types.ObjectId(),
+                    schedule: findSchedule._id,
+                    seat: seat,
+                    user: checkUser._id
+                })
+            });
+
+            result = await Ticket.insertMany(buyTicket, { session });
+
             await Schedule.updateMany(
                 { _id: findSchedule._id },
                 { $set: { 'roomSeats.$[item].status': "pending" } },
@@ -187,8 +174,20 @@ const createTicket = async (req, res) => {
 
             await session.commitTransaction();
             session.endSession();
-        } else if (checkUser.role === 'staff') {
-            //update seats status in current schedule
+            
+        } else if(checkUser.role === 'staff') {
+            seatChosens.forEach(seat => {
+                buyTicket.push({
+                    _id: new mongoose.Types.ObjectId(),
+                    schedule: findSchedule._id,
+                    seat: seat,
+                    user: checkUser._id,
+                    status: 1
+                })
+            });
+
+            result = await Ticket.insertMany(buyTicket, { session });
+
             await Schedule.updateMany(
                 { _id: findSchedule._id },
                 { $set: { 'roomSeats.$[item].status': "sold" } },
@@ -203,9 +202,22 @@ const createTicket = async (req, res) => {
             session.endSession();
         }
 
+        const checkTicket = await Ticket.findOne({
+            seat: seatChosens.seatNo,
+            schedule: findSchedule
+        }).exec();
+
+        if (checkTicket !== null) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(409).json({
+                message: "Ticket already reserved"
+            });
+        }
+
         return res.status(201).json({
             message: "All ticket booked",
-            data: data
+            data: result
         });
 
     } catch (error) {
