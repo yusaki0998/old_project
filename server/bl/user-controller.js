@@ -21,9 +21,9 @@ const register = async (req, res) => {
     try {
         const { fullname, gender, email, phone, password, retype, dob } = req.body;
 
-        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const regexp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-        if (!email || !password || !fullname || !dob || !phone) {
+        if (!email || !password || !fullname || !dob || !phone || !gender) {
             return res.status(301).json({
                 message: "Missing information required to register"
             });
@@ -43,7 +43,7 @@ const register = async (req, res) => {
             });
         }
 
-        if (phone.length > 10) {
+        if (isNaN(phone) || phone.length !== 10) {
             return res.status(301).json({
                 message: "Your phone number is invalid, phone number must be 10 numbers"
             });
@@ -292,7 +292,7 @@ const updateProfile = async (req, res) => {
 
         const { fullname, gender, email, phone } = req.body;
 
-        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const regexp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
         const user = await User.findOne({
             _id: id
@@ -827,13 +827,14 @@ const getCustomer = async (req, res) => {
         }
 
         const findCustomerTicket = await Ticket.find({
-            user: findCustomer._id
+            user: findCustomer._id,
+            status: 0
         })
             .populate({
                 path: 'schedule',
                 model: 'Schedule',
                 options: {
-                    sort: { 'showDate': -1 }
+                    sort: { 'showDate': 1 }
                 },
                 populate: [{
                     path: 'movie',

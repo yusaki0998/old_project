@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Movie = require('../dbaccess/movie-model');
 const User = require('../dbaccess/user-model');
-//const Schedule = require('../dbaccess/schedule-model');
 const cloudinary = require('../utils/cloudinary');
 const moment = require('moment');
 
@@ -22,7 +21,7 @@ const createMovie = async (req, res) => {
         const { movieName, director, actor, genre, nation, ageRating, amountOfTime,
             showtimes, description, status } = req.body;
 
-        if (!movieName || !director || !actor) {
+        if (!movieName || !director || !actor || !ageRating || !genre) {
             return res.status(301).json({
                 message: "Missing information required to create movie"
             });
@@ -75,7 +74,9 @@ const getOngoingMovies = async (req, res) => {
     try {
         const findMovies = await Movie.find({
             status: 1
-        }).exec();
+        })
+        .sort({ showtimes: 1})
+        .exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
@@ -101,7 +102,9 @@ const getComingSoonMovies = async (req, res) => {
     try {
         const findMovies = await Movie.find({
             status: 0
-        }).exec();
+        })
+        .sort({ showtimes: 1})
+        .exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
