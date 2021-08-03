@@ -76,7 +76,7 @@ const getScheduleSeats = async (req, res) => {
         const findSchedule = await Schedule
             .findById(id)
             .select('+roomSeats')
-            .populate('movie', 'movieName', 'coverImage')
+            .populate('movie', 'movieName coverImage')
             .populate('room', 'roomName')
             .populate('slot')
             .exec();
