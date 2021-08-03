@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Movie = require('../dbaccess/movie-model');
+const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');
 const cloudinary = require('../utils/cloudinary');
 const moment = require('moment');
@@ -268,6 +269,16 @@ const deleteMovie = async (req, res) => {
         }
 
         const id = req.params.movieId;
+
+        const checkMovieSchedule = await Schedule.find({
+            movie: id
+        }).exec();
+
+        if(checkMovieSchedule.length !== 0) {
+            return res.status(409).json({
+                message: "Cannot delete movie ! You must delete all movie schedule before delete this movie"
+            });
+        }
 
         const deleteMovie = await Movie.findByIdAndDelete(id).exec();
 

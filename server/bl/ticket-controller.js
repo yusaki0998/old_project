@@ -203,16 +203,26 @@ const createTicket = async (req, res) => {
             session.endSession();
         }
 
-        const checkTicket = await Ticket.findOne({
-            seat: seatChosens.seatNo,
-            schedule: findSchedule
-        }).exec();
+        // const checkTicket = await Ticket.findOne({
+        //     seat: seatChosens.seatNo,
+        //     schedule: findSchedule
+        // }).exec();
 
-        if (checkTicket !== null) {
+        const checkTicket = await Ticket.find(
+            {
+                schedule: findSchedule,
+                seat: { $in: seatChosens }
+            }
+        ).exec();
+
+        console.log(checkTicket);
+
+        if (checkTicket.length !== 0) {
             await session.abortTransaction();
             session.endSession();
             return res.status(409).json({
-                message: "Ticket already reserved"
+                message: "Ticket already reserved",
+                data: checkTicket
             });
         }
 
@@ -397,7 +407,7 @@ const deleteTicket = async (req, res) => {
 
         session.startTransaction();
 
-        const { id } = req.body;
+        const id = req.query.id;
 
         console.log(id);
 
