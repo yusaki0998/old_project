@@ -49,7 +49,7 @@ const EditProfile = () => {
       <Helmet>
         <title> Chỉnh sửa thông tin cá nhân </title>
       </Helmet>
-      <div className="d-flex">
+      <div className="d-flex flex-col">
         <div className="image__placeholder mr-4">
           <img
             className="d-block my-3 user__img-wrapper"
@@ -63,16 +63,16 @@ const EditProfile = () => {
             }
             alt={loginData?.data?.fullname || ""}
           />
-          <button className="btn__outline-orange">Thay đổi</button>
+          <button className="btn__outline-orange mx-auto">Thay đổi</button>
         </div>
         <div className="edit__form">
-          <p className="mt-3">
-            <strong>Đổi thông tin tài khoản</strong>
-          </p>
           <form
-            className="edit__profile--form"
+            className="edit__profile--form mx-auto"
             onSubmit={handleSubmit(onValid)}
           >
+            <p className="mt-3">
+              <strong>Đổi thông tin tài khoản</strong>
+            </p>
             <div className="sign__row mb-3">
               <div className="sign__col">
                 <p className="sign__label">Tên</p>

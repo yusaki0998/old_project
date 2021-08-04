@@ -255,7 +255,6 @@ const SignUp = () => {
                 >
                   {signUp.isLoading ? "Đang đăng ký" : "Đăng ký"}
                 </button>
-
                 <span className="sign__text">
                   Đã có tài khoản? <Link to="/signin">Đăng nhập!</Link>
                 </span>

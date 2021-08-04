@@ -30,8 +30,7 @@ const SlotList = ({ list, isLoading, onEditSlot }) => {
               <th>ID</th>
               <th>Slot</th>
               <th>Thời gian</th>
-              <th>Sửa</th>
-              <th>Xóa</th>
+              <th>Sửa/Xóa</th>
             </tr>
           </thead>
           <tbody>
@@ -59,10 +58,6 @@ const SlotList = ({ list, isLoading, onEditSlot }) => {
                       >
                         <i className="icon ion-ios-create"></i>
                       </button>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="main__table-btns">
                       <button
                         className="main__table-btn main__table-btn--delete"
                         onClick={() => onOpen(slot)}

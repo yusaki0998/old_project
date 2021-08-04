@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SlotListSkeleton from "../../skeleton/SlotListSkeleton";
 import WeekPicker from "../shared/WeekPicker";
 import OutsideHandler from "../shared/ClickWrapper";
@@ -8,6 +8,7 @@ import ScheduleSkeleton from "../../skeleton/ScheduleSkeleton";
 import ScheduleEditForm from "./ScheduleEditForm";
 import { useSelector } from "react-redux";
 import NewScheduleForm from "./NewSchedule";
+import { getCurrentWeekNum } from "../../utils/helper";
 
 const convertDateString = (daysArr) => {
   const convertedDates = [];
@@ -50,18 +51,30 @@ const CalendarTable = ({
 
   const allFilm = [...comingFilm.list, ...currentFilm.list];
 
+  const { currentWeekNum, dates } = getCurrentWeekNum();
+
+  useEffect(() => {
+    setWeekNum(currentWeekNum);
+    setDays(dates);
+    fetchListScheduleHandler(currentWeekNum);
+    // eslint-disable-next-line
+  }, []);
+
   const findSchedule = (slotId, dateStr) => {
-    const scheduleItem = listSchedules.find(
+    const scheduleItems = listSchedules.filter(
       (item) => item?.slot?._id === slotId && item?.showDate?.includes(dateStr)
     );
-    return scheduleItem?.movie?.movieName || "+";
+    return scheduleItems || [];
   };
 
-  const onEditSchedule = (slotData, dateStr, dayInWeek) => {
-    const scheduleItem = listSchedules.find(
-      (item) =>
-        item?.slot?._id === slotData?._id && item?.showDate?.includes(dateStr)
-    );
+  const onEditSchedule = (slotData, dateStr, dayInWeek, scheduleId) => {
+    const scheduleItem = scheduleId
+      ? listSchedules.find((item) => item._id === scheduleId)
+      : listSchedules.find(
+          (item) =>
+            item?.slot?._id === slotData?._id &&
+            item?.showDate?.includes(dateStr)
+        );
     if (!convertedDates.length) {
       return "";
     }
@@ -82,6 +95,18 @@ const CalendarTable = ({
     setSelectedSchedule(scheduleItem);
     setDayInWeekNum(dayInWeek);
     setOpenEdit(true);
+  };
+
+  const onNewSchedule = (slotData, dateStr, dayInWeek) => {
+    setOpenNewSchedule(true);
+    setSelectedSlotId(slotData);
+    setDayInWeekNum(dayInWeek);
+    const dateStrArr = dateStr?.split("-");
+    if (!dateStr.length) {
+      setSelectedDate(dateStr);
+      return "";
+    }
+    setSelectedDate(`${dateStrArr?.[1]}/${dateStrArr?.[2]}/${dateStrArr?.[0]}`);
   };
 
   return (
@@ -147,74 +172,312 @@ const CalendarTable = ({
                   {!loadingSchedules && (
                     <>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[0], 0)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[0])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[0]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[0])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[0],
+                                        0,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[0], 0)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[0], 0)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[1], 1)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[1])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[1]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[1])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[1],
+                                        1,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[1], 1)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[1], 1)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[2], 2)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[2])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[2]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[2])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[2],
+                                        2,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[2], 2)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[2], 2)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[3], 3)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[3])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[3]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[3])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[3],
+                                        3,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[3], 3)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[3], 3)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[4], 4)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[4])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[4]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[4])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[4],
+                                        4,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[4], 4)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[4], 4)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[5], 5)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[5])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[5]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[5])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[5],
+                                        5,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[5], 5)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[5], 5)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                       <td>
-                        <div
-                          className="text-schedule"
-                          onClick={() =>
-                            onEditSchedule(slot, convertedDates?.[6], 6)
-                          }
-                        >
-                          {findSchedule(slot._id, convertedDates?.[6])}
-                        </div>
+                        {findSchedule(slot._id, convertedDates?.[6]).length >
+                        0 ? (
+                          <div className="d-flex align-items-center">
+                            <div className="group__text-schedule flex-1">
+                              {findSchedule(slot._id, convertedDates?.[6])?.map(
+                                (item) => (
+                                  <div
+                                    className="text-schedule"
+                                    onClick={() =>
+                                      onEditSchedule(
+                                        slot,
+                                        convertedDates?.[6],
+                                        6,
+                                        item._id
+                                      )
+                                    }
+                                    key={item._id}
+                                  >
+                                    {item?.movie?.movieName}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div
+                              className="new__schedule text-white cursor-pointer pr-2 font-bold w-50"
+                              onClick={() =>
+                                onNewSchedule(slot, convertedDates?.[6], 6)
+                              }
+                            >
+                              +
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="text-schedule font-bold"
+                            onClick={() =>
+                              onEditSchedule(slot, convertedDates?.[6], 6)
+                            }
+                          >
+                            +
+                          </div>
+                        )}
                       </td>
                     </>
                   )}

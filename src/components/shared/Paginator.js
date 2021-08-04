@@ -11,10 +11,10 @@ const Paginator = ({
   scrollAfterClicking,
 }) => {
   if (isLoading) {
-    return null;
+    return "";
   }
   if (!maxPage || maxPage <= 1) {
-    return null;
+    return "";
   }
   return (
     <div className="paginator-wrap">

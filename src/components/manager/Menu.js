@@ -27,7 +27,7 @@ const Menu = () => {
   return (
     <>
       <div className={`sidebar ${sidebar.show ? "show" : ""}`}>
-        <a href="/" className="sidebar__logo">
+        <a href="##" className="sidebar__logo">
           <img src={logo} alt="Hotflix logo" />
         </a>
         <div className="sidebar__user">
@@ -142,8 +142,8 @@ const Menu = () => {
                 to="/manager/slot"
                 onClick={() => dispatch(hideSidebar())}
               >
-                <i className="icon ion-ios-man"></i>
-                <span>Slot chiếu</span>
+                <i className="icon ion-ios-time"></i>
+                <span>Giờ chiếu</span>
               </Link>
             </li>
             <li className="sidebar__nav-item">
@@ -158,6 +158,21 @@ const Menu = () => {
               >
                 <i className="icon ion-ios-card"></i>
                 <span>Doanh thu</span>
+              </Link>
+            </li>
+            <li className="sidebar__nav-item">
+              <Link
+                className={`sidebar__nav-link ${checkCondition(
+                  pathname.includes("/staff") ||
+                    pathname.includes("/staff-info"),
+                  "sidebar__nav-link--active",
+                  ""
+                )}`}
+                to="/manager/staff"
+                onClick={() => dispatch(hideSidebar())}
+              >
+                <i className="icon ion-ios-calculator"></i>
+                <span>Thống kê</span>
               </Link>
             </li>
           </ul>

@@ -74,7 +74,7 @@ const CustomerTicketInfo = () => {
 
   return (
     <div className="text-white tab-pane my-3">
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center sm-flex-col">
         <h3 className="border-bottom d-inline-block">
           Thông tin vé của khách hàng
         </h3>
@@ -91,7 +91,7 @@ const CustomerTicketInfo = () => {
         <div className="info">
           <div className="top__info mt-3 mb-4">
             <div className="row w-100 mb-3">
-              <div className="col-5 col-md-3">
+              <div className="col-5 col-md-2">
                 <strong>Tên khách hàng</strong>
               </div>
               <div className="col-7 col-md-9">
@@ -99,7 +99,7 @@ const CustomerTicketInfo = () => {
               </div>
             </div>
             <div className="row w-100 mb-3">
-              <div className="col-5 col-md-3">
+              <div className="col-5 col-md-2">
                 <strong>Số điện thoại</strong>
               </div>
               <div className="col-7 col-md-9">
@@ -107,7 +107,7 @@ const CustomerTicketInfo = () => {
               </div>
             </div>
             <div className="row w-100 mb-3">
-              <div className="col-5 col-md-3">
+              <div className="col-5 col-md-2">
                 <strong>Email</strong>
               </div>
               <div className="col-7 col-md-9">
@@ -116,6 +116,11 @@ const CustomerTicketInfo = () => {
             </div>
           </div>
           <div className="ticket__list">
+            <div className="d-flex justify-content-center">
+              <h3 className="border-bottom d-inline-block mb-4">
+                Danh sách ghế đã đặt
+              </h3>
+            </div>
             <div className="col-12">
               <div className="main__table-wrap">
                 <table className="main__table">
@@ -234,6 +239,7 @@ const CustomerTicketInfo = () => {
             setCurPage={setCurPage}
             totalItems={customerInfo?.ticket?.length || 0}
             isLoading={false}
+            scrollAfterClicking
           />
           <CancelBooking
             open={isCancelling}

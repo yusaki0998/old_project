@@ -89,22 +89,6 @@ const Header = ({ hideCenterDiv, isActive }) => {
                 >
                   {isAuthenticated ? (
                     <>
-                      {(loginData?.data?.role === "admin" ||
-                        loginData?.data?.role === "manager" ||
-                        loginData?.data?.role === "staff") && (
-                        <button
-                          className={`header__nav-link text-white mr-3 ${checkCondition(
-                            isActive,
-                            "header__nav-link--active",
-                            ""
-                          )}`}
-                          onClick={() =>
-                            history.push(`/${loginData?.data?.role}`)
-                          }
-                        >
-                          Quản trị
-                        </button>
-                      )}
                       <button
                         className={`header__nav-link text-white ${checkCondition(
                           window.location.pathname.includes("/customer/info"),

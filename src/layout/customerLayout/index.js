@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserGeneralInfoRequest } from "../../store/api/user";
 import { getUserProfileSuccess } from "../../store/actions/userActions";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import NotFound from "../../pages/global/NotFound";
 
 const EditPassword = lazy(() => import("../../pages/customer/EditPassword"));
 const OrderHistory = lazy(() => import("../../pages/customer/OrderHistory"));
@@ -67,6 +68,9 @@ const CustomerLayout = ({ children }) => {
             <Suspense fallback={<LoadingSpinner />}>
               <EditPassword />
             </Suspense>
+          </Route>
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
       </div>

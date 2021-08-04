@@ -9,6 +9,9 @@ const MovieFiltered = ({
   list,
   hideFiltered,
   filmItemClassName,
+  categories,
+  filterMovie,
+  isStaff,
 }) => {
   return (
     <section className="content">
@@ -25,55 +28,35 @@ const MovieFiltered = ({
                 >
                   <li className="nav-item">
                     <a
-                      className="nav-link active"
+                      className="nav-link"
                       data-toggle="tab"
-                      href="#tab-1"
+                      href={`#tab-0`}
                       role="tab"
-                      aria-controls="tab-1"
+                      aria-controls={`tab-0`}
                       aria-selected="true"
+                      onClick={() => filterMovie("ALL")}
                     >
-                      NEW RELEASES
+                      Tất cả
                     </a>
                   </li>
-
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      data-toggle="tab"
-                      href="#tab-2"
-                      role="tab"
-                      aria-controls="tab-2"
-                      aria-selected="false"
+                  {categories?.map((cate, index) => (
+                    <li
+                      className="nav-item"
+                      key={cate}
+                      onClick={() => filterMovie(cate)}
                     >
-                      MOVIES
-                    </a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      data-toggle="tab"
-                      href="#tab-3"
-                      role="tab"
-                      aria-controls="tab-3"
-                      aria-selected="false"
-                    >
-                      TV SERIES
-                    </a>
-                  </li>
-
-                  <li className="nav-item">
-                    <a
-                      className="nav-link"
-                      data-toggle="tab"
-                      href="#tab-4"
-                      role="tab"
-                      aria-controls="tab-4"
-                      aria-selected="false"
-                    >
-                      CARTOONS
-                    </a>
-                  </li>
+                      <a
+                        className="nav-link"
+                        data-toggle="tab"
+                        href={`#tab-${index + 1}`}
+                        role="tab"
+                        aria-controls={`tab-${index + 1}`}
+                        aria-selected="true"
+                      >
+                        {cate}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
                 <div className="content__mobile-tabs" id="content__mobile-tabs">
                   {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
@@ -177,7 +160,7 @@ const MovieFiltered = ({
                     }`}
                     key={item._id}
                   >
-                    <MovieItem movieItem={item} />
+                    <MovieItem movieItem={item} isStaff={isStaff} />
                   </div>
                 ))}
             </div>

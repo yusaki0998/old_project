@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { scrollToTop } from "../../utils/scrollToTopPos";
 import { getMovieSeatsRequest } from "../../store/api/global";
@@ -10,7 +10,7 @@ import SeatMap from "../../components/manager/SeatMap";
 import BookingSeatTypes from "../../components/main/BookingSeatTypes";
 import BookingSummary from "../../components/main/BookingSummary";
 
-const SelectSeat = () => {
+const SelectSeat = ({ isStaff }) => {
   const [bookingDetail, setBookingDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
@@ -34,6 +34,18 @@ const SelectSeat = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const syncMovieSeatMapOnBackground = useCallback(() => {
+    getMovieSeatsRequest(id)
+      .then(({ data }) => {
+        if (!!data.data) {
+          setBookingDetail(data?.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+
   useEffect(() => {
     fetchMovieSeatMap();
     return () => {
@@ -41,6 +53,16 @@ const SelectSeat = () => {
     };
     // eslint-disable-next-line
   }, [id]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      syncMovieSeatMapOnBackground();
+    }, 30000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [syncMovieSeatMapOnBackground]);
 
   const selectSeatHandler = (seat) => {
     const isSeleted = selectedSeats.find((item) => item?._id === seat?._id);
@@ -77,6 +99,7 @@ const SelectSeat = () => {
             <BookingSummary
               bookingDetail={bookingDetail}
               selectedSeats={selectedSeats}
+              isStaff={isStaff}
             />
           </section>
         </>

@@ -17,29 +17,40 @@ const RoomDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [roomDetailData, setRoomDetailData] = useState({});
   const [openSeatForm, setOpenSeatForm] = useState(false);
-  const [selectedSeat, setSelectedSeat] = useState({});
 
-  const onShowSeatForm = (seatData) => {
-    setSelectedSeat(seatData);
+  const onShowSeatForm = () => {
     setOpenSeatForm(true);
+  };
+
+  const fetchRoomDetail = () => {
+    setIsLoading(true);
+    getRoomDetailRequest(roomIdField)
+      .then(({ data }) => {
+        setRoomDetailData(data?.data);
+        setIsLoading(false);
+      })
+      .catch((_) => {
+        setIsLoading(false);
+        history.goBack();
+      });
   };
 
   useEffect(() => {
     if (!roomIdField) {
       history.goBack();
     } else {
-      setIsLoading(true);
-      getRoomDetailRequest(roomIdField)
-        .then(({ data }) => {
-          setRoomDetailData(data?.data);
-          setIsLoading(false);
-        })
-        .catch((_) => {
-          setIsLoading(false);
-          history.goBack();
-        });
+      fetchRoomDetail();
     }
+    // eslint-disable-next-line
   }, [history, roomIdField]);
+
+  const vipSeatPrice = roomDetailData?.seatMap?.seats?.find(
+    (item) => item.seatType === "vip"
+  )?.price;
+
+  const normalSeatPrice = roomDetailData?.seatMap?.seats?.find(
+    (item) => item.seatType === "normal"
+  )?.price;
 
   return (
     <main className="pb-4">
@@ -77,13 +88,15 @@ const RoomDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="">
               <SeatMap
                 seatList={roomDetailData?.seatMap?.seats || []}
-                openForm={onShowSeatForm}
+                openForm={() => {
+                  console.log("kick to seat");
+                }}
               />
             </div>
-            <div className="seat__types seat__list">
+            <div className="seat__types seat__list w-auto">
               <div className="d-flex align-items-center justify-content-center">
                 <div className="d-flex align-items-center mr-4">
                   <div className="seat__item vip">
@@ -92,7 +105,10 @@ const RoomDetail = () => {
                       <span className="seat__text"></span>
                     </div>
                   </div>
-                  <span>Ghế VIP</span>
+                  <div>
+                    <span>Ghế VIP</span> <br />
+                    <span>Giá : {vipSeatPrice}</span>
+                  </div>
                 </div>
                 <div className="d-flex align-items-center">
                   <div className="seat__item">
@@ -101,9 +117,20 @@ const RoomDetail = () => {
                       <span className="seat__text"></span>
                     </div>
                   </div>
-                  <span>Ghế Thường</span>
+                  <div>
+                    <span>Ghế Thường</span> <br />
+                    <span>Giá : {normalSeatPrice}</span>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div className="d-flex justify-content-center align-items-center">
+              <button
+                className="btn__outline-orange mb-4 mx-auto"
+                onClick={onShowSeatForm}
+              >
+                Thay đổi
+              </button>
             </div>
           </div>
         )}
@@ -111,11 +138,13 @@ const RoomDetail = () => {
       <SeatForm
         open={openSeatForm}
         close={() => {
-          setSelectedSeat({});
           setOpenSeatForm(false);
         }}
-        seatData={selectedSeat}
         roomName={roomDetailData?.roomName}
+        fetchRoomDetail={fetchRoomDetail}
+        mapId={roomDetailData?.seatMap?._id}
+        vipSeatPrice={vipSeatPrice}
+        normalSeatPrice={normalSeatPrice}
       />
     </main>
   );

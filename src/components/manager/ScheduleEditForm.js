@@ -218,9 +218,9 @@ const ScheduleEditForm = ({
           </div>
           {scheduleData?._id && (
             <div className="row align-items-center">
-              <div className="col-md-4">
+              <div className="col-12">
                 <button
-                  className={`btn__outline-orange ml-0 btn-sm btn-delete ${checkCondition(
+                  className={`btn__outline-orange btn-sm btn-delete ${checkCondition(
                     isLoading,
                     "divDisable",
                     ""
@@ -230,7 +230,6 @@ const ScheduleEditForm = ({
                   Xóa lịch chiếu
                 </button>
               </div>
-              <div className="col-md-8"></div>
             </div>
           )}
         </div>

@@ -7,7 +7,8 @@ import { useSelector } from "react-redux";
 import Sidebar from "../../components/shared/Sidebar";
 import AdminHeader from "../../components/shared/AdminHeader";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
-const Catalog = lazy(() => import("../../pages/admin/Catalog"));
+import NotFound from "../../pages/global/NotFound";
+
 const Users = lazy(() => import("../../pages/admin/Users"));
 const CreateAccount = lazy(() => import("../../pages/admin/CreateAccount"));
 const ManagerList = lazy(() => import("../../pages/admin/ManagerList"));
@@ -40,11 +41,6 @@ const AdminLayout = ({ children }) => {
             <Dashboard />
           </Suspense>
         </Route>
-        <Route exact path={`${router.path}/catalog`}>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Catalog />
-          </Suspense>
-        </Route>
         <Route exact path={`${router.path}/users`}>
           <Suspense fallback={<LoadingSpinner />}>
             <Users />
@@ -69,6 +65,9 @@ const AdminLayout = ({ children }) => {
           <Suspense fallback={<LoadingSpinner />}>
             <EditAccountInfo />
           </Suspense>
+        </Route>
+        <Route path="*">
+          <NotFound />
         </Route>
       </Switch>
     </>

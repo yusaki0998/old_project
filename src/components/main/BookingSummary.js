@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { bookTicketRequest } from "../../store/api/global";
 import { useHistory } from "react-router-dom";
 
-const BookingSummary = ({ bookingDetail, selectedSeats }) => {
+const BookingSummary = ({ bookingDetail, selectedSeats, isStaff }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [isBooking, setIsBooking] = useState(false);
@@ -45,7 +45,9 @@ const BookingSummary = ({ bookingDetail, selectedSeats }) => {
           setTimeout(() => {
             dispatch(removeNotification(newNoti.id));
           }, 2000);
-          history.push(`/customer/history-transactions`);
+          history.push(
+            isStaff ? "/staff/ticket-history" : `/customer/history-transactions`
+          );
         })
         .catch((err) => {
           const newNoti = {
@@ -65,7 +67,7 @@ const BookingSummary = ({ bookingDetail, selectedSeats }) => {
       const newNoti = {
         id: uuid_v4(),
         type: "error",
-        message: "Vui lòng chọn ít nhật 1 ghế",
+        message: "Vui lòng chọn ít nhất 1 ghế",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -76,59 +78,68 @@ const BookingSummary = ({ bookingDetail, selectedSeats }) => {
   return (
     <div className="booking__summary">
       <div className="row align-items-center">
-        <div className="col-3">
-          <img src={poster} alt="poster" />
-          <h3>{bookingDetail?.movie?.movieName}</h3>
+        <div className="col-md-3 col-12">
+          <img
+            src={
+              bookingDetail?.movie?.coverImage?.includes("cloudinary")
+                ? bookingDetail?.movie?.coverImage
+                : poster
+            }
+            alt="poster"
+          />
+          <h4>{bookingDetail?.movie?.movieName}</h4>
         </div>
-        <div className="col-3">
+        <div className="col-md-4 col-12 sm-mb-2">
           <div className="row">
-            <div className="col-4">Rạp</div>
-            <div className="col-8">Hanoi Cinema</div>
-          </div>
-          <div className="row">
-            <div className="col-4">Ngày chiếu</div>
-            <div className="col-8">
-              {bookingDetail?.showDate?.substr(0, 10)}
+            <div className="col-12">
+              <strong>Ngày chiếu : </strong>{" "}
+              <span>{bookingDetail?.showDate?.substr(0, 10)}</span>
             </div>
           </div>
           <div className="row">
-            <div className="col-4">Slot chiếu</div>
-            <div className="col-8">
-              {bookingDetail?.slot?.slotName} (
-              {convertTime(bookingDetail?.slot?.startTime)} -{" "}
-              {convertTime(bookingDetail?.slot?.endTime)})
+            <div className="col-12">
+              <strong>Giờ chiếu : </strong>{" "}
+              <span>
+                {bookingDetail?.slot?.slotName} (
+                {convertTime(bookingDetail?.slot?.startTime)} -{" "}
+                {convertTime(bookingDetail?.slot?.endTime)})
+              </span>
             </div>
           </div>
           <div className="row">
-            <div className="col-4">Phòng chiếu</div>
-            <div className="col-8">{bookingDetail?.room?.roomName}</div>
+            <div className="col-12 ">
+              <strong>Phòng chiếu : </strong>
+              <span>{bookingDetail?.room?.roomName}</span>
+            </div>
           </div>
         </div>
-        <div className="col-3">
+        <div className="col-md-3 col-12 sm-mb-2">
           <div className="row">
-            <div className="col-4">Ghế : </div>
-            <div className="col-8">
-              <p>
+            <div className="col-12">
+              <strong>Ghế : </strong>{" "}
+              <span>
                 {selectedSeats.length > 0
                   ? selectedSeats.map((item) => item.seatNo).join(",")
                   : "Vui lòng chọn ghế"}
-              </p>
+              </span>
             </div>
           </div>
           <div className="row">
-            <div className="col-4">Tổng : </div>
-            <div className="col-8">
-              {formatter.format(
-                selectedSeats.length > 0
-                  ? selectedSeats.reduce((acc, item) => acc + item.price, 0)
-                  : 0
-              )}
+            <div className="col-12">
+              <strong>Tổng : </strong>{" "}
+              <span>
+                {formatter.format(
+                  selectedSeats.length > 0
+                    ? selectedSeats.reduce((acc, item) => acc + item.price, 0)
+                    : 0
+                )}
+              </span>
             </div>
           </div>
         </div>
-        <div className="col-3">
+        <div className="col-md-2 col-12">
           <button
-            className={`card__trailer text-yellow ${checkCondition(
+            className={`card__trailer text-yellow btn-filled ${checkCondition(
               isBooking,
               "divDisable",
               ""

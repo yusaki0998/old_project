@@ -6,7 +6,7 @@ import MovieSuggestion from "../../components/main/MovieSuggestion";
 import TopMovieDetail from "../../components/main/TopMovieDetail";
 import { scrollToTop } from "../../utils/scrollToTopPos";
 import { getFilmDetailRequest } from "../../store/api/global";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { getListSlotRequest } from "../../store/api/manager";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import {
   globalGetListCurrentFilm,
 } from "../../store/actions/globalActions";
 
-const MovieDetail = () => {
+const MovieDetail = ({ hideSuggestion }) => {
   const [movieDetail, setMovieDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [listSlot, setListSlot] = useState([]);
@@ -79,25 +79,72 @@ const MovieDetail = () => {
       )}
       {!isLoading && movieDetail && (
         <>
-          <section className="section section--details">
-            <div className="container">
-              <TopMovieDetail movieDetail={movieDetail} listSlot={listSlot} />
+          <section
+            className={`section section--details ${
+              hideSuggestion ? "mt-0" : ""
+            }`}
+          >
+            {hideSuggestion && (
+              <button
+                className={`btn__outline-orange btn-sm ml-0 mb-4`}
+                onClick={() => history.push("/staff/booking-ticket")}
+              >
+                <i className="fas fa-chevron-left mr-2"></i> Quay lại danh sách
+              </button>
+            )}
+            <div className={`history__trace ${hideSuggestion ? "d-none" : ""}`}>
+              <div className="container">
+                <div className="d-flex align-items-center mb-4 border-bottom border-sm">
+                  <Link to="/">
+                    <i className="icon ion-ios-home icon-big"></i>
+                  </Link>
+                  <span className="text-white arrow__right">
+                    <i className="icon ion-ios-arrow-forward"></i>
+                  </span>
+                  <Link
+                    to={`${
+                      movieDetail?.status === 1
+                        ? "/current-film"
+                        : "coming-film"
+                    }`}
+                  >
+                    {movieDetail?.status === 1
+                      ? "PHIM ĐANG CHIẾU"
+                      : "PHIM SẮP CHIẾU"}
+                  </Link>
+                  <span className="text-white arrow__right">
+                    <i className="icon ion-ios-arrow-forward"></i>
+                  </span>
+                  <span className="text-white">{movieDetail?.movieName}</span>
+                </div>
+              </div>
             </div>
-          </section>
-          <section className="content">
             <div className="container">
-              <MovieSuggestion
-                isLoading={
-                  movieDetail?.status === 0
-                    ? comingFilm.isLoading
-                    : currentFilm.isLoading
-                }
-                list={
-                  movieDetail?.status === 0 ? comingFilm.list : currentFilm.list
-                }
+              <TopMovieDetail
+                movieDetail={movieDetail}
+                listSlot={listSlot}
+                hideSuggestion={hideSuggestion}
               />
             </div>
           </section>
+          {!hideSuggestion && (
+            <section className="content">
+              <div className="container">
+                <MovieSuggestion
+                  isLoading={
+                    movieDetail?.status === 0
+                      ? comingFilm.isLoading
+                      : currentFilm.isLoading
+                  }
+                  list={
+                    movieDetail?.status === 0
+                      ? comingFilm.list
+                      : currentFilm.list
+                  }
+                />
+              </div>
+            </section>
+          )}
         </>
       )}
     </>

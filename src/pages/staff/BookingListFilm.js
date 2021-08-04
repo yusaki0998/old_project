@@ -76,6 +76,7 @@ const BookingListFilm = () => {
           list={filteredList}
           filmItemClassName="col-xl-3"
           hideFiltered
+          isStaff
         />
       </div>
     </div>

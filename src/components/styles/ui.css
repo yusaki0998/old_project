@@ -1,7 +1,7 @@
 /** @format */
 
 .c__backdrop {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: -2;
   position: fixed;
   width: 100%;

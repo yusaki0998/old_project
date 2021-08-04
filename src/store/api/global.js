@@ -19,7 +19,7 @@ export const getMovieSeatsRequest = async (scheduleId) =>
 
 export const bookTicketRequest = async (scheduleId, data) =>
   axios.post(
-    `/tickets//${scheduleId}`,
+    `/tickets/${scheduleId}`,
     {
       seats: data,
     },

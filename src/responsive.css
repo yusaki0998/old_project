@@ -27,6 +27,19 @@
   .slot__list-row {
     grid-template-columns: repeat(2, 1fr);
   }
+  .sm-d-none {
+    display: none;
+  }
+  .sm-d-block {
+    display: block !important;
+  }
+  .booking__summary {
+    position: static;
+    height: auto;
+    width: 100%;
+    background-color: transparent;
+    color: #fff;
+  }
 }
 
 @media (max-width: 768px) {
@@ -90,5 +103,14 @@
   }
   .slot__list-row {
     grid-template-columns: repeat(1, 1fr);
+  }
+  .sm-flex-col {
+    flex-direction: column;
+  }
+  .table__search.mr {
+    margin-right: 10px;
+  }
+  .sm-mb-2 {
+    margin-bottom: 15px;
   }
 }

@@ -15,12 +15,12 @@ const VerifyEmail = () => {
       <div className="container">
         <div className="row">
           <div className="col-12 col-lg-4 col-md-6 col-sm-8 mx-auto">
-            <form>
+            <form className="sign__form">
               <Link to="/" className="sign__logo sign__link">
                 <img src={logo} alt="Hotflix" />
               </Link>
               <div className="sign__group">
-                <label htmlFor="otp__code" className="sign__label">
+                <label htmlFor="otp__code" className="sign__label text-white">
                   Nhập mã xác thực
                 </label>
                 <input
@@ -31,7 +31,7 @@ const VerifyEmail = () => {
                   onChange={(e) => setToken(e.target.value)}
                 />
               </div>
-              <p className="confirm__otp-text">
+              <p className="confirm__otp-text text-white">
                 Mã xác minh này đã được gửi đến email bạn đăng ký tài khoản.
                 <br />
               </p>

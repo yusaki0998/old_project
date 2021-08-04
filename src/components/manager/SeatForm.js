@@ -1,22 +1,28 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Modal from "../ui/Modal";
 import Backdrop from "../ui/Backdrop";
-import { createSlotRequest } from "../../store/api/manager";
+import { updateSeatInfoRequest } from "../../store/api/manager";
 import { useDispatch } from "react-redux";
-import { createSlotSuccess } from "../../store/actions/managerActions";
 import {
   addNotification,
   removeNotification,
 } from "../../store/actions/uiActions";
 import { v4 as uuid_v4 } from "uuid";
 import { useForm } from "react-hook-form";
-import { checkCondition } from "../../utils/helper";
 import OutsideHandler from "../shared/ClickWrapper";
 import { convertSeatTypeToVietnamese } from "../../utils/convertGender";
 
-const SeatForm = ({ open, close, seatData, roomName }) => {
+const SeatForm = ({
+  open,
+  close,
+  roomName,
+  fetchRoomDetail,
+  mapId,
+  vipSeatPrice,
+  normalSeatPrice,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [showSeatType, setShowSeatType] = useState(false);
@@ -27,46 +33,30 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm();
 
-  useEffect(() => {
-    setSeatType(seatData?.seatType);
-  }, [seatData]);
-
   const onValid = async (data) => {
+    console.log(data);
     setIsLoading(true);
-    const isUpdate = !!seatData?._id;
     try {
-      const { data: dataRes } = await createSlotRequest(
-        {
-          ...data,
-          startTime: data.startTime.replace(":", ""),
-          endTime: data.endTime.replace(":", ""),
-        },
-        isUpdate,
-        seatData?._id
-      );
+      await updateSeatInfoRequest(mapId, {
+        ...data,
+        type: seatType,
+      });
+      fetchRoomDetail();
       setIsLoading(false);
       reset();
       close();
       const newNoti = {
         id: uuid_v4(),
         type: "success",
-        message: isUpdate
-          ? "Cập nhật slot thành công!"
-          : "Tạo mới slot thành công!",
+        message: "Cập nhật ghế thành công!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
       }, 2000);
-      dispatch(
-        createSlotSuccess({
-          data: dataRes.data,
-          isUpdate,
-          slotId: seatData?._id,
-        })
-      );
     } catch (error) {
       setIsLoading(false);
       const newNoti = {
@@ -74,9 +64,7 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
         type: "error",
         message:
           error?.response?.data?.message ||
-          (isUpdate
-            ? "Cập nhật slot thất bại. Vui lòng thử lại!"
-            : "Tạo mới slot thất bại. Vui lòng thử lại!"),
+          "Cập nhật ghế thất bại. Vui lòng thử lại!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -107,35 +95,6 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
               <p>{roomName}</p>
             </div>
           </div>
-          <div className="row align-items-center">
-            <div className="col-md-4">
-              <p>Số ghế</p>
-            </div>
-            <div className="col-md-8">
-              <div className="sign__group">
-                <input
-                  type="text"
-                  className={`sign__input sign__input-modal ${
-                    errors.seatNo ? "input-error" : ""
-                  }`}
-                  defaultValue={checkCondition(
-                    seatData?.seatNo,
-                    seatData?.seatNo,
-                    ""
-                  )}
-                  {...register("seatNo", {
-                    required: {
-                      value: true,
-                      message: "Đây là mục bắt buộc",
-                    },
-                  })}
-                />
-                {errors.seatNo && (
-                  <p className="input-required">{errors.seatNo.message}</p>
-                )}
-              </div>
-            </div>
-          </div>
           <div className="row align-items-center mb-3">
             <div className="col-md-4">
               <p>Loại ghế</p>
@@ -157,8 +116,22 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
                       height: 95,
                     }}
                   >
-                    <li onClick={() => setSeatType("vip")}>VIP</li>
-                    <li onClick={() => setSeatType("normal")}>Thường</li>
+                    <li
+                      onClick={() => {
+                        setSeatType("vip");
+                        setValue("price", vipSeatPrice);
+                      }}
+                    >
+                      VIP
+                    </li>
+                    <li
+                      onClick={() => {
+                        setSeatType("normal");
+                        setValue("price", normalSeatPrice);
+                      }}
+                    >
+                      Thường
+                    </li>
                   </ul>
                   <button className="sign__select-icon">
                     <i
@@ -182,11 +155,7 @@ const SeatForm = ({ open, close, seatData, roomName }) => {
                   className={`sign__input sign__input-modal ${
                     errors.price ? "input-error" : ""
                   }`}
-                  defaultValue={checkCondition(
-                    seatData?.price,
-                    seatData?.price,
-                    0
-                  )}
+                  step={1000}
                   {...register("price", {
                     required: {
                       value: true,

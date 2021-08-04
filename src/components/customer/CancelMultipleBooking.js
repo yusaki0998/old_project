@@ -3,25 +3,36 @@
 import React, { useState } from "react";
 import Modal from "../ui/Modal";
 import Backdrop from "../ui/Backdrop";
-import { deteleSlotRequest } from "../../store/api/manager";
 import { useDispatch } from "react-redux";
-import { removeSlotFromState } from "../../store/actions/managerActions";
 import {
   addNotification,
   removeNotification,
 } from "../../store/actions/uiActions";
 import { v4 as uuid_v4 } from "uuid";
+import { cancelBookingRequest } from "../../store/api/global";
 
-const DeleteSlot = ({ open, close, slotData }) => {
+const CancelMultipleBooking = ({ open, close, ticketDatas, callback }) => {
   const [isLoading, setIsLoading] = useState();
   const dispatch = useDispatch();
 
   const onConfirm = async () => {
     setIsLoading(true);
     try {
-      await deteleSlotRequest(slotData?._id);
-      dispatch(removeSlotFromState(slotData?._id));
+      const data = await Promise.all(
+        ticketDatas.map((id) => cancelBookingRequest(id))
+      );
+      console.log(data);
       setIsLoading(false);
+      callback();
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message: "Hủy đặt ghế thành công!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
       close();
     } catch (error) {
       setIsLoading(false);
@@ -31,7 +42,7 @@ const DeleteSlot = ({ open, close, slotData }) => {
         type: "error",
         message:
           error?.response?.data?.message ||
-          "Xóa phòng chiếu thất bại. Vui lòng thử lại!",
+          "Hủy đặt ghế thất bại. Vui lòng thử lại!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -45,11 +56,11 @@ const DeleteSlot = ({ open, close, slotData }) => {
       <Modal
         open={open}
         close={close}
-        title="Xóa giờ chiếu"
-        body={`Bạn có chắc muốn xóa giờ chiếu '${slotData.slotName || ""}'`}
+        title="Hủy các ghế đã chọn"
+        body={`Bạn có chắc muốn hủy các ghế đã chọn`}
         onConfirm={onConfirm}
         isLoading={isLoading}
-      ></Modal>
+      />
       <Backdrop
         open={open}
         onClicked={() => {
@@ -62,4 +73,4 @@ const DeleteSlot = ({ open, close, slotData }) => {
   );
 };
 
-export default DeleteSlot;
+export default CancelMultipleBooking;

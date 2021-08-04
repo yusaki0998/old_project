@@ -114,3 +114,18 @@ export const createScheduleRequest = async (data) =>
 
 export const deteleScheduleRequest = async (scheduleId) =>
   axios.delete(`/schedules/${scheduleId}`);
+
+export const updateSeatInfoRequest = async (seatId, data) =>
+  axios.put(`/seats/${seatId}`, data, {
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+
+export const getStaffDetailRequest = async (staffId, startDate, endDate) =>
+  axios.get(`/reports/staffs/${staffId}`, {
+    params: {
+      startDate,
+      endDate,
+    },
+  });

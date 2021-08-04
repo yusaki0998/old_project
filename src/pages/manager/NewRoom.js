@@ -10,9 +10,9 @@ import {
   resetCreateRoomState,
 } from "../../store/actions/managerActions";
 import { getListSeatMapRequest } from "../../store/api/manager";
-import seatMap from "../../assets/seat-map.jpg";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { Helmet } from "react-helmet";
+import { PROD_REST_API_URL } from "../../utils/constants";
 
 const NewRoom = () => {
   const { createRoom: createRoomData } = useSelector((state) => state.manager);
@@ -108,7 +108,10 @@ const NewRoom = () => {
                     }`}
                   >
                     <img
-                      src={seatMap}
+                      src={`${PROD_REST_API_URL}${item?.image?.replace(
+                        "..",
+                        ""
+                      )}`}
                       alt="seat map"
                       className="w-100"
                       onClick={() => setSelectedSeatMap(item?._id)}

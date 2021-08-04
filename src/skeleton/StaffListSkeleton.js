@@ -3,7 +3,7 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-const SlotListSkeleton = () => {
+const StaffListSkeleton = () => {
   return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
     <tr key={item}>
       <td>
@@ -13,21 +13,21 @@ const SlotListSkeleton = () => {
       </td>
       <td>
         <div className="main__table-text">
-          <Skeleton width={80} height={16} />
+          <Skeleton width={170} height={16} />
         </div>
       </td>
       <td>
         <div className="main__table-text">
-          <Skeleton width={80} height={16} />
+          <Skeleton width={150} height={16} />
         </div>
       </td>
       <td>
         <div className="main__table-btns">
-          <Skeleton width={80} height={16} />
+          <Skeleton width={60} height={16} />
         </div>
       </td>
     </tr>
   ));
 };
 
-export default SlotListSkeleton;
+export default StaffListSkeleton;

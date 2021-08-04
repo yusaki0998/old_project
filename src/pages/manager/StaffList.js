@@ -1,76 +1,56 @@
 /** @format */
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Paginator from "../../components/shared/Paginator";
-import UserListSkeleton from "../../skeleton/UserListSkeleton";
-import DeleteAccount from "../../components/admin/DeleteAccount";
-import { getListManager } from "../../store/actions/adminActions";
+import StaffListSkeleton from "../../skeleton/StaffListSkeleton";
+import { getListStaff } from "../../store/actions/adminActions";
 import { useHistory } from "react-router-dom";
 import { getUserBySearchInputRequest } from "../../store/api/admin";
 import { MAX_ITEMS_PER_PAGE } from "../manager/FilmRoom";
-import { convertGenderToVietnamese } from "../../utils/convertGender";
 import { Helmet } from "react-helmet";
 
-const ManagerList = () => {
+const StaffList = () => {
   const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
-  const { managers } = useSelector((state) => state.admin);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [selectedAcc, setSelectedAcc] = useState({});
+  const { staffs } = useSelector((state) => state.admin);
   const [isTouched, setIsTouched] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
-  const [curPage, setCurPage] = useState(0);
   const history = useHistory();
-
-  const onOpen = (acc) => {
-    setSelectedAcc(acc);
-    setOpenDelete(true);
-  };
-
-  const onClose = () => {
-    setOpenDelete(false);
-    setTimeout(() => {
-      setSelectedAcc({});
-    }, 1000);
-  };
+  const [curPage, setCurPage] = useState(0);
 
   useEffect(() => {
-    dispatch(getListManager());
+    dispatch(getListStaff());
   }, [dispatch]);
 
   useEffect(() => {
-    setFilteredList(managers.list);
-  }, [managers.list]);
+    setFilteredList(staffs.list);
+  }, [staffs.list]);
 
   const onSearchUser = () => {
     if (isTouched && searchInput.trim()) {
       getUserBySearchInputRequest(searchInput.trim().toLowerCase())
         .then(({ data }) => {
-          setFilteredList(
-            data?.data?.filter((user) => user?.role === "manager")
-          );
+          setFilteredList(data?.data?.filter((user) => user?.role === "staff"));
         })
         .catch((err) => {
           console.log(err);
         });
     }
     if (!searchInput.trim()) {
-      setFilteredList(managers.list);
+      setFilteredList(staffs.list);
     }
   };
-
   return (
-    <main className="main">
+    <div className="">
       <Helmet>
-        <title> Danh sách quản lý </title>
+        <title> Danh sách nhân viên </title>
       </Helmet>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             <div className="admin__manager-list__wrapper text-white mt-5">
               <div className="d-flex justify-content-between mb-4 align-items-center sm-flex-col">
-                <h3>Danh sách quản lý</h3>
+                <h3>Danh sách nhân viên</h3>
                 <form className="table__search mr">
                   <input
                     className="header__search-input"
@@ -81,7 +61,7 @@ const ManagerList = () => {
                       setSearchInput(e.target.value);
                       setIsTouched(true);
                       if (!e.target.value.trim()) {
-                        setFilteredList(managers.list);
+                        setFilteredList(staffs.list);
                       }
                     }}
                   />
@@ -99,47 +79,35 @@ const ManagerList = () => {
                   <table className="main__table">
                     <thead>
                       <tr>
-                        <th>Email</th>
-                        <th>Tên quản lý</th>
-                        <th>Số điện thoại</th>
-                        <th>Giới tính </th>
-                        <th>Ngày sinh </th>
-                        <th>Sửa / Xóa</th>
+                        <th>STT</th>
+                        <th>Tên tài khoản</th>
+                        <th>Tên nhân viên</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {managers.isLoading && <UserListSkeleton />}
-                      {!managers.isLoading &&
+                      {staffs.isLoading && <StaffListSkeleton />}
+                      {!staffs.isLoading &&
                         filteredList
                           .slice(
                             curPage * MAX_ITEMS_PER_PAGE,
                             (curPage + 1) * MAX_ITEMS_PER_PAGE
                           )
-                          .map((manager) => (
-                            <tr key={manager._id}>
+                          .map((staff, index) => (
+                            <tr key={staff._id}>
                               <td>
                                 <div className="main__table-text">
-                                  {manager.email}
+                                  {index + 1}
                                 </div>
                               </td>
                               <td>
                                 <div className="main__table-text">
-                                  {manager.fullname}
+                                  {staff.email}
                                 </div>
                               </td>
                               <td>
                                 <div className="main__table-text">
-                                  {manager.phone}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="main__table-text">
-                                  {convertGenderToVietnamese(manager.gender)}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="main__table-text">
-                                  {manager.dob?.toString()?.substr(0, 10)}
+                                  {staff.fullname}
                                 </div>
                               </td>
                               <td>
@@ -148,17 +116,11 @@ const ManagerList = () => {
                                     className="main__table-btn main__table-btn--edit"
                                     onClick={() =>
                                       history.push(
-                                        `/admin/edit-account?uId=${manager._id}&role=manager`
+                                        `/manager/staff-info/${staff._id}`
                                       )
                                     }
                                   >
-                                    <i className="icon ion-ios-create"></i>
-                                  </button>
-                                  <button
-                                    className="main__table-btn main__table-btn--delete"
-                                    onClick={() => onOpen(manager)}
-                                  >
-                                    <i className="icon ion-ios-trash"></i>
+                                    <i className="icon ion-ios-search"></i>
                                   </button>
                                 </div>
                               </td>
@@ -174,17 +136,12 @@ const ManagerList = () => {
                 setCurPage={setCurPage}
                 totalItems={filteredList.length}
               />
-              <DeleteAccount
-                open={openDelete}
-                close={onClose}
-                userData={selectedAcc}
-              />
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 
-export default ManagerList;
+export default StaffList;

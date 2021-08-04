@@ -217,7 +217,7 @@ ul {
   width: 100%;
   background-color: #1a191f;
   z-index: 101;
-  border-bottom: 1px solid #222028;
+  border-bottom: 1px solid #4c4b4e;
 }
 .header__logo {
   display: flex;
@@ -513,7 +513,7 @@ ul {
 }
 @media (min-width: 360px) {
   .header__logo {
-    width: 110px;
+    width: 80px;
   }
 }
 @media (min-width: 576px) {
@@ -534,7 +534,7 @@ ul {
   }
   .header__logo {
     height: 80px;
-    width: 120px;
+    width: 80px;
   }
   .header__auth {
     margin-right: 52px;
@@ -916,10 +916,39 @@ ul {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+  }
+  /* width */
+  .content__tabs::-webkit-scrollbar {
+    cursor: pointer;
+    height: 8px;
+    border-radius: 8px;
+  }
+
+  /* Track */
+  .content__tabs::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  /* Handle */
+  .content__tabs::-webkit-scrollbar-thumb {
+    background: #ffc312;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  /* Handle on hover */
+  .content__tabs::-webkit-scrollbar-thumb:hover {
+    background: #f9ab00;
+    cursor: pointer;
   }
   .content__tabs li {
     margin-right: 40px;
+    min-width: 80px;
   }
   .content__tabs li:last-child {
     margin-right: 0;
@@ -933,7 +962,7 @@ ul {
     color: #fff;
     position: relative;
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 12px;
   }
   .content__tabs a:hover {
     color: #f9ab00;
@@ -1267,6 +1296,7 @@ ul {
   width: 100%;
   transition: opacity 0.5s;
   min-height: 288px;
+  max-height: 288px;
 }
 .card__cover:hover img {
   opacity: 0.4;
@@ -3084,7 +3114,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 120px;
+  width: 80px;
   order: 1;
 }
 .footer__logo img {

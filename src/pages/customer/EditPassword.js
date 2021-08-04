@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import "react-datepicker/dist/react-datepicker.css";
 import { updateUserPasswordRequest } from "../../store/api/user";
 import { useDispatch } from "react-redux";
 import {
@@ -62,7 +61,7 @@ const EditPassword = () => {
       <div className="d-flex">
         <div className="edit__form">
           <form
-            className="edit__profile--form"
+            className="edit__profile--form mx-auto"
             onSubmit={handleSubmit(onValid)}
           >
             <div className="sign__row mb-3">

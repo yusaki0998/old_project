@@ -8,8 +8,6 @@ import { showAgeThreshold } from "../../utils/age";
 import { useSelector } from "react-redux";
 import { getMovieScheduleRequest } from "../../store/api/global";
 import LoadingSpinner from "../ui/LoadingSpinner";
-import { getRandomRatingForMovie } from "../../utils/constants";
-import { getRatingColor } from "./MovieItem";
 import OutsideHandler from "../shared/ClickWrapper";
 
 export const showTotalTime = (time) => {
@@ -17,12 +15,12 @@ export const showTotalTime = (time) => {
     return "-";
   }
   if (justContainNumber(time?.toString())) {
-    return `${time} minutes`;
+    return `${time} phút`;
   }
   return time;
 };
 
-const TopMovieDetail = ({ movieDetail }) => {
+const TopMovieDetail = ({ movieDetail, hideSuggestion }) => {
   const [unvailableFilm, setUnAvailableFilm] = useState(false);
   const [scheduleDetail, setScheduleDetail] = useState(null);
   const [dateDetail, setDateDetail] = useState([]);
@@ -32,8 +30,6 @@ const TopMovieDetail = ({ movieDetail }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const [viewDate, setViewDate] = useState(false);
   const history = useHistory();
-
-  const rating = getRandomRatingForMovie();
 
   useEffect(() => {
     if (isShowBooking) {
@@ -78,13 +74,6 @@ const TopMovieDetail = ({ movieDetail }) => {
                 }
                 alt="poster"
               />
-              <span
-                className={`card__rate card__rate--green ${getRatingColor(
-                  rating
-                )}`}
-              >
-                {rating}
-              </span>
             </div>
           </div>
           <div className="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
@@ -109,12 +98,14 @@ const TopMovieDetail = ({ movieDetail }) => {
                   {movieDetail?.genre}
                 </li>
                 <li>
-                  <span className="font-weight-bold">Phát hành:</span>
+                  <span className="font-weight-bold">Khởi chiếu:</span>
                   {movieDetail?.showtimes?.toString()?.substr(0, 10)}
                 </li>
                 <li>
                   <span className="font-weight-bold">Độ tuổi:</span>{" "}
-                  {showAgeThreshold(movieDetail?.ageRating)}
+                  <span className="text-uppercase font-weight-bold">
+                    {showAgeThreshold(movieDetail?.ageRating)}
+                  </span>
                 </li>
                 <li>
                   <span className="font-weight-bold">Thời lượng:</span>{" "}
@@ -169,11 +160,9 @@ const TopMovieDetail = ({ movieDetail }) => {
                     {dateDetail?.map((item, index) => (
                       <li
                         key={index}
-                        onClick={() =>
-                          setTicketDate(item?.showDate?.substr(0, 10))
-                        }
+                        onClick={() => setTicketDate(item?.substr(0, 10))}
                       >
-                        {item?.showDate?.substr(0, 10)}
+                        {item?.substr(0, 10)}
                       </li>
                     ))}
                   </ul>
@@ -193,19 +182,29 @@ const TopMovieDetail = ({ movieDetail }) => {
                   Phim hiện tại chưa có lịch chiếu
                 </p>
               )}
+              {!ticketDate && (
+                <p className="text-white my-2">Vui lòng chọn ngày chiếu</p>
+              )}
               <div className="slot__list-row">
-                {scheduleDetail?.length > 0 &&
+                {ticketDate &&
+                  scheduleDetail?.length > 0 &&
                   scheduleDetail
-                    ?.filter((scheduleItem) =>
-                      !!ticketDate
-                        ? scheduleItem?.showDate?.includes(ticketDate)
-                        : !!scheduleItem.showDate
+                    ?.filter(
+                      (scheduleItem) =>
+                        !!ticketDate &&
+                        scheduleItem?.showDate?.includes(ticketDate)
                     )
                     ?.map((item) => (
                       <div
                         className={`slot__item`}
                         key={item._id}
-                        onClick={() => history.push(`/select-seat/${item._id}`)}
+                        onClick={() =>
+                          history.push(
+                            hideSuggestion
+                              ? `/staff/select-seat/${item._id}`
+                              : `/select-seat/${item._id}`
+                          )
+                        }
                       >
                         <div>
                           <span className="slot__badge">

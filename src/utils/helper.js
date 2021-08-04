@@ -59,3 +59,50 @@ export const dayInWeeks = [
   "Thứ 7",
   "Chủ Nhật",
 ];
+
+export const getCurrentWeekNum = () => {
+  const currentdate = new Date();
+  const dates = [];
+  const currentDay = currentdate.getDay();
+  if (currentDay === 0) {
+    dates.push(currentdate);
+    for (let i = 1; i <= 6; i++) {
+      const nextDate = new Date();
+      nextDate.setDate(currentdate.getDate() + i);
+      dates.push(nextDate);
+    }
+  } else {
+    for (let i = currentDay; i > 1; i--) {
+      const prevDate = new Date();
+      prevDate.setDate(currentdate.getDate() - i + 1);
+      dates.push(prevDate);
+    }
+    dates.push(currentdate);
+    for (let i = 1; i <= 7 - currentDay; i++) {
+      const prevDate = new Date();
+      prevDate.setDate(currentdate.getDate() + i);
+      dates.push(prevDate);
+    }
+  }
+
+  const oneJan = new Date(currentdate.getFullYear(), 0, 1);
+  const numberOfDays = Math.floor(
+    (currentdate - oneJan) / (24 * 60 * 60 * 1000)
+  );
+  const currentWeekNum =
+    Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7) - 1;
+  return {
+    currentWeekNum,
+    dates,
+  };
+};
+
+export const parseCategories = (allCategories) => {
+  const categories = [];
+  allCategories.forEach((cate) => {
+    if (!categories.includes(cate)) {
+      categories.push(cate);
+    }
+  });
+  return categories;
+};

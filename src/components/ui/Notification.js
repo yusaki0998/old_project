@@ -19,13 +19,17 @@ const Notification = () => {
     if (notiList.length > 0) {
       notiList.forEach((element) => {
         if (element.type === "error") {
-          toast.error(element.message, options);
+          toast.error(element.message, {
+            ...options,
+          });
         }
         if (element.type === "info") {
           toast.info(element.message, options);
         }
         if (element.type === "success") {
-          toast.success(element.message, options);
+          toast.success(element.message, {
+            ...options,
+          });
         }
       });
     }

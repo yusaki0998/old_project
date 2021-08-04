@@ -6,6 +6,8 @@ import { useRouteMatch, Switch, Route, useHistory } from "react-router-dom";
 import Menu from "../../components/manager/Menu";
 import ManagerHeader from "../../components/shared/ManagerHeader";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import NotFound from "../../pages/global/NotFound";
+
 const CurrentFilm = lazy(() => import("../../pages/manager/CurrentFilm"));
 const IncomingFilm = lazy(() => import("../../pages/manager/IncomingFilm"));
 const NewFilm = lazy(() => import("../../pages/manager/NewFilm"));
@@ -16,6 +18,9 @@ const ViewSlot = lazy(() => import("../../pages/manager/ViewSlot"));
 const EditRoom = lazy(() => import("../../pages/manager/EditRoom"));
 const RoomDetail = lazy(() => import("../../pages/manager/RoomDetail"));
 const FilmCalendar = lazy(() => import("../../pages/manager/FilmCalendar"));
+const Revenue = lazy(() => import("../../pages/manager/Revenue"));
+const StaffList = lazy(() => import("../../pages/manager/StaffList"));
+const StaffInfo = lazy(() => import("../../pages/manager/StaffInfo"));
 
 const ManagerLayout = () => {
   const router = useRouteMatch();
@@ -89,6 +94,24 @@ const ManagerLayout = () => {
               <Suspense fallback={<LoadingSpinner />}>
                 <FilmCalendar />
               </Suspense>
+            </Route>
+            <Route exact path={`${router.path}/revenue`}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <Revenue />
+              </Suspense>
+            </Route>
+            <Route exact path={`${router.path}/staff`}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <StaffList />
+              </Suspense>
+            </Route>
+            <Route exact path={`${router.path}/staff-info/:id`}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <StaffInfo />
+              </Suspense>
+            </Route>
+            <Route path="*">
+              <NotFound />
             </Route>
           </Switch>
         </div>

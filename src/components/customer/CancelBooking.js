@@ -24,7 +24,7 @@ const CancelBooking = ({ open, close, ticketData, callback }) => {
       const newNoti = {
         id: uuid_v4(),
         type: "success",
-        message: "Hủy đặt ghế thành côngư!",
+        message: "Hủy đặt ghế thành công!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {
@@ -54,7 +54,7 @@ const CancelBooking = ({ open, close, ticketData, callback }) => {
         open={open}
         close={close}
         title="Hủy ghế đã đặt"
-        body={`Bạn có chắc muốn hủy vé phim`}
+        body={`Bạn có chắc muốn hủy ghế đã đặt`}
         onConfirm={onConfirm}
         isLoading={isLoading}
       />

@@ -3,8 +3,8 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { Link, useHistory } from "react-router-dom";
 
 const ForgotPassword = () => {
   const {
@@ -12,9 +12,10 @@ const ForgotPassword = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const history = useHistory();
 
   const onValid = (data) => {
-    console.log(data);
+    history.push(`/confirm-otp?email=${data.email}`);
   };
 
   return (
@@ -26,52 +27,40 @@ const ForgotPassword = () => {
         <div className="row">
           <div className="col-12">
             <div className="sign__content">
-              <form className="sign__form" onSubmit={handleSubmit(onValid)}>
+              <form
+                className="sign__form mt-5"
+                onSubmit={handleSubmit(onValid)}
+              >
                 <a href="/" className="sign__logo">
                   <img src={logo} alt="Hotflix" />
                 </a>
-
                 <div className="sign__group">
-                  <p className="text-white">Nhập số điện thoại</p>
+                  <p className="text-white">Nhập email</p>
                   <input
                     type="text"
                     className={`sign__input ${
-                      errors.phone ? "input-error" : ""
+                      errors.email ? "input-error" : ""
                     }`}
-                    {...register("phone", {
+                    {...register("email", {
                       required: {
                         value: true,
                         message: "Đây là mục bắt buộc",
                       },
-                      minLength: {
-                        value: "10",
-                        message: "Số điện thoại phải bao gồm ít nhất 10 chữ số",
-                      },
-                      pattern: {
-                        value: /^\d+$/,
-                        message: "Số điện thoại phải là chữ số",
-                      },
                     })}
                   />
-                  {errors.phone && (
-                    <p className="input-required">{errors.phone.message}</p>
+                  {errors.email && (
+                    <p className="input-required">{errors.email.message}</p>
                   )}
-                </div>
-
-                <div className="sign__group sign__group--checkbox">
-                  <input id="remember" name="remember" type="checkbox" />
-                  <label htmlFor="remember">
-                    Tôi đồng ý với{" "}
-                    <Link to="/privacy"> Điều khoản & Chính sách</Link>
-                  </label>
                 </div>
 
                 <button className="sign__btn" type="submit">
                   Xác nhận
                 </button>
-
                 <span className="sign__text">
-                  Mã OTP sẽ được gửi tới số điện thoại này
+                  Đã có tài khoản? <Link to="/signin">Đăng nhập!</Link>
+                </span>
+                <span className="sign__text">
+                  Mã xác thực sẽ được gửi tới email này
                 </span>
               </form>
             </div>

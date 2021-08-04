@@ -15,17 +15,7 @@ const Footer = () => {
               <Link to="/" className="footer__logo">
                 <img src={logo} alt="HotFlix logo" />
               </Link>
-              <span className="footer__copyright">© HOTFLIX, 2019—2021</span>
-
-              <nav className="footer__nav">
-                <Link to="/about">Về chúng tôi</Link>
-                <Link to="/contacts">Liên hệ</Link>
-                <Link to="/privacy">Chính sách & Điều khoản</Link>
-              </nav>
-
-              <button className="footer__back" type="button">
-                <i className="icon ion-ios-arrow-round-up"></i>
-              </button>
+              <span className="footer__copyright">© OTBM , 2019—2021</span>
             </div>
           </div>
         </div>

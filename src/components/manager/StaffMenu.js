@@ -27,7 +27,7 @@ const StaffMenu = () => {
   return (
     <>
       <div className={`sidebar ${sidebar.show ? "show" : ""}`}>
-        <a href="/" className="sidebar__logo">
+        <a href="##" className="sidebar__logo">
           <img src={logo} alt="Hotflix logo" />
         </a>
         <div className="sidebar__user">
@@ -37,7 +37,7 @@ const StaffMenu = () => {
               src={
                 loginData?.data?.avatar
                   ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
-                      "../uploads",
+                      "uploads",
                       ""
                     )}`
                   : userImg
@@ -82,7 +82,9 @@ const StaffMenu = () => {
             <li className="sidebar__nav-item">
               <Link
                 className={`sidebar__nav-link ${checkCondition(
-                  pathname.includes("/booking-ticket"),
+                  pathname.includes("/booking-ticket") ||
+                    pathname.includes("/view-movie") ||
+                    pathname.includes("/select-seat"),
                   "sidebar__nav-link--active",
                   ""
                 )}`}

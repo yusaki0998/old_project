@@ -30,9 +30,8 @@ const RoomList = ({ list, isLoading }) => {
             <tr>
               <th>ID</th>
               <th>Tên phòng</th>
-              <th>Tên map</th>
-              <th>Sửa</th>
-              <th>Xóa</th>
+              <th>Tên sơ đồ ghế</th>
+              <th>Sửa/Xóa</th>
             </tr>
           </thead>
           <tbody>
@@ -52,7 +51,8 @@ const RoomList = ({ list, isLoading }) => {
                   </td>
                   <td>
                     <div className="main__table-text">
-                      {room?.seatMap?.name || "Not yet"}
+                      {room?.seatMap?.name?.replace("Map", "Sơ đồ ghế ") ||
+                        "Chưa có"}
                     </div>
                   </td>
                   <td>
@@ -65,10 +65,6 @@ const RoomList = ({ list, isLoading }) => {
                       >
                         <i className="icon ion-ios-create"></i>
                       </button>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="main__table-btns">
                       <button
                         className="main__table-btn main__table-btn--delete"
                         onClick={() => onOpen(room)}

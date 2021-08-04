@@ -11,21 +11,16 @@ import PublicLayout from "./layout/publicLayout";
 import AdminLayout from "./layout/adminLayout";
 import StaffLayout from "./layout/staffLayout";
 import { useSelector } from "react-redux";
+import NotFound from "./pages/global/NotFound";
 
 const HomePage = lazy(() => import("./pages/global/HomePage"));
 const CurrentFilm = lazy(() => import("./pages/global/CurrentFilm"));
 const ComingFilm = lazy(() => import("./pages/global/ComingFilm"));
-const PricingPage = lazy(() => import("./pages/global/PricingPlan"));
-const About = lazy(() => import("./pages/global/About"));
-const Contact = lazy(() => import("./pages/global/Contact"));
 const SignUp = lazy(() => import("./pages/global/SignUp"));
-const NotFound = lazy(() => import("./pages/global/NotFound"));
 const MovieDetail = lazy(() => import("./pages/global/MovieDetail"));
 const SelectSeat = lazy(() => import("./pages/global/SelectSeat"));
 const CustomerProfile = lazy(() => import("./pages/main/CustomerProfile"));
 const ForgotPassword = lazy(() => import("./pages/global/ForgotPassword"));
-const FAQ = lazy(() => import("./pages/global/FAQ"));
-const Privacy = lazy(() => import("./pages/global/Privacy"));
 const ConfirmOTP = lazy(() => import("./pages/global/ConfirmOTP"));
 const VerifyEmail = lazy(() => import("./pages/global/VerifyEmail"));
 const Login = lazy(() => import("./pages/global/Login"));
@@ -71,34 +66,6 @@ function App() {
               </UnAuthLayout>
             </Suspense>
           </Route>
-          <Route path="/pricing">
-            <Suspense fallback={<LoadingSpinner />}>
-              <PublicLayout>
-                <PricingPage />
-              </PublicLayout>
-            </Suspense>
-          </Route>
-          <Route path="/privacy">
-            <Suspense fallback={<LoadingSpinner />}>
-              <PublicLayout>
-                <Privacy />
-              </PublicLayout>
-            </Suspense>
-          </Route>
-          <Route path="/about">
-            <Suspense fallback={<LoadingSpinner />}>
-              <PublicLayout>
-                <About />
-              </PublicLayout>
-            </Suspense>
-          </Route>
-          <Route path="/contacts">
-            <Suspense fallback={<LoadingSpinner />}>
-              <PublicLayout>
-                <Contact />
-              </PublicLayout>
-            </Suspense>
-          </Route>
           <Route path="/details/:id">
             <Suspense fallback={<LoadingSpinner />}>
               <PublicLayout>
@@ -127,13 +94,6 @@ function App() {
               </PublicLayout>
             </Suspense>
           </Route>
-          <Route path="/faq">
-            <Suspense fallback={<LoadingSpinner />}>
-              <PublicLayout>
-                <FAQ />
-              </PublicLayout>
-            </Suspense>
-          </Route>
           <Route path="/profile">
             <Suspense fallback={<LoadingSpinner />}>
               <AuthLayout>
@@ -143,9 +103,9 @@ function App() {
           </Route>
           <Route path="/forgot">
             <Suspense fallback={<LoadingSpinner />}>
-              <AuthLayout>
+              <UnAuthLayout>
                 <ForgotPassword />
-              </AuthLayout>
+              </UnAuthLayout>
             </Suspense>
           </Route>
           <Route path="/admin">
@@ -168,9 +128,7 @@ function App() {
             </Suspense>
           </Route>
           <Route path="*">
-            <Suspense fallback={<LoadingSpinner />}>
-              <NotFound />
-            </Suspense>
+            <NotFound />
           </Route>
         </Switch>
       </Router>

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/actions/authActions";
 import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
+import { hideSidebar } from "../../store/actions/uiActions";
 
 const Sidebar = ({ userInfo }) => {
   const { pathname, search } = useLocation();
@@ -29,7 +30,7 @@ const Sidebar = ({ userInfo }) => {
   return (
     <>
       <div className={`sidebar ${sidebar.show ? "show" : ""}`}>
-        <a href="/" className="sidebar__logo">
+        <a href="##" className="sidebar__logo">
           <img src={logo} alt="Hotflix logo" />
         </a>
         <div className="sidebar__user">
@@ -70,6 +71,7 @@ const Sidebar = ({ userInfo }) => {
                     ? "sidebar__nav-link--active"
                     : ""
                 }`}
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-create"></i>
                 <span>Tạo tài khoản</span>
@@ -84,6 +86,7 @@ const Sidebar = ({ userInfo }) => {
                     ? "sidebar__nav-link--active"
                     : ""
                 }`}
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-contact"></i> <span>Nhân viên</span>
               </Link>
@@ -98,13 +101,13 @@ const Sidebar = ({ userInfo }) => {
                     ? "sidebar__nav-link--active"
                     : ""
                 }`}
+                onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-contact"></i> <span>Quản lý</span>
               </Link>
             </li>
           </ul>
         </div>
-        <div className="sidebar__copyright">© HOTFLIX, 2021.</div>
       </div>
       <ConfirmLogoutModal
         open={showLogout}

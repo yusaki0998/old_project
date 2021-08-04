@@ -47,9 +47,7 @@ const StaffList = () => {
     if (isTouched && searchInput.trim()) {
       getUserBySearchInputRequest(searchInput.trim().toLowerCase())
         .then(({ data }) => {
-          setFilteredList(
-            data?.data?.filter((user) => user?.role === "manager")
-          );
+          setFilteredList(data?.data?.filter((user) => user?.role === "staff"));
         })
         .catch((err) => {
           console.log(err);
@@ -69,9 +67,9 @@ const StaffList = () => {
         <div className="row">
           <div className="col-12">
             <div className="admin__manager-list__wrapper text-white mt-5">
-              <div className="d-flex justify-content-between mb-4 align-items-center">
+              <div className="d-flex justify-content-between mb-4 align-items-center sm-flex-col">
                 <h3>Danh sách nhân viên</h3>
-                <form className="table__search">
+                <form className="table__search mr">
                   <input
                     className="header__search-input"
                     type="text"
@@ -104,7 +102,7 @@ const StaffList = () => {
                         <th>Số điện thoại</th>
                         <th>Giới tính </th>
                         <th>Ngày sinh </th>
-                        <th>Chỉnh sửa / Xóa</th>
+                        <th>Sửa / Xóa</th>
                       </tr>
                     </thead>
                     <tbody>

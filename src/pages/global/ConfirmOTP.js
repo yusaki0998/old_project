@@ -12,13 +12,13 @@ const ConfirmOTP = () => {
   const history = useHistory();
 
   const query = new URLSearchParams(search);
-  const phoneField = query.get("phone");
+  const emailField = query.get("email");
 
   useEffect(() => {
-    if (!phoneField) {
+    if (!emailField) {
       history.push("/signup");
     }
-  }, [history, phoneField]);
+  }, [history, emailField]);
 
   return (
     <div className="confirm__otp">
@@ -27,13 +27,13 @@ const ConfirmOTP = () => {
       </Helmet>
       <div className="container">
         <div className="row">
-          <div className="col-12 col-lg-4 col-md-6 col-sm-8 mx-auto">
-            <form>
+          <div className="mx-auto">
+            <form className="sign__form">
               <Link to="/" className="sign__logo sign__link">
                 <img src={logo} alt="Hotflix" />
               </Link>
               <div className="sign__group">
-                <label htmlFor="otp__code" className="sign__label">
+                <label htmlFor="otp__code" className="sign__label text-white">
                   Nhập mã xác thực
                 </label>
                 <input
@@ -44,10 +44,8 @@ const ConfirmOTP = () => {
                   onChange={(e) => setOtp(e.target.value)}
                 />
               </div>
-              <p className="confirm__otp-text">
-                Mã xác minh OTP đã được gửi đến số điện thoại {phoneField}.
-                <br />
-                Bạn chỉ có thể nhận tối đa 3 mã/1 ngày
+              <p className="confirm__otp-text text-white">
+                Mã xác thực đã được gửi đến email {emailField}.
               </p>
               <button className="sign__btn" type="button">
                 Xác nhận
