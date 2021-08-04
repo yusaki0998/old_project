@@ -241,6 +241,16 @@ const deleteSchedule = async (req, res) => {
 
         const id = req.params.scheduleId;
 
+        const checkScheduleTicket = await Ticket.find({
+            schedule: id
+        }).exec()
+
+        if(checkScheduleTicket.length !== 0) {
+            return res.status(409).json({
+                message: "Cannot delete schedule ! There is tickets selling on this schedule"
+            });
+        }
+
         const deleteSchedule = await Schedule.findByIdAndDelete(id).exec();
 
         if (!deleteSchedule) {

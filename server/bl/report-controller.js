@@ -1,41 +1,69 @@
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
-const User = require('../dbaccess//user-model');
+const User = require('../dbaccess/user-model');
+const Movie = require('../dbaccess/movie-model');
+const moment = require('moment');
+const _ = require('lodash');
 
 const movieReports = async (req, res) => {
     try {
-        const weekNumber = req.query.week;
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
+        const movieId = req.query.movie;
 
-        const countSchedule = await Schedule.find(
-            { week: weekNumber }
+        const sDate = moment(startDate, 'MM-DD-YYYY');
+        const eDate = moment(endDate, 'MM-DD-YYYY');
+
+        let query = [];
+        if (!!startDate) {
+            query.push({ showDate: { $gte: sDate } })
+        }
+        if (!!endDate) {
+            query.push({ showDate: { $lte: eDate } })
+        }
+        if (!!movieId) {
+            query.push({ movie: movieId })
+        }
+
+        let final_query = query.length ? { $and: query } : {};
+
+        const findSchedule = await Schedule.find(
+            final_query
         )
             .populate('movie', 'movieName')
-            .exec();
+            .exec()
 
-        //Get schedule id for tickets query
-        let id = countSchedule.map(schedule => { return schedule._id });
-        const countTicket = await Ticket.find(
+        let movieSchedule = [];
+        findSchedule.forEach(schedule => {
+            movieSchedule.push(schedule.movie)
+        });
+
+        const unique = _.uniqWith(movieSchedule, _.isEqual);
+        const result = _.compact(unique);
+
+        let id = findSchedule.map(schedule => { return schedule._id });
+        const findTicket = await Ticket.find(
             {
                 schedule: { $in: id },
-                //status: 1
+                status: 1
             }
         )
             .populate({
                 path: 'schedule',
                 model: 'Schedule',
-                match: { week: weekNumber },
+                //match: { showDate: { $gte: sDate, $lte: eDate } },
                 populate: [{
                     path: 'movie',
                     model: 'Movie',
                     select: 'movieName',
-                    match: { _id: countSchedule.movie }
+                    match: { _id: findSchedule.movie }
                 }]
             })
             .exec();
 
         let normalSeats = [];
         let vipSeats = [];
-        countTicket.forEach(ticket => {
+        findTicket.forEach(ticket => {
             if (ticket.seat.seatType === 'normal') {
                 normalSeats.push(ticket);
             } else if (ticket.seat.seatType === 'vip') {
@@ -44,12 +72,11 @@ const movieReports = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Movie report",
+            message: "Report",
             data: {
-                movieSchedule: countSchedule,
-                scheduleReport: countSchedule.length,
-                ticket: countTicket,
-                ticketReport: countTicket.length,
+                movie: result,
+                scheduleReport: findSchedule.length,
+                ticketReport: findTicket.length,
                 normalSeatReport: normalSeats.length,
                 vipSeatReport: vipSeats.length,
             }
@@ -66,47 +93,76 @@ const movieReports = async (req, res) => {
 
 const staffReports = async (req, res) => {
     try {
-        const weekNumber = req.query.week;
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
 
-        const getStaffs = await User.find({
+        const sDate = moment(startDate, 'MM-DD-YYYY');
+        const eDate = moment(endDate, 'MM-DD-YYYY');
+
+        const staffId = req.params.staffId;
+
+        const getStaff = await User.findOne({
+            _id: staffId,
             role: 'staff'
         }).exec();
 
-        const countSchedule = await Schedule.find(
-            { week: weekNumber }
-        ).exec();
+        const findSchedule = await Schedule.find({
+            showDate: {
+                $gte: sDate,
+                $lte: eDate
+            }
+        }).exec();
 
-        //Get staff id for tickets query
-        let userId = getStaffs.map(staff => { return staff._id });
-        let scheduleId = countSchedule.map(schedule => { return schedule._id });
-        const countTicket = await Ticket.find(
+        //let userId = getStaff.map(staff => { return staff._id });
+        let scheduleId = findSchedule.map(schedule => { return schedule._id });
+        const findTicket = await Ticket.find(
             {
-                user: { $in: userId },
+                user: staffId,
                 schedule: { $in: scheduleId },
-                //status: 1
+                status: 1
             }
         )
             .populate({
                 path: 'schedule',
                 model: 'Schedule',
-                match: { week: weekNumber },
-            })
-            .populate({
-                path: 'user',
-                model: 'User',
-                select: 'fullname email',
-                match: { _id: getStaffs._id }
+                options: {
+                    sort: { 'showDate': -1 }
+                },
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
             })
             .exec();
+
+        let normalSeats = [];
+        let vipSeats = [];
+        findTicket.forEach(ticket => {
+            if (ticket.seat.seatType === 'normal') {
+                normalSeats.push(ticket);
+            } else if (ticket.seat.seatType === 'vip') {
+                vipSeats.push(ticket);
+            }
+        });
 
         return res.status(200).json({
             message: "Report",
             data: {
-                staffTicketReport: countTicket,
-                report: countTicket.length
+                staffInfo: getStaff,
+                ticketReport: findTicket.length,
+                normalSeatReport: normalSeats.length,
+                vipSeatReport: vipSeats.length,
+                ticketHistory: findTicket
             }
         });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({

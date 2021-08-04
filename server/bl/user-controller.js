@@ -21,9 +21,9 @@ const register = async (req, res) => {
     try {
         const { fullname, gender, email, phone, password, retype, dob } = req.body;
 
-        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const regexp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-        if (!email || !password || !fullname || !dob || !phone) {
+        if (!email || !password || !fullname || !dob || !phone || !gender) {
             return res.status(301).json({
                 message: "Missing information required to register"
             });
@@ -43,7 +43,7 @@ const register = async (req, res) => {
             });
         }
 
-        if (phone.length > 10) {
+        if (isNaN(phone) || phone.length !== 10) {
             return res.status(301).json({
                 message: "Your phone number is invalid, phone number must be 10 numbers"
             });
@@ -292,7 +292,7 @@ const updateProfile = async (req, res) => {
 
         const { fullname, gender, email, phone } = req.body;
 
-        const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const regexp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
         const user = await User.findOne({
             _id: id
@@ -497,15 +497,16 @@ const getStaffs = async (req, res) => {
 
         const checkUser = await User.findById(currentUser).exec();
 
-        if (checkUser.role !== 'admin') {
+        let findStaffs
+        if (checkUser.role === 'admin' || checkUser.role === 'manager') {
+            findStaffs = await User.find({
+                role: 'staff'
+            }).exec();
+        } else {
             return res.status(403).json({
                 message: "You don't have permission to access this"
             })
         }
-
-        const findStaffs = await User.find({
-            role: 'staff'
-        }).exec();
 
         if (!findStaffs || findStaffs.length === 0) {
             return res.status(404).json({
@@ -533,18 +534,19 @@ const getStaff = async (req, res) => {
 
         const checkUser = await User.findById(currentUser).exec();
 
-        if (checkUser.role !== 'admin') {
+        const id = req.params.staffId;
+
+        let findStaff;
+        if (checkUser.role === 'admin' || checkUser.role === 'manager') {
+            findStaff = await User.findOne({
+                _id: id,
+                role: 'staff'
+            }).exec();
+        } else {
             return res.status(403).json({
                 message: "You don't have permission to access this"
             })
         }
-
-        const id = req.params.staffId;
-
-        const findStaff = await User.findOne({
-            _id: id,
-            role: 'staff'
-        }).exec();
 
         if (!findStaff) {
             return res.status(404).json({
@@ -825,25 +827,29 @@ const getCustomer = async (req, res) => {
         }
 
         const findCustomerTicket = await Ticket.find({
-            user: findCustomer._id
+            user: findCustomer._id,
+            status: 0
         })
-        .populate({
-            path: 'schedule',
-            model: 'Schedule',
-            populate: [{
-                path: 'movie',
-                model: 'Movie',
-                select: 'movieName'
-            }, {
-                path: 'room',
-                model: 'Room',
-                select: 'roomName'
-            }, {
-                path: 'slot',
-                model: 'Slot'
-            }]
-        })
-        .exec();
+            .populate({
+                path: 'schedule',
+                model: 'Schedule',
+                options: {
+                    sort: { 'showDate': 1 }
+                },
+                populate: [{
+                    path: 'movie',
+                    model: 'Movie',
+                    select: 'movieName'
+                }, {
+                    path: 'room',
+                    model: 'Room',
+                    select: 'roomName'
+                }, {
+                    path: 'slot',
+                    model: 'Slot'
+                }]
+            })
+            .exec();
 
         return res.status(200).json({
             message: "Customer information found",

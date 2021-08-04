@@ -67,9 +67,17 @@ const getSeatMap = async (req, res) => {
             });
         }
 
+        const info = findMap.seats;
+        const normal = info.find(element => element.seatType === 'normal');
+        const vip = info.find(element => element.seatType === 'vip');
+
         return res.status(200).json({
             message: "Seat map found",
-            data: findMap
+            data: {
+                map: findMap,
+                normalPrice: normal.price,
+                vipPrice: vip.price
+            }
         });
     } catch (error) {
         console.error(error.message);

@@ -11,7 +11,11 @@ const ticketSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
     //1: accept, 0: pending
-    status: { type: Number, default: 0 }
+    status: { type: Number, default: 0 },
+
+    bookedDate: { type: Date, default: Date.now() },
+
+    paymentDate: { type: Date },
 });
 
 module.exports = mongoose.model('Ticket', ticketSchema);

@@ -76,7 +76,7 @@ const getScheduleSeats = async (req, res) => {
         const findSchedule = await Schedule
             .findById(id)
             .select('+roomSeats')
-            .populate('movie', 'movieName')
+            .populate('movie', 'movieName coverImage')
             .populate('room', 'roomName')
             .populate('slot')
             .exec();
@@ -146,35 +146,22 @@ const createTicket = async (req, res) => {
 
         const findSchedule = await Schedule.findById(id).exec();
 
-        let buyTicket = [];
-        seatChosens.forEach(seat => {
-            buyTicket.push({
-                _id: new mongoose.Types.ObjectId(),
-                schedule: findSchedule._id,
-                seat: seat,
-                user: checkUser._id
-            })
-        });
-
-        const data = await Ticket.insertMany(buyTicket, { session });
-
-        const checkTicket = await Ticket.findOne({
-            seat: seatChosens.seatNo,
-            schedule: findSchedule
-        }).exec();
-
-        if (checkTicket !== null) {
-            await session.abortTransaction();
-            session.endSession();
-            return res.status(409).json({
-                message: "Ticket already reserved"
-            });
-        }
-
         const seatNumber = seatChosens.map(seat => seat.seatNo);
 
+        let buyTicket = [];
+        let result;
         if (checkUser.role === 'customer') {
-            //update seats status in current schedule
+            seatChosens.forEach(seat => {
+                buyTicket.push({
+                    _id: new mongoose.Types.ObjectId(),
+                    schedule: findSchedule._id,
+                    seat: seat,
+                    user: checkUser._id
+                })
+            });
+
+            result = await Ticket.insertMany(buyTicket, { session });
+
             await Schedule.updateMany(
                 { _id: findSchedule._id },
                 { $set: { 'roomSeats.$[item].status': "pending" } },
@@ -187,8 +174,21 @@ const createTicket = async (req, res) => {
 
             await session.commitTransaction();
             session.endSession();
+
         } else if (checkUser.role === 'staff') {
-            //update seats status in current schedule
+            seatChosens.forEach(seat => {
+                buyTicket.push({
+                    _id: new mongoose.Types.ObjectId(),
+                    schedule: findSchedule._id,
+                    seat: seat,
+                    user: checkUser._id,
+                    status: 1,
+                    paymentDate: Date.now()
+                })
+            });
+
+            result = await Ticket.insertMany(buyTicket, { session });
+
             await Schedule.updateMany(
                 { _id: findSchedule._id },
                 { $set: { 'roomSeats.$[item].status': "sold" } },
@@ -203,9 +203,32 @@ const createTicket = async (req, res) => {
             session.endSession();
         }
 
+        // const checkTicket = await Ticket.findOne({
+        //     seat: seatChosens.seatNo,
+        //     schedule: findSchedule
+        // }).exec();
+
+        const checkTicket = await Ticket.find(
+            {
+                schedule: findSchedule,
+                seat: { $in: seatChosens }
+            }
+        ).exec();
+
+        console.log(checkTicket);
+
+        if (checkTicket.length !== 0) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(409).json({
+                message: "Ticket already reserved",
+                data: checkTicket
+            });
+        }
+
         return res.status(201).json({
             message: "All ticket booked",
-            data: data
+            data: result
         });
 
     } catch (error) {
@@ -344,7 +367,7 @@ const updateTicketStatus = async (req, res) => {
 
         const updateTicket = await Ticket.updateOne(
             { _id: id },
-            { status: status },
+            { status: status, paymentDate: Date.now() },
             { session }
         ).exec();
 
@@ -378,30 +401,61 @@ const updateTicketStatus = async (req, res) => {
 const deleteTicket = async (req, res) => {
     const session = await mongoose.startSession();
     try {
+        const currentUser = req.userData._id;
+
+        const checkUser = await User.findById(currentUser).exec();
+
         session.startTransaction();
 
-        const id = req.params.ticketId;
+        const id = req.query.id;
 
-        const findTicket = await Ticket
-            .findById(id)
-            .exec();
+        console.log(id);
 
-        if (!findTicket) {
-            return res.status(404).json({
-                message: "Ticket not found"
+        if (!id) {
+            return res.status(301).json({
+                message: "Ticket id is not valid",
+                data: null
             });
         }
 
-        const deleteTicket = await Ticket.findByIdAndDelete(id).exec();
+        if (!Array.isArray(id)) {
+            return res.status(409).json({
+                message: "Ticket id is not an array",
+                data: null
+            });
+        }
 
-        await Schedule.updateOne(
+        const findTickets = await Ticket
+            .find({ _id: { $in: id }, user: checkUser._id })
+            .exec();
+
+        if (!findTickets) {
+            return res.status(404).json({
+                message: "Tickets not found"
+            });
+        }
+
+        //getting seats in tickets
+        const seats = findTickets.map(x => x.seat)
+        //getting seats number in seats
+        const seatNumber = seats.map(x => x.seatNo)
+        //getting schedules in tickets
+        const scheduleId = findTickets.map(x => x.schedule)
+
+        await Schedule.updateMany(
             {
-                _id: findTicket.schedule,
-                'roomSeats.seatNo': findTicket.seat.seatNo
+                _id: { $in: scheduleId },
             },
-            { $set: { 'roomSeats.$.status': "empty" } },
-            { session }
+            { $set: { 'roomSeats.$[item].status': "empty" } },
+            {
+                arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
+                session
+            }
         ).exec();
+
+        const deleteTicket = await Ticket
+            .deleteMany({ _id: { $in: id } })
+            .exec();
 
         await session.commitTransaction();
         session.endSession();

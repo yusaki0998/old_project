@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
-const moment = require('moment');
+//const moment = require('moment');
 
 const createSlot = async (req, res) => {
     try {
@@ -35,13 +35,13 @@ const createSlot = async (req, res) => {
 
         if (startTime > 2359 || startTime < 0) {
             return res.status(301).json({
-                message: "Start time must be with in 0h-23h59 range"
+                message: "Start time must be with in 00h00-23h59 range"
             });
         }
 
         if (endTime > 2359 || endTime < 0) {
             return res.status(301).json({
-                message: "End time must be with in 0h-23h59 range"
+                message: "End time must be with in 00h00-23h59 range"
             });
         }
 

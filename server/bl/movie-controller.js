@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Movie = require('../dbaccess/movie-model');
+const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');
-//const Schedule = require('../dbaccess/schedule-model');
 const cloudinary = require('../utils/cloudinary');
 const moment = require('moment');
 
@@ -22,7 +22,7 @@ const createMovie = async (req, res) => {
         const { movieName, director, actor, genre, nation, ageRating, amountOfTime,
             showtimes, description, status } = req.body;
 
-        if (!movieName || !director || !actor) {
+        if (!movieName || !director || !actor || !ageRating || !genre) {
             return res.status(301).json({
                 message: "Missing information required to create movie"
             });
@@ -75,7 +75,9 @@ const getOngoingMovies = async (req, res) => {
     try {
         const findMovies = await Movie.find({
             status: 1
-        }).exec();
+        })
+        .sort({ showtimes: 1})
+        .exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
@@ -101,7 +103,9 @@ const getComingSoonMovies = async (req, res) => {
     try {
         const findMovies = await Movie.find({
             status: 0
-        }).exec();
+        })
+        .sort({ showtimes: 1})
+        .exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
@@ -178,8 +182,10 @@ const updateMovie = async (req, res) => {
         const { movieName, director, actor, genre, nation, ageRating, amountOfTime,
             showtimes, description, status } = req.body;
 
+        let cloud;
         if (req.file) {
-            movie.coverImage = req.file.path;
+            cloud = await cloudinary.uploader.upload(req.file.path);
+            movie.coverImage = cloud.secure_url;
         }
 
         if (movieName) {
@@ -263,6 +269,16 @@ const deleteMovie = async (req, res) => {
         }
 
         const id = req.params.movieId;
+
+        const checkMovieSchedule = await Schedule.find({
+            movie: id
+        }).exec();
+
+        if(checkMovieSchedule.length !== 0) {
+            return res.status(409).json({
+                message: "Cannot delete movie ! You must delete all movie schedule before delete this movie"
+            });
+        }
 
         const deleteMovie = await Movie.findByIdAndDelete(id).exec();
 
