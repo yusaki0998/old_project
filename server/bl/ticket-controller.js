@@ -3,6 +3,7 @@ const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');
 const Movie = require('../dbaccess/movie-model');
+const Report = require('../dbaccess/report-model');
 
 const getMovieSchedule = async (req, res) => {
     try {
@@ -148,7 +149,24 @@ const createTicket = async (req, res) => {
 
         const seatNumber = seatChosens.map(seat => seat.seatNo);
 
+        const checkTicket = await Ticket.find(
+            {
+                schedule: findSchedule,
+                seat: { $in: seatChosens }
+            }
+        ).exec();
+
+        console.log(checkTicket);
+
+        if (checkTicket.length !== 0) {
+            return res.status(409).json({
+                message: "Ticket already reserved",
+                data: checkTicket
+            });
+        }
+
         let buyTicket = [];
+        let reports = [];
         let result;
         if (checkUser.role === 'customer') {
             seatChosens.forEach(seat => {
@@ -199,6 +217,20 @@ const createTicket = async (req, res) => {
                 }
             ).exec();
 
+            seatChosens.forEach(ticket => {
+                reports.push({
+                    _id: new mongoose.Types.ObjectId(),
+                    movie: findSchedule.movie,
+                    room: findSchedule.room,
+                    slot: findSchedule.slot,
+                    user: currentUser,
+                    income: ticket.price,
+                    paymentDate: Date.now()
+                })
+            });
+
+            await Report.insertMany(reports, { session });
+
             await session.commitTransaction();
             session.endSession();
         }
@@ -207,24 +239,6 @@ const createTicket = async (req, res) => {
         //     seat: seatChosens.seatNo,
         //     schedule: findSchedule
         // }).exec();
-
-        const checkTicket = await Ticket.find(
-            {
-                schedule: findSchedule,
-                seat: { $in: seatChosens }
-            }
-        ).exec();
-
-        console.log(checkTicket);
-
-        if (checkTicket.length !== 0) {
-            await session.abortTransaction();
-            session.endSession();
-            return res.status(409).json({
-                message: "Ticket already reserved",
-                data: checkTicket
-            });
-        }
 
         return res.status(201).json({
             message: "All ticket booked",
@@ -363,6 +377,10 @@ const updateTicketStatus = async (req, res) => {
             });
         }
 
+        const findTicketSchedule = await Schedule.findOne({
+            _id: findTicket.schedule
+        }).exec();
+
         const { status } = req.body;
 
         const updateTicket = await Ticket.updateOne(
@@ -379,6 +397,18 @@ const updateTicketStatus = async (req, res) => {
             { $set: { 'roomSeats.$.status': "sold" } },
             { session }
         ).exec();
+
+        const report = new Report({
+            _id: new mongoose.Types.ObjectId(),
+            movie: findTicketSchedule.movie,
+            room: findTicketSchedule.room,
+            slot: findTicketSchedule.slot,
+            user: checkUser._id,
+            income: findTicket.seat.price,
+            paymentDate: Date.now()
+        });
+
+        await report.save({ session });
 
         await session.commitTransaction();
         session.endSession();
@@ -418,12 +448,12 @@ const deleteTicket = async (req, res) => {
             });
         }
 
-        if (!Array.isArray(id)) {
-            return res.status(409).json({
-                message: "Ticket id is not an array",
-                data: null
-            });
-        }
+        // if (!Array.isArray(id)) {
+        //     return res.status(409).json({
+        //         message: "Ticket id is not an array",
+        //         data: null
+        //     });
+        // }
 
         const findTickets = await Ticket
             .find({ _id: { $in: id }, user: checkUser._id })

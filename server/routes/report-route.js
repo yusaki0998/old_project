@@ -4,7 +4,6 @@ const checkAuth = require('../middleware/check-auth');
 
 const ReportController = require('../bl/report-controller');
 
-router.get('/movies', ReportController.movieReports);
-router.get('/staffs/:staffId', ReportController.staffReports);
+router.get('/', ReportController.revenueReports);
 
 module.exports = router;
