@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schedule = require('../dbaccess/schedule-model');
-const Movie = require('../dbaccess/movie-model');
+const Ticket = require('../dbaccess/ticket-model');
+//const Movie = require('../dbaccess/movie-model');
 const Room = require('../dbaccess/room-model');
-const Slot = require('../dbaccess/slot-model');
+//const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
 const SeatMap = require('../dbaccess/seat-map-model');
 
