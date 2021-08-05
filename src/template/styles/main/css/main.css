@@ -868,6 +868,7 @@ ul {
   opacity: 0;
   max-height: 200px;
   border-radius: 6px;
+  overflow-y: scroll;
 }
 .content__mobile-tabs-menu li {
   display: block;

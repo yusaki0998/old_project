@@ -4,7 +4,7 @@ import React from "react";
 
 const BookingSeatTypes = () => {
   return (
-    <div className="mb-5">
+    <div className="mb-4">
       <div className="seat__types seat__list d-flex justify-content-center w-auto">
         <div className="d-flex align-items-center justify-content-center flex-col mr-4">
           <div className="d-flex align-items-center mr-4">

@@ -30,4 +30,4 @@ export const bookTicketRequest = async (scheduleId, data) =>
     }
   );
 export const cancelBookingRequest = async (ticketId) =>
-  axios.delete(`/tickets/${ticketId}`);
+  axios.delete(`/tickets?id=${ticketId.join("&id=")}`);

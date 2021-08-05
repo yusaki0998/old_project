@@ -18,9 +18,7 @@ const CancelMultipleBooking = ({ open, close, ticketDatas, callback }) => {
   const onConfirm = async () => {
     setIsLoading(true);
     try {
-      const data = await Promise.all(
-        ticketDatas.map((id) => cancelBookingRequest(id))
-      );
+      const data = await cancelBookingRequest(ticketDatas.map((id) => id));
       console.log(data);
       setIsLoading(false);
       callback();

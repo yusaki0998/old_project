@@ -78,8 +78,9 @@ const BookingSummary = ({ bookingDetail, selectedSeats, isStaff }) => {
   return (
     <div className="booking__summary">
       <div className="row align-items-center">
-        <div className="col-md-3 col-12">
+        <div className="col-md-3 col-12 d-flex sm-mb-2">
           <img
+            className="mr-2"
             src={
               bookingDetail?.movie?.coverImage?.includes("cloudinary")
                 ? bookingDetail?.movie?.coverImage

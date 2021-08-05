@@ -88,7 +88,7 @@ const SelectSeat = ({ isStaff }) => {
       )}
       {!isLoading && bookingDetail?._id && (
         <>
-          <h1 className="text-center text-white">Booking Online</h1>
+          <h4 className="text-center text-white">Booking Online</h4>
           <section className="content">
             <SeatMap
               seatList={bookingDetail?.roomSeats}

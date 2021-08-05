@@ -18,7 +18,7 @@ const CancelBooking = ({ open, close, ticketData, callback }) => {
   const onConfirm = async () => {
     setIsLoading(true);
     try {
-      await cancelBookingRequest(ticketData?._id);
+      await cancelBookingRequest([ticketData?._id]);
       setIsLoading(false);
       callback();
       const newNoti = {
