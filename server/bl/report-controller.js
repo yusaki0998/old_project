@@ -47,9 +47,7 @@ const revenueReports = async (req, res) => {
 
         return res.status(200).json({
             message: "Report",
-            data: {
-                report
-            }
+            data: report
         });
 
     } catch (error) {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var ObjectId = require('mongoose').Types.ObjectId;
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');
@@ -439,8 +440,6 @@ const deleteTicket = async (req, res) => {
 
         const id = req.query.id;
 
-        console.log(id);
-
         if (!id) {
             return res.status(301).json({
                 message: "Ticket id is not valid",
@@ -448,18 +447,15 @@ const deleteTicket = async (req, res) => {
             });
         }
 
-        // if (!Array.isArray(id)) {
-        //     return res.status(409).json({
-        //         message: "Ticket id is not an array",
-        //         data: null
-        //     });
-        // }
-
         const findTickets = await Ticket
-            .find({ _id: { $in: id }, user: checkUser._id })
+            .find({
+                _id: { $in: id }
+            })
             .exec();
 
-        if (!findTickets) {
+        console.log(findTickets);
+
+        if (findTickets.length === 0) {
             return res.status(404).json({
                 message: "Tickets not found"
             });
@@ -472,19 +468,20 @@ const deleteTicket = async (req, res) => {
         //getting schedules in tickets
         const scheduleId = findTickets.map(x => x.schedule)
 
-        await Schedule.updateMany(
+        const update = await Schedule.updateMany(
             {
                 _id: { $in: scheduleId },
             },
             { $set: { 'roomSeats.$[item].status': "empty" } },
             {
+                multi: true,
                 arrayFilters: [{ 'item.seatNo': { $in: seatNumber } }],
                 session
             }
         ).exec();
 
         const deleteTicket = await Ticket
-            .deleteMany({ _id: { $in: id } })
+            .deleteMany({ _id: { $in: id } }, { session })
             .exec();
 
         await session.commitTransaction();
@@ -492,7 +489,10 @@ const deleteTicket = async (req, res) => {
 
         return res.status(200).json({
             message: "Ticket deleted",
-            data: deleteTicket
+            data: {
+                update,
+                deleteTicket
+            }
         });
 
     } catch (error) {
