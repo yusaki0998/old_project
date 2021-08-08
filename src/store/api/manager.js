@@ -129,3 +129,22 @@ export const getStaffDetailRequest = async (staffId, startDate, endDate) =>
       endDate,
     },
   });
+
+export const getRevenueListRequest = async (
+  startDate,
+  endDate,
+  movie,
+  room,
+  slot,
+  user
+) =>
+  axios.get(`/reports`, {
+    params: {
+      startDate,
+      endDate,
+      movie,
+      room,
+      slot,
+      user,
+    },
+  });

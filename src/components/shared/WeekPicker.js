@@ -80,6 +80,7 @@ export default class WeekPicker extends React.Component {
           onDayMouseEnter={this.handleDayEnter}
           onDayMouseLeave={this.handleDayLeave}
           onWeekClick={this.handleWeekClick}
+          firstDayOfWeek={1}
         />
         {selectedDays.length === 7 && (
           <div>

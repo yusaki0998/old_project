@@ -3,14 +3,10 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import userImg from "../../template/styles/main/img/user.svg";
-import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
 
 const Profile = () => {
   const { loginData } = useSelector((state) => state.auth);
-  const history = useHistory();
   return (
     <div className="customer__profile-wrapper my-5">
       <Helmet>
@@ -18,28 +14,6 @@ const Profile = () => {
       </Helmet>
       <div className="col-md-8 col-lg-6 mx-auto col-sm-10 col-12">
         <div className="d-flex align-items-center">
-          <div className="mr-4">
-            <div className="">
-              <img
-                className="d-block my-3 user__img-wrapper"
-                src={
-                  loginData?.data?.avatar
-                    ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
-                        "../uploads",
-                        ""
-                      )}`
-                    : userImg
-                }
-                alt={loginData?.data?.fullname || ""}
-              />
-            </div>
-            <button
-              onClick={() => history.push("/customer/edit-info")}
-              className="btn__outline-orange"
-            >
-              Thay đổi
-            </button>
-          </div>
           <div>
             <strong>Xin chào {loginData?.data?.fullname} </strong>
             <p>

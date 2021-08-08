@@ -8,7 +8,7 @@ import ScheduleSkeleton from "../../skeleton/ScheduleSkeleton";
 import ScheduleEditForm from "./ScheduleEditForm";
 import { useSelector } from "react-redux";
 import NewScheduleForm from "./NewSchedule";
-import { getCurrentWeekNum } from "../../utils/helper";
+import { convertTime, getCurrentWeekNum } from "../../utils/helper";
 
 const convertDateString = (daysArr) => {
   const convertedDates = [];
@@ -166,7 +166,15 @@ const CalendarTable = ({
               slotList?.map((slot) => (
                 <tr key={slot._id}>
                   <td>
-                    <div className="text-schedule">{slot.slotName}</div>
+                    <div
+                      className="text-schedule"
+                      style={{
+                        minWidth: 105,
+                      }}
+                    >
+                      {slot.slotName} <br /> ( {convertTime(slot?.startTime)} -{" "}
+                      {convertTime(slot?.endTime)})
+                    </div>
                   </td>
                   {loadingSchedules && <ScheduleSkeleton />}
                   {!loadingSchedules && (
@@ -190,7 +198,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}
@@ -234,7 +243,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}
@@ -278,7 +288,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}
@@ -322,7 +333,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}
@@ -366,7 +378,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}
@@ -410,7 +423,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}
@@ -454,7 +468,8 @@ const CalendarTable = ({
                                     }
                                     key={item._id}
                                   >
-                                    {item?.movie?.movieName}
+                                    {item?.movie?.movieName} <br /> (
+                                    {item?.room?.roomName})
                                   </div>
                                 )
                               )}

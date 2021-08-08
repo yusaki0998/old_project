@@ -281,7 +281,11 @@ const NewFilm = () => {
             </div>
             <div className="col-md-5">
               <div className="sign__group">
-                <input ref={imgRef} type="file" className="sign__input pt-1" />
+                <input
+                  ref={imgRef}
+                  type="file"
+                  className="sign__input pt-1 cursor-pointer"
+                />
                 {imgError && <p className="input-required">{imgError}</p>}
               </div>
             </div>

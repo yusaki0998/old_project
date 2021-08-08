@@ -65,12 +65,12 @@ export const getCurrentWeekNum = () => {
   const dates = [];
   const currentDay = currentdate.getDay();
   if (currentDay === 0) {
-    dates.push(currentdate);
-    for (let i = 1; i <= 6; i++) {
+    for (let i = -6; i <= -1; i++) {
       const nextDate = new Date();
       nextDate.setDate(currentdate.getDate() + i);
       dates.push(nextDate);
     }
+    dates.push(currentdate);
   } else {
     for (let i = currentDay; i > 1; i--) {
       const prevDate = new Date();

@@ -3,11 +3,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import userImg from "../../template/styles/main/img/user.svg";
 import { convertGenderToVietnamese } from "../../utils/convertGender";
 import { editUserProfile } from "../../store/actions/userActions";
 import OutsideHandler from "../../components/shared/ClickWrapper";
-import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import { checkCondition, getBirhDate } from "../../utils/helper";
 import { Helmet } from "react-helmet";
 
@@ -50,21 +48,6 @@ const EditProfile = () => {
         <title> Chỉnh sửa thông tin cá nhân </title>
       </Helmet>
       <div className="d-flex flex-col">
-        <div className="image__placeholder mr-4">
-          <img
-            className="d-block my-3 user__img-wrapper"
-            src={
-              loginData?.data?.avatar
-                ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
-                    "../uploads",
-                    ""
-                  )}`
-                : userImg
-            }
-            alt={loginData?.data?.fullname || ""}
-          />
-          <button className="btn__outline-orange mx-auto">Thay đổi</button>
-        </div>
         <div className="edit__form">
           <form
             className="edit__profile--form mx-auto"

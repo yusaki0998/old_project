@@ -99,7 +99,7 @@ const OrderHistory = ({ hideCancelTicket }) => {
                   {loginData?.data?.role === "customer" && <th>Trạng thái</th>}
                   <th
                     className={`${checkCondition(
-                      hideCancelTicket,
+                      hideCancelTicket || loginData?.data?.role === "staff",
                       "d-none",
                       ""
                     )}`}
@@ -210,7 +210,7 @@ const OrderHistory = ({ hideCancelTicket }) => {
                       )}
                       <td
                         className={`${checkCondition(
-                          hideCancelTicket,
+                          hideCancelTicket || loginData?.data?.role === "staff",
                           "d-none",
                           ""
                         )}`}

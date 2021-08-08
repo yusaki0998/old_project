@@ -3198,7 +3198,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   .footer__copyright {
     order: 2;
     margin-top: 0;
-    margin-left: 30px;
   }
   .footer__back {
     position: absolute;
@@ -3208,7 +3207,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 @media (min-width: 1200px) {
   .footer__copyright {
-    margin-left: 40px;
   }
   .footer__nav a {
     margin-right: 40px;
@@ -3219,7 +3217,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 @media (min-width: 1440px) {
   .footer__copyright {
-    margin-left: 50px;
   }
   .footer__nav {
     margin-right: 95px;

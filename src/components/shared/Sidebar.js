@@ -4,17 +4,14 @@ import React, { useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import "../styles/sidebar.css";
 import logo from "../../assets/logo.png";
-import userImg from "../../template/styles/main/img/user.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/actions/authActions";
-import { PROD_REST_API_IMG_URL } from "../../utils/constants";
 import ConfirmLogoutModal from "../modals/ConfirmLogout";
 import { hideSidebar } from "../../store/actions/uiActions";
 
 const Sidebar = ({ userInfo }) => {
   const { pathname, search } = useLocation();
   const { sidebar } = useSelector((state) => state.ui);
-  const { loginData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -34,20 +31,6 @@ const Sidebar = ({ userInfo }) => {
           <img src={logo} alt="Hotflix logo" />
         </a>
         <div className="sidebar__user">
-          <div className="sidebar__user-img">
-            <img
-              src={
-                loginData?.data?.avatar
-                  ? `${PROD_REST_API_IMG_URL}${loginData?.data?.avatar?.replace(
-                      "../uploads",
-                      ""
-                    )}`
-                  : userImg
-              }
-              alt={userInfo?.fullname}
-            />
-          </div>
-
           <div className="sidebar__user-title">
             <span>Admin</span>
             <p className="sidebar__user-name">{userInfo?.fullname}</p>

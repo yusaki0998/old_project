@@ -327,7 +327,7 @@ const EditFilm = () => {
                   <input
                     ref={imgRef}
                     type="file"
-                    className="sign__input pt-1"
+                    className="sign__input pt-1 cursor-pointer"
                   />
                   {imgError && <p className="input-required">{imgError}</p>}
                 </div>
