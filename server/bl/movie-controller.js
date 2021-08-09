@@ -307,7 +307,7 @@ const search = async (req, res) => {
         const input = req.query.input;
 
         const findMovies = await Movie.find({
-            $text: { $search: input }
+            $text: { $search: input, $caseSensitive: false }
         }).exec();
 
         if (!findMovies || findMovies.length === 0) {

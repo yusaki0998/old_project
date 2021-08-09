@@ -196,6 +196,16 @@ const deleteSlot = async (req, res) => {
 
         const id = req.params.slotId;
 
+        const checkSlotSchedule = await Schedule.find({
+            slot: id
+        }).exec();
+
+        if(checkSlotSchedule.length !== 0) {
+            return res.status(409).json({
+                message: "Cannot delete slot ! You must delete all schedule with this slot"
+            });
+        }
+
         const deleteSlot = await Slot.findByIdAndDelete(id).exec();
 
         if(!deleteSlot) {
