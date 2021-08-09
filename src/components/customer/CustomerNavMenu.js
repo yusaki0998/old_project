@@ -7,7 +7,7 @@ const CustomerNavMenu = () => {
   const { pathname } = useLocation();
   return (
     <div className="container customer__nav-menu">
-      <h1 className="text-center text-white">Thông tin chung</h1>
+      <h1 className="text-center text-white">Thông tin chunggggg</h1>
       <ul>
         <li>
           <Link
