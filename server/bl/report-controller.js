@@ -45,9 +45,15 @@ const revenueReports = async (req, res) => {
             .populate('user', 'fullname email')
             .exec()
 
+        const total = report.reduce((a, b) => ({income: a.income + b.income}));
+
         return res.status(200).json({
             message: "Report",
-            data: report
+            data: {
+                report: report,
+                ticket: report.length,
+                total: total
+            }
         });
 
     } catch (error) {
