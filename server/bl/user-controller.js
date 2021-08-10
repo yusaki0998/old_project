@@ -887,7 +887,7 @@ const search = async (req, res) => {
                                 { role: 'manager' }
                             ]
                         },
-                        { $text: { $search: input } }
+                        { $text: { $search: input, $caseSensitive: false } }
                     ]
                 }
             ).exec();
@@ -896,7 +896,7 @@ const search = async (req, res) => {
             findUsers = await User.find({
                 $and: [
                     { role: 'customer' },
-                    { $text: { $search: input } },
+                    { $text: { $search: input, $caseSensitive: false } },
                     {
                         _id: { $ne: req.userData._id.toString() }
                     }

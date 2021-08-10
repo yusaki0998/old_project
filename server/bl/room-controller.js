@@ -184,6 +184,16 @@ const deleteRoom = async (req, res) => {
 
         const id = req.params.roomId;
         
+        const checkRoomSchedule = await Schedule.find({
+            room: id
+        }).exec();
+
+        if(checkRoomSchedule.length !== 0) {
+            return res.status(409).json({
+                message: "Cannot delete room ! You must delete all schedule with this room"
+            });
+        }
+
         const deleteRoom = await Room.findByIdAndDelete(id).exec();
 
         if(!deleteRoom){

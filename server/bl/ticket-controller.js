@@ -28,10 +28,12 @@ const getMovieSchedule = async (req, res) => {
             });
         }
 
+        let date = new Date()
+        date.setHours(0, 0, 0, 0)
         const findSchedule = await Schedule.find({
             movie: id,
             showDate: {
-                $gte: Date.now()
+                $gte: date
             }
         })
             .sort({ showDate: 1 })
