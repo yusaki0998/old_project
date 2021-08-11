@@ -116,7 +116,7 @@ const register = async (req, res) => {
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
-            html: `To confirm your email, click here: ${url}`
+            text: `To confirm your email, click here: ${url}`
         });
 
         return res.status(201).json({
