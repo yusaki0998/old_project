@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Room = require('../dbaccess/room-model');
 const User = require('../dbaccess/user-model');
+const Schedule = require('../dbaccess/schedule-model');
 
 const createRoom = async (req, res) => {
     try {
