@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-//var ObjectId = require('mongoose').Types.ObjectId;
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');

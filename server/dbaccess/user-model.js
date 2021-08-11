@@ -33,6 +33,8 @@ const userSchema = mongoose.Schema({
     },
 
     verified: { type: Boolean, default: false },
+
+    verifyToken: { type: String, default: null },
 });
 
 userSchema.index({

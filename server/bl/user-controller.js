@@ -93,19 +93,30 @@ const register = async (req, res) => {
 
         await user.save();
 
+        const token = jwt.sign({
+            email: user.email,
+        },
+            process.env.EMAIL_SECRET, {
+            expiresIn: "10m"
+        });
+
+        user.token = token;
+        await user.save();
+        console.log(user.token);
+
         let url;
         if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify/${user._id}`
+            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify?token=${token}`
         }
         else {
-            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify/${user._id}`;
+            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify?token=${token}`;
         }
 
         transporter.sendMail({
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
-            html: `Click <a href = '${url}'>here</a> to confirm your email.`
+            html: `To confirm your email, click here: ${url}`
         });
 
         return res.status(201).json({
@@ -123,27 +134,28 @@ const register = async (req, res) => {
 
 const verify = async (req, res) => {
     try {
-        const userId = req.params.id;
+        const token = req.query.token;
 
-        console.log(userId);
-
-        if (!userId) {
+        if(!token) {
             return res.status(404).json({
-                message: "Cannot find registered user"
-            });
+                message: "Missing token required to verify account"
+            })
         }
 
+        const payload = jwt.verify(token, process.env.EMAIL_SECRET);
+
         const user = await User.findOne({
-            _id: userId
+            email: payload.email
         }).exec();
 
         if (!user) {
             return res.status(404).json({
-                message: "User does not exist"
+                message: "User not exist"
             });
         }
 
         user.verified = true;
+        user.token = null;
 
         await user.save();
 
@@ -160,40 +172,101 @@ const verify = async (req, res) => {
     }
 }
 
-const resetPassword = async (req, res) => {
+const recoverPassword = async (req, res) => {
     try {
         const { email } = req.body;
 
-        const userMail = await User.findOne({
+        const user = await User.findOne({
             email: email,
             verified: true
         }).exec();
 
-        if (!userMail) {
+        if (!user) {
             return res.status(404).json({
                 message: "Email not found"
             });
         }
 
-        const randomString = generateString(8);
+        const token = jwt.sign({
+            email: user.email,
+        },
+            process.env.EMAIL_SECRET, {
+            expiresIn: "10m"
+        });
 
-        const hashString = await bcrypt.hash(randomString, 10);
+        user.token = token;
 
-        userMail.password = hashString;
+        await user.save();
 
-        await userMail.save();
+        let url;
+        if (process.env.NODE_ENV === 'production') {
+            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/reset-password?token=${token}`
+        }
+        else {
+            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/reset-password?token=${token}`;
+        }
 
         transporter.sendMail({
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Password reset',
-            html: `Your new password is ${randomString}. Besure to change it immediately after you login`
+            text: `Hi, ${user.fullname}. It seem that you want to change your password.
+            Please make sure that it's you. Here is your password recovery link: ${url}`
         });
 
         return res.status(200).json({
-            message: "Reset password success, an email with a new password just sent to you"
+            message: `An instruction mail to reset password was sent to ${user.email}`
         });
 
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const token = req.query.token;
+
+        if(!token) {
+            return res.status(404).json({
+                message: "Missing token required to reset password"
+            })
+        }
+
+        const { newPassword, retypePassword } = req.body;
+
+        const payload = jwt.verify(token, process.env.EMAIL_SECRET);
+
+        const user = await User.findOne({
+            email: payload.email
+        }).exec();
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not exist"
+            });
+        }
+
+        if(newPassword !== retypePassword) {
+            return res.status(400).json({
+                message: "Password not match"
+            })
+        }
+
+        const hashPass = await bcrypt.hash(newPassword, 10);
+
+        user.password = hashPass;
+        user.token = null;
+
+        await user.save();
+
+        return res.status(200).json({
+            message: `Password reset for user ${user.fullname}`
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -930,6 +1003,7 @@ const search = async (req, res) => {
 module.exports = {
     register,
     verify,
+    recoverPassword,
     resetPassword,
     login,
     profile,
