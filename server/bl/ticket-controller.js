@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-var ObjectId = require('mongoose').Types.ObjectId;
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
 const User = require('../dbaccess/user-model');
 const Movie = require('../dbaccess/movie-model');
 const Report = require('../dbaccess/report-model');
+const moment = require('moment');
 
 const getMovieSchedule = async (req, res) => {
     try {
@@ -91,10 +91,19 @@ const getScheduleSeats = async (req, res) => {
             });
         }
 
+        if(moment().isSame(moment(findSchedule.showDate))) {
+            if(parseInt(moment().format('HHmm')) > findSchedule.slot.startTime) {
+                return res.status().json({
+                    message: "This movie schedule already closed"
+                });
+            }
+        }
+
         return res.status(200).json({
             message: "Schedule found",
             data: findSchedule
         });
+        
     } catch (error) {
         console.error(error.message);
         res.status(500).json({

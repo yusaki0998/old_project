@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Slot = require('../dbaccess/slot-model');
 const User = require('../dbaccess/user-model');
+const Schedule = require('../dbaccess/schedule-model');
 //const moment = require('moment');
 
 const createSlot = async (req, res) => {

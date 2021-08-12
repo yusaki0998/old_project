@@ -6,7 +6,8 @@ const upload = require('../utils/multer');
 const UserController = require('../bl/user-controller');
 
 router.post('/register', UserController.register);
-router.get('/verify/:id', UserController.verify);
+router.put('/verify', UserController.verify);
+router.post('/recover-password', UserController.recoverPassword);
 router.patch('/reset-password', UserController.resetPassword);
 router.post('/login', UserController.login);
 router.get('/profile', checkAuth, UserController.profile);
