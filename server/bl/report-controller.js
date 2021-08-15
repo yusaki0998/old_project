@@ -45,7 +45,14 @@ const revenueReports = async (req, res) => {
             .populate('user', 'fullname email')
             .exec()
 
-        const total = report.reduce((a, b) => ({income: a.income + b.income}), 0);
+        if(report.length === 0) {
+            return res.status(404).json({
+                message: "No data or invalid data",
+                data: []
+            })
+        }
+
+        const total = report.reduce((a, b) => ({income: a.income + b.income}));
 
         return res.status(200).json({
             message: "Report",
