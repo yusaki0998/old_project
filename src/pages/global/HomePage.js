@@ -9,11 +9,26 @@ import {
   getListCurrentFilm,
 } from "../../store/actions/managerActions";
 import { parseCategories } from "../../utils/helper";
+import { useHistory } from "react-router-dom";
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const { comingFilm, currentFilm } = useSelector((state) => state.manager);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const { loginData } = useSelector((state) => state.auth);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (loginData?.data?.role === "admin") {
+      history.push("/admin");
+    }
+    if (loginData?.data?.role === "manager") {
+      history.push("/manager");
+    }
+    if (loginData?.data?.role === "staff") {
+      history.push("/staff");
+    }
+  }, [history, loginData?.data?.role]);
 
   useEffect(() => {
     dispatch(getListCurrentFilm());

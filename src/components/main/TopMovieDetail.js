@@ -27,7 +27,7 @@ const TopMovieDetail = ({ movieDetail, hideSuggestion }) => {
   const [ticketDate, setTicketDate] = useState("");
   const [isShowBooking, setIsShowBooking] = useState(false);
   const [loadingSchedule, setLoadingSchedule] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, loginData } = useSelector((state) => state.auth);
   const [viewDate, setViewDate] = useState(false);
   const history = useHistory();
 
@@ -118,7 +118,13 @@ const TopMovieDetail = ({ movieDetail, hideSuggestion }) => {
               </ul>
               {movieDetail?.status === 1 && (
                 <button
-                  className="card__trailer"
+                  className={`card__trailer ${
+                    loginData?.data?.role &&
+                    loginData?.data?.role !== "customer" &&
+                    loginData?.data?.role !== "staff"
+                      ? "d-none"
+                      : ""
+                  }`}
                   onClick={() => {
                     if (!isAuthenticated) {
                       history.push(

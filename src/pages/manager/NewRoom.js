@@ -113,7 +113,6 @@ const NewRoom = () => {
                         ""
                       )}`}
                       alt="seat map"
-                      className="w-100"
                       onClick={() => setSelectedSeatMap(item?._id)}
                     />
                     <p>

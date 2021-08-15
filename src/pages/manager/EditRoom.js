@@ -12,8 +12,8 @@ import {
 } from "../../store/api/manager";
 import { checkCondition } from "../../utils/helper";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import seatMap from "../../assets/seat-map.jpg";
 import { Helmet } from "react-helmet";
+import { PROD_REST_API_URL } from "../../utils/constants";
 
 const EditRoom = () => {
   const { updateRoom: updateRoomData } = useSelector((state) => state.manager);
@@ -118,7 +118,7 @@ const EditRoom = () => {
             <div className="row">
               {isLoadingMap && <LoadingSpinner />}
               {!isLoadingMap &&
-                seatMapList?.map((item, index) => (
+                seatMapList?.map((item) => (
                   <div className="col-6 col-sm-4 col-md-3" key={item._id}>
                     <div
                       className={`seat__map-item ${
@@ -126,9 +126,11 @@ const EditRoom = () => {
                       }`}
                     >
                       <img
-                        src={seatMap}
+                        src={`${PROD_REST_API_URL}${item?.image?.replace(
+                          "..",
+                          ""
+                        )}`}
                         alt="seat map"
-                        className="w-100"
                         onClick={() => setSelectedSeatMap(item?._id)}
                       />
                       <p>

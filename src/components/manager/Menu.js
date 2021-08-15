@@ -31,7 +31,9 @@ const Menu = () => {
         <div className="sidebar__user">
           <div className="sidebar__user-title">
             <span>Manager</span>
-            <p className="sidebar__user-name">{loginData?.data?.fullname}</p>
+            <p className="sidebar__user-name cursor-pointer">
+              {loginData?.data?.fullname}
+            </p>
           </div>
           <button
             className="sidebar__user-btn"
@@ -43,6 +45,12 @@ const Menu = () => {
         </div>
         <div className="sidebar__nav-wrap">
           <ul className="sidebar__nav">
+            <li className="sidebar__nav-item">
+              <Link to="/customer/info" className={`sidebar__nav-link`}>
+                <i className="icon ion-ios-contact"></i>{" "}
+                <span>Quản lý tài khoản</span>
+              </Link>
+            </li>
             <li className="sidebar__nav-item">
               <Link
                 className={`sidebar__nav-link ${checkCondition(

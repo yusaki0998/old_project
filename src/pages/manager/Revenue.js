@@ -29,7 +29,7 @@ const convertDateToStr = (dateItem) => {
   return dateStr;
 };
 
-const FilmRoom = () => {
+const Revenue = () => {
   const dispatch = useDispatch();
   const {
     room: roomData,
@@ -279,9 +279,7 @@ const FilmRoom = () => {
             <div className="row">
               <button
                 className={`btn__outline-orange ml-3 mb-4 ${
-                  isLoading || (!roomId && !staffId && !slotId && !filmId)
-                    ? "divDisable"
-                    : ""
+                  isLoading ? "divDisable" : ""
                 }`}
                 onClick={getRevenueList}
               >
@@ -306,4 +304,4 @@ const FilmRoom = () => {
   );
 };
 
-export default FilmRoom;
+export default Revenue;

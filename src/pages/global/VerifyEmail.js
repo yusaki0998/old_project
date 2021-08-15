@@ -15,7 +15,7 @@ const VerifyEmail = () => {
       <div className="container">
         <div className="row">
           <div className="col-12 col-lg-4 col-md-6 col-sm-8 mx-auto">
-            <form className="sign__form">
+            <form className="sign__form mt-5">
               <Link to="/" className="sign__logo sign__link">
                 <img src={logo} alt="Hotflix" />
               </Link>

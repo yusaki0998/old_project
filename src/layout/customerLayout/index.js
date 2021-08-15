@@ -21,7 +21,7 @@ const CustomerLayout = ({ children }) => {
   const router = useRouteMatch();
   const dispatch = useDispatch();
 
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, loginData } = useSelector((state) => state.auth);
   const history = useHistory();
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const CustomerLayout = ({ children }) => {
   return (
     <>
       <Header />
-      <CustomerNavMenu />
+      <CustomerNavMenu userData={loginData?.data || {}} />
       {children}
       <div className="container text-white min-height-80vh">
         <Switch>

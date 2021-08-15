@@ -44,6 +44,11 @@ const Header = ({ hideCenterDiv, isActive }) => {
                     <Link
                       className={`header__nav-link ${
                         pathname === "/" ? "header__nav-link--active" : ""
+                      } ${
+                        loginData?.data?.role &&
+                        loginData?.data?.role !== "customer"
+                          ? "d-none"
+                          : ""
                       }`}
                       to="/"
                       onClick={() => dispatch(hideSidebar())}
@@ -56,6 +61,11 @@ const Header = ({ hideCenterDiv, isActive }) => {
                       className={`header__nav-link ${
                         pathname.includes("/current-film") || fromField === "1"
                           ? "header__nav-link--active"
+                          : ""
+                      } ${
+                        loginData?.data?.role &&
+                        loginData?.data?.role !== "customer"
+                          ? "d-none"
                           : ""
                       }`}
                       to="/current-film"
@@ -70,6 +80,11 @@ const Header = ({ hideCenterDiv, isActive }) => {
                       className={`header__nav-link ${
                         pathname.includes("/coming-film") || fromField === "0"
                           ? "header__nav-link--active"
+                          : ""
+                      } ${
+                        loginData?.data?.role &&
+                        loginData?.data?.role !== "customer"
+                          ? "d-none"
                           : ""
                       }`}
                       onClick={() => dispatch(hideSidebar())}
@@ -89,6 +104,17 @@ const Header = ({ hideCenterDiv, isActive }) => {
                 >
                   {isAuthenticated ? (
                     <>
+                      {loginData?.data?.role &&
+                        loginData?.data?.role !== "customer" && (
+                          <button
+                            className={`header__nav-link text-white mr-4`}
+                            onClick={() =>
+                              history.push(`/${loginData?.data?.role}`)
+                            }
+                          >
+                            Dashboard
+                          </button>
+                        )}
                       <button
                         className={`header__nav-link text-white ${checkCondition(
                           window.location.pathname.includes("/customer/info"),

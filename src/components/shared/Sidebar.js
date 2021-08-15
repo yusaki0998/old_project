@@ -33,9 +33,10 @@ const Sidebar = ({ userInfo }) => {
         <div className="sidebar__user">
           <div className="sidebar__user-title">
             <span>Admin</span>
-            <p className="sidebar__user-name">{userInfo?.fullname}</p>
+            <p className="sidebar__user-name cursor-pointer">
+              {userInfo?.fullname}
+            </p>
           </div>
-
           <button
             className="sidebar__user-btn"
             type="button"
@@ -46,6 +47,12 @@ const Sidebar = ({ userInfo }) => {
         </div>
         <div className="sidebar__nav-wrap">
           <ul className="sidebar__nav">
+            <li className="sidebar__nav-item">
+              <Link to="/customer/info" className={`sidebar__nav-link`}>
+                <i className="icon ion-ios-contact"></i>{" "}
+                <span>Quản lý tài khoản</span>
+              </Link>
+            </li>
             <li className="sidebar__nav-item">
               <Link
                 to="/admin/create-account"
