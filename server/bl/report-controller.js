@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Report = require('../dbaccess/report-model');
 const moment = require('moment');
 //const _ = require('lodash');
@@ -45,13 +46,7 @@ const revenueReports = async (req, res) => {
             .populate('user', 'fullname email')
             .exec()
 
-        //const total = report.reduce((a, b) => ({income: a.income + b.income}));
-
-        const total = Array.prototype.reduce.call(report, (a, b) => {
-            if(a === ' ') 
-                return report;
-            return {income: a.income + b.income};
-        });
+        const total = report.reduce((a, b) => ({income: a.income + b.income}), 0);
 
         return res.status(200).json({
             message: "Report",
