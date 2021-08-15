@@ -69,7 +69,7 @@ const FilmRoom = () => {
         slotId,
         staffId
       );
-      setFilteredList(data?.data || []);
+      setFilteredList(data?.data?.report || []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -134,6 +134,7 @@ const FilmRoom = () => {
                             {film.movieName}
                           </li>
                         ))}
+                        <li onClick={() => setFilm("")}>Huỷ chọn</li>
                       </ul>
                       <button className="sign__select-icon">
                         <i
@@ -175,6 +176,7 @@ const FilmRoom = () => {
                             {room.roomName}
                           </li>
                         ))}
+                        <li onClick={() => setRoomId("")}>Huỷ chọn</li>
                       </ul>
                       <button className="sign__select-icon">
                         <i
@@ -216,6 +218,7 @@ const FilmRoom = () => {
                             {slot.slotName}
                           </li>
                         ))}
+                        <li onClick={() => setSlotId("")}>Huỷ chọn</li>
                       </ul>
                       <button className="sign__select-icon">
                         <i
@@ -243,7 +246,7 @@ const FilmRoom = () => {
                       <li className="gender__text">
                         {staffId
                           ? staffs?.list?.find((item) => item._id === staffId)
-                              ?.staffName
+                              ?.fullname
                           : "Vui lòng chọn"}
                       </li>
                       <ul
@@ -259,6 +262,7 @@ const FilmRoom = () => {
                             {staff.fullname}
                           </li>
                         ))}
+                        <li onClick={() => setStaffId("")}>Huỷ chọn</li>
                       </ul>
                       <button className="sign__select-icon">
                         <i
@@ -275,7 +279,9 @@ const FilmRoom = () => {
             <div className="row">
               <button
                 className={`btn__outline-orange ml-3 mb-4 ${
-                  isLoading ? "divDisable" : ""
+                  isLoading || (!roomId && !staffId && !slotId && !filmId)
+                    ? "divDisable"
+                    : ""
                 }`}
                 onClick={getRevenueList}
               >

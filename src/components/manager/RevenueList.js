@@ -17,10 +17,7 @@ const RevenueList = ({ list, isLoading }) => {
               <th>Phòng chiếu</th>
               <th>Slot</th>
               <th>Nhân viên</th>
-              <th>Số vé bán ra</th>
-              <th>Ghế VIP</th>
-              <th>Ghế thường</th>
-              <th>Tổng doanh thu</th>
+              <th>Giá vé bán ra</th>
             </tr>
           </thead>
           <tbody>
@@ -49,21 +46,6 @@ const RevenueList = ({ list, isLoading }) => {
                   <td>
                     <div className="main__table-text">
                       {item?.user?.fullname}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">
-                      {item?.room?.roomName}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">
-                      {item?.room?.roomName}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="main__table-text">
-                      {item?.room?.roomName}
                     </div>
                   </td>
                   <td>

@@ -154,7 +154,8 @@ const TopMovieDetail = ({ movieDetail, hideSuggestion }) => {
                   <ul
                     className={`${viewDate ? "show" : ""}`}
                     style={{
-                      height: "auto",
+                      maxHeight: 180,
+                      overflowY: "scroll",
                     }}
                   >
                     {dateDetail?.map((item, index) => (

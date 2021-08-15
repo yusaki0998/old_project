@@ -55,6 +55,10 @@ const OrderHistory = ({ hideCancelTicket }) => {
         <div className="col-12">
           <button
             className={`btn__outline-orange ml-0 mb-3 btn-sm btn-delete ${checkCondition(
+              hideCancelTicket,
+              "d-none",
+              ""
+            )} ${checkCondition(
               removingTickets.length === 0,
               "divDisable",
               ""
@@ -160,7 +164,13 @@ const OrderHistory = ({ hideCancelTicket }) => {
                         <div className="main__table-text"> {index + 1} </div>
                       </td>
                       <td>
-                        <div className="main__table-text">
+                        <div
+                          className={`main__table-text ${checkCondition(
+                            hideCancelTicket,
+                            "divDisable",
+                            ""
+                          )}`}
+                        >
                           <Link to={`/details/${item?.schedule?.movie?._id}`}>
                             {item?.schedule?.movie?.movieName || "-"}
                           </Link>
