@@ -17,6 +17,7 @@ const RevenueList = ({ list, isLoading }) => {
               <th>Phòng chiếu</th>
               <th>Slot</th>
               <th>Nhân viên</th>
+              <th>Ngày bán vé</th>
               <th>Giá vé bán ra</th>
             </tr>
           </thead>
@@ -46,6 +47,11 @@ const RevenueList = ({ list, isLoading }) => {
                   <td>
                     <div className="main__table-text">
                       {item?.user?.fullname}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="main__table-text">
+                      {item?.paymentDate?.substr(0, 10)}
                     </div>
                   </td>
                   <td>

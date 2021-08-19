@@ -2,11 +2,53 @@
 
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { verifyRegisterRequest } from "../../store/api/auth";
+import { useDispatch } from "react-redux";
+import { v4 as uuid_v4 } from "uuid";
+import {
+  addNotification,
+  removeNotification,
+} from "../../store/actions/uiActions";
 
 const VerifyEmail = () => {
   const [token, setToken] = useState("");
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const verifyHandler = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await verifyRegisterRequest(token);
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message:
+          data?.message || "Xác thực e-mail thành công. Vui lòng đăng nhập!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
+      history.push("/signin");
+    } catch (error) {
+      const newNoti = {
+        id: uuid_v4(),
+        type: "error",
+        message:
+          error?.response?.data?.message ||
+          "Xác thực e-mail thất bại. Vui lòng thử lại!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="confirm__otp">
       <Helmet>
@@ -35,7 +77,13 @@ const VerifyEmail = () => {
                 Mã xác minh này đã được gửi đến email bạn đăng ký tài khoản.
                 <br />
               </p>
-              <button className="sign__btn" type="button">
+              <button
+                className={`sign__btn ${token ? "" : "divDisable"} ${
+                  isLoading ? "divDisable" : ""
+                }`}
+                type="button"
+                onClick={verifyHandler}
+              >
                 Xác nhận
               </button>
             </form>

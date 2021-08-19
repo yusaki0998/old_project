@@ -48,12 +48,6 @@ const Sidebar = ({ userInfo }) => {
         <div className="sidebar__nav-wrap">
           <ul className="sidebar__nav">
             <li className="sidebar__nav-item">
-              <Link to="/customer/info" className={`sidebar__nav-link`}>
-                <i className="icon ion-ios-contact"></i>{" "}
-                <span>Quản lý tài khoản</span>
-              </Link>
-            </li>
-            <li className="sidebar__nav-item">
               <Link
                 to="/admin/create-account"
                 className={`sidebar__nav-link ${

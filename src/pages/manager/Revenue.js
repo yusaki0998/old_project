@@ -15,6 +15,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import OutsideHandler from "../../components/shared/ClickWrapper";
 import { getRevenueListRequest } from "../../store/api/manager";
 import RevenueList from "../../components/manager/RevenueList";
+import { formatter } from "../customer/OrderHistory";
+import { v4 as uuid_v4 } from "uuid";
+import {
+  addNotification,
+  removeNotification,
+} from "../../store/actions/uiActions";
 
 export const MAX_ITEMS_PER_PAGE = 10;
 
@@ -50,6 +56,7 @@ const Revenue = () => {
   const [showStaffList, setShowStaffList] = useState(false);
   const [staffId, setStaffId] = useState("");
   const [isLoading, setIsLoading] = useState();
+  const [totalInfo, setTotalInfo] = useState(null);
 
   useEffect(() => {
     dispatch(getListRoom());
@@ -70,8 +77,24 @@ const Revenue = () => {
         staffId
       );
       setFilteredList(data?.data?.report || []);
+      setTotalInfo({
+        ticket: data?.data?.ticket || 0,
+        totalIncome: data?.data?.total?.income || 0,
+      });
     } catch (error) {
-      console.log(error);
+      setFilteredList([]);
+      setTotalInfo(null);
+      const newNoti = {
+        id: uuid_v4(),
+        type: "error",
+        message:
+          error?.response?.data?.message ||
+          "Tìm kiếm thất bại. Vui lòng thử lại!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
     } finally {
       setIsLoading(false);
     }
@@ -80,11 +103,11 @@ const Revenue = () => {
   return (
     <div className="tab-pane">
       <Helmet>
-        <title>Báo Cáo Doanh thu </title>
+        <title>Báo Cáo Thống Kê </title>
       </Helmet>
       <div className="row">
         <div className="col-12">
-          <h3 className="text-white mt-3">Báo Cáo Doanh Thu</h3>
+          <h3 className="text-white mt-3">Báo Cáo Thống Kê</h3>
           <div className="filter__engine text-white">
             <div className="row">
               <div className="col-md-3 col-6">
@@ -290,6 +313,18 @@ const Revenue = () => {
           <div className="results">
             <RevenueList list={filteredList} isLoading={isLoading} />
           </div>
+          {totalInfo && (
+            <div className="totals my-3 text-white">
+              <div className="text-white mb-2">
+                <strong>Tổng số vé dựa trên những mục đã chọn : </strong>{" "}
+                <span> {totalInfo?.ticket} </span>
+              </div>
+              <div className="text-white">
+                <strong>Tổng doanh thu dựa trên những mục đã chọn : </strong>{" "}
+                <span> {formatter.format(totalInfo?.totalIncome)} </span>
+              </div>
+            </div>
+          )}
           <div className="room__paginator">
             <Paginator
               curPage={curPage}

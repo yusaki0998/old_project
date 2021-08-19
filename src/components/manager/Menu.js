@@ -148,21 +148,6 @@ const Menu = () => {
                 onClick={() => dispatch(hideSidebar())}
               >
                 <i className="icon ion-ios-card"></i>
-                <span>Doanh thu</span>
-              </Link>
-            </li>
-            <li className="sidebar__nav-item">
-              <Link
-                className={`sidebar__nav-link ${checkCondition(
-                  pathname.includes("/staff") ||
-                    pathname.includes("/staff-info"),
-                  "sidebar__nav-link--active",
-                  ""
-                )}`}
-                to="/manager/staff"
-                onClick={() => dispatch(hideSidebar())}
-              >
-                <i className="icon ion-ios-calculator"></i>
                 <span>Thống kê</span>
               </Link>
             </li>

@@ -1,10 +1,17 @@
 /** @format */
 
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import logo from "../../assets/logo.png";
 import { Link, useHistory } from "react-router-dom";
+import { getForgotPasswordTokenRequest } from "../../store/api/auth";
+import { v4 as uuid_v4 } from "uuid";
+import {
+  addNotification,
+  removeNotification,
+} from "../../store/actions/uiActions";
+import { useDispatch } from "react-redux";
 
 const ForgotPassword = () => {
   const {
@@ -13,9 +20,38 @@ const ForgotPassword = () => {
     formState: { errors },
   } = useForm();
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const onValid = (data) => {
-    history.push(`/confirm-otp?email=${data.email}`);
+  const onValid = async (data) => {
+    setIsLoading(true);
+    try {
+      const { data: dataRes } = await getForgotPasswordTokenRequest(data);
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message: dataRes?.message || "Mã xác thực đã được gửi tới e-mail này!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
+      history.push(`/confirm-otp?email=${data.email}`);
+    } catch (error) {
+      const newNoti = {
+        id: uuid_v4(),
+        type: "error",
+        message:
+          error?.response?.data?.message ||
+          "Xác thực e-mail thất bại. Vui lòng thử lại!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,7 +89,10 @@ const ForgotPassword = () => {
                   )}
                 </div>
 
-                <button className="sign__btn" type="submit">
+                <button
+                  className={`sign__btn ${isLoading ? "divDisable" : ""}`}
+                  type="submit"
+                >
                   Xác nhận
                 </button>
                 <span className="sign__text">
