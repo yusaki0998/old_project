@@ -47,7 +47,7 @@ const ConfirmOTP = () => {
       setTimeout(() => {
         dispatch(removeNotification(newNoti.id));
       }, 2000);
-      history.push(`/singin`);
+      history.push(`/signin`);
     } catch (error) {
       const newNoti = {
         id: uuid_v4(),

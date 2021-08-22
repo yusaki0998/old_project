@@ -27,6 +27,16 @@ const FilmListSkeleton = () => {
         </div>
       </td>
       <td>
+        <div className="main__table-text">
+          <Skeleton width={90} height={16} />
+        </div>
+      </td>
+      <td>
+        <div className="main__table-text">
+          <Skeleton width={90} height={16} />
+        </div>
+      </td>
+      <td>
         <div className="main__table-btns">
           <Skeleton width={90} height={16} />
         </div>

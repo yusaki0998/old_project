@@ -13,6 +13,7 @@ import {
 import OutsideHandler from "../../components/shared/ClickWrapper";
 import { AGE_THRESHOLD, showAgeThreshold } from "../../utils/age";
 import { Helmet } from "react-helmet";
+import { useHistory } from "react-router-dom";
 
 const NewFilm = () => {
   const [status, setStatus] = useState("");
@@ -25,28 +26,39 @@ const NewFilm = () => {
   const [imgError, setImgError] = useState("");
   const [showtimes, setShowtimes] = useState(new Date());
   const [previewImageSrc, setPreviewImageSrc] = useState("");
+  const history = useHistory();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
+    clearErrors,
   } = useForm();
 
   useEffect(() => {
     if (createFilmData?.success) {
+      setTimeout(() => {
+        dispatch(resetCreateNewFilmState());
+      }, 500);
       reset();
       setStatus("");
       setAgeRating("");
-
-      const timer = setTimeout(() => {
-        dispatch(resetCreateNewFilmState());
-      }, 500);
-      return () => {
-        clearTimeout(timer);
-      };
+      if (createFilmData.data?.data?.status === 1) {
+        history.push("/manager/current");
+      }
+      if (createFilmData.data?.data?.status === 0) {
+        history.push("/manager/coming");
+      }
     }
-  }, [createFilmData?.success, reset, dispatch]);
+  }, [
+    createFilmData?.success,
+    reset,
+    dispatch,
+    history,
+    createFilmData.data?.data?.status,
+  ]);
 
   useEffect(() => {
     setPreviewImageSrc(
@@ -54,10 +66,19 @@ const NewFilm = () => {
         ? URL?.createObjectURL(imgRef?.current?.files?.[0])
         : ""
     );
+    setImgError("");
   }, [imgRef]);
 
   const onValid = (data) => {
-    if (!imgRef || !imgRef.current || !imgRef.current.files) {
+    if (!status) {
+      setError("status", { type: "manual", message: "Đây là mục bắt buộc" });
+      return;
+    }
+    if (!ageRating) {
+      setError("ageRating", { type: "manual", message: "Đây là mục bắt buộc" });
+      return;
+    }
+    if (!imgRef || !imgRef.current || !imgRef.current.files[0]) {
       setImgError("Đây là mục bắt buộc");
     } else {
       const formdata = new FormData();
@@ -215,6 +236,7 @@ const NewFilm = () => {
                       message: "Đây là mục bắt buộc",
                     },
                   })}
+                  min={0}
                 />
                 {errors.amountOfTime && (
                   <p className="input-required">
@@ -259,7 +281,13 @@ const NewFilm = () => {
                     }}
                   >
                     {AGE_THRESHOLD.map((item) => (
-                      <li key={item.key} onClick={() => setAgeRating(item.key)}>
+                      <li
+                        key={item.key}
+                        onClick={() => {
+                          setAgeRating(item.key);
+                          clearErrors("ageRating");
+                        }}
+                      >
                         {item.label}
                       </li>
                     ))}
@@ -273,6 +301,9 @@ const NewFilm = () => {
                   </button>
                 </div>
               </OutsideHandler>
+              {errors.ageRating && (
+                <p className="input-required">{errors.ageRating.message}</p>
+              )}
             </div>
           </div>
           <div className="row align-items-center">
@@ -335,8 +366,22 @@ const NewFilm = () => {
                       height: 95,
                     }}
                   >
-                    <li onClick={() => setStatus("1")}>Phim đang chiếu</li>
-                    <li onClick={() => setStatus("0")}>Phim sắp chiếu</li>
+                    <li
+                      onClick={() => {
+                        setStatus("1");
+                        clearErrors("status");
+                      }}
+                    >
+                      Phim đang chiếu
+                    </li>
+                    <li
+                      onClick={() => {
+                        setStatus("0");
+                        clearErrors("status");
+                      }}
+                    >
+                      Phim sắp chiếu
+                    </li>
                   </ul>
                   <button className="sign__select-icon">
                     <i
@@ -345,6 +390,9 @@ const NewFilm = () => {
                   </button>
                 </div>
               </OutsideHandler>
+              {errors.status && (
+                <p className="input-required">{errors.status.message}</p>
+              )}
             </div>
           </div>
           <button

@@ -664,3 +664,38 @@ code {
 .stafInfo__table th {
   padding: 0 !important;
 }
+.w-50-imp {
+  width: 50% !important;
+}
+.bg-gr {
+  background-color: #eaeff1 !important;
+  color: #1a191f !important;
+}
+.bg-gr:focus {
+  outline: none !important;
+  background: #e6f8ff !important;
+}
+.revenue__table,
+.revenue__table th,
+.revenue__table td {
+  border: 1px solid #fff !important;
+  border-collapse: collapse !important;
+}
+.revenue__table th,
+.revenue__table td {
+  padding: 8px !important;
+}
+.revenue__table thead,
+.revenue__table tr {
+  border-bottom: none !important;
+}
+.revenue__table {
+  border-radius: 3px !important;
+}
+.img__wrapper-input {
+  display: flex;
+  align-items: center;
+}
+.img__wrapper-input .img__preview img {
+  max-width: 100px;
+}

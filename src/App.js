@@ -6,7 +6,6 @@ import CustomerLayout from "./layout/customerLayout";
 import ManagerLayout from "./layout/managerLayout";
 import LoadingSpinner from "./components/ui/LoadingSpinner";
 import UnAuthLayout from "./layout/unAuthLayout";
-import AuthLayout from "./layout/authLayout";
 import PublicLayout from "./layout/publicLayout";
 import AdminLayout from "./layout/adminLayout";
 import StaffLayout from "./layout/staffLayout";
@@ -19,7 +18,6 @@ const ComingFilm = lazy(() => import("./pages/global/ComingFilm"));
 const SignUp = lazy(() => import("./pages/global/SignUp"));
 const MovieDetail = lazy(() => import("./pages/global/MovieDetail"));
 const SelectSeat = lazy(() => import("./pages/global/SelectSeat"));
-const CustomerProfile = lazy(() => import("./pages/main/CustomerProfile"));
 const ForgotPassword = lazy(() => import("./pages/global/ForgotPassword"));
 const ConfirmOTP = lazy(() => import("./pages/global/ConfirmOTP"));
 const VerifyEmail = lazy(() => import("./pages/global/VerifyEmail"));
@@ -92,13 +90,6 @@ function App() {
               <PublicLayout>
                 <ComingFilm />
               </PublicLayout>
-            </Suspense>
-          </Route>
-          <Route path="/profile">
-            <Suspense fallback={<LoadingSpinner />}>
-              <AuthLayout>
-                <CustomerProfile />
-              </AuthLayout>
             </Suspense>
           </Route>
           <Route path="/forgot">

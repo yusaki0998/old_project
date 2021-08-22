@@ -106,13 +106,8 @@ const EditProfile = () => {
                     <label htmlFor="birthYear">Năm</label>
                     <div className="sign__group">
                       <select
-                        className="sign__input"
-                        {...register("birthYear", {
-                          required: {
-                            value: true,
-                            message: "Đây là mục bắt buộc",
-                          },
-                        })}
+                        className="sign__input divDisable"
+                        {...register("birthYear")}
                         defaultValue={checkCondition(
                           loginData?.data?.dob,
                           getBirhDate(loginData?.data?.dob)[0],
@@ -127,13 +122,8 @@ const EditProfile = () => {
                     <label htmlFor="birthMonth">Tháng</label>
                     <div className="sign__group">
                       <select
-                        className="sign__input"
-                        {...register("birthMonth", {
-                          required: {
-                            value: true,
-                            message: "Đây là mục bắt buộc",
-                          },
-                        })}
+                        className="sign__input divDisable"
+                        {...register("birthMonth")}
                         defaultValue={checkCondition(
                           loginData?.data?.dob,
                           getBirhDate(loginData?.data?.dob)[1],
@@ -148,13 +138,8 @@ const EditProfile = () => {
                     <label htmlFor="birthDay">Ngày</label>
                     <div className="sign__group">
                       <select
-                        className="sign__input"
-                        {...register("birthDay", {
-                          required: {
-                            value: true,
-                            message: "Đây là mục bắt buộc",
-                          },
-                        })}
+                        className="sign__input divDisable"
+                        {...register("birthDay")}
                         defaultValue={checkCondition(
                           loginData?.data?.dob,
                           getBirhDate(loginData?.data?.dob)[2],

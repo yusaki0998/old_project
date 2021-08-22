@@ -27,6 +27,8 @@ const NewRoom = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
+    clearErrors,
   } = useForm();
 
   useEffect(() => {
@@ -54,6 +56,13 @@ const NewRoom = () => {
   }, []);
 
   const onValid = (data) => {
+    if (!selectedSeatMap) {
+      setError("selectedSeatMap", {
+        type: "manual",
+        message: "Đây là mục bắt buộc",
+      });
+      return;
+    }
     dispatch(createRoom({ ...data, seatMap: selectedSeatMap }));
   };
 
@@ -113,7 +122,10 @@ const NewRoom = () => {
                         ""
                       )}`}
                       alt="seat map"
-                      onClick={() => setSelectedSeatMap(item?._id)}
+                      onClick={() => {
+                        setSelectedSeatMap(item?._id);
+                        clearErrors("selectedSeatMap");
+                      }}
                     />
                     <p>
                       <strong>Sơ đồ {index + 1}</strong>
@@ -122,6 +134,9 @@ const NewRoom = () => {
                 </div>
               ))}
           </div>
+          {errors.selectedSeatMap && (
+            <p className="input-required">{errors.selectedSeatMap.message}</p>
+          )}
           <button
             className={`btn__outline-orange mx-auto my-4 ${
               createRoomData.isLoading ? "divDisable" : ""

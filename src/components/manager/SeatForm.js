@@ -34,10 +34,18 @@ const SeatForm = ({
     formState: { errors },
     reset,
     setValue,
+    setError,
+    clearErrors,
   } = useForm();
 
   const onValid = async (data) => {
-    console.log(data);
+    if (!seatType) {
+      setError("seatType", {
+        type: "manual",
+        message: "Đây là mục bắt buộc",
+      });
+      return;
+    }
     setIsLoading(true);
     try {
       await updateSeatInfoRequest(mapId, {
@@ -120,6 +128,7 @@ const SeatForm = ({
                       onClick={() => {
                         setSeatType("vip");
                         setValue("price", vipSeatPrice);
+                        clearErrors("seatType");
                       }}
                     >
                       VIP
@@ -128,6 +137,7 @@ const SeatForm = ({
                       onClick={() => {
                         setSeatType("normal");
                         setValue("price", normalSeatPrice);
+                        clearErrors("seatType");
                       }}
                     >
                       Thường
@@ -142,6 +152,9 @@ const SeatForm = ({
                   </button>
                 </div>
               </OutsideHandler>
+              {errors.seatType && (
+                <p className="input-required">{errors.seatType.message}</p>
+              )}
             </div>
           </div>
           <div className="row align-items-center">
@@ -162,6 +175,7 @@ const SeatForm = ({
                       message: "Đây là mục bắt buộc",
                     },
                   })}
+                  min={0}
                 />
                 {errors.price && (
                   <p className="input-required">{errors.price.message}</p>

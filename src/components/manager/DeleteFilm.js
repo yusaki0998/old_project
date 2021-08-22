@@ -23,6 +23,15 @@ const DeleteFilm = ({ open, close, filmData, from }) => {
       dispatch(removeFilmFromState(filmData?._id, from));
       setIsLoading(false);
       close();
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message: "Xóa phim thành công!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
     } catch (error) {
       setIsLoading(false);
       close();

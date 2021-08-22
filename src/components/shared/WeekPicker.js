@@ -105,6 +105,11 @@ export default class WeekPicker extends React.Component {
             .SelectedWeekExample .DayPicker-Day {
               outline: none;
               border: 1px solid transparent;
+              pointer-events: none;
+              /* for "disabled" effect */
+              opacity: 0.4;
+              cursor: not-allowed;
+              user-select: none;
             }
             .SelectedWeekExample .DayPicker-Day--hoverRange {
               background-color: #EFEFEF !important;

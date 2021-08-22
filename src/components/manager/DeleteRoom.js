@@ -23,6 +23,15 @@ const DeleteRoom = ({ open, close, roomData }) => {
       dispatch(removeRoomFromState(roomData?._id));
       setIsLoading(false);
       close();
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message: "Xóa phòng chiếu thành công!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
     } catch (error) {
       setIsLoading(false);
       close();

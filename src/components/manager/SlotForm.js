@@ -138,7 +138,7 @@ const SlotForm = ({ open, close, slotData }) => {
               <div className="sign__group">
                 <input
                   type="time"
-                  className={`sign__input sign__input-modal ${
+                  className={`sign__input sign__input-modal w-50-imp bg-gr ${
                     errors.startTime ? "input-error" : ""
                   }`}
                   defaultValue={checkCondition(
@@ -167,7 +167,7 @@ const SlotForm = ({ open, close, slotData }) => {
               <div className="sign__group">
                 <input
                   type="time"
-                  className={`sign__input sign__input-modal ${
+                  className={`sign__input sign__input-modal w-50-imp bg-gr ${
                     errors.endTime ? "input-error" : ""
                   }`}
                   defaultValue={checkCondition(

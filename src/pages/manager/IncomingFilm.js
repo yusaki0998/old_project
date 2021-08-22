@@ -74,6 +74,7 @@ const IncomingFilm = () => {
           (curPage + 1) * MAX_ITEMS_PER_PAGE
         )}
         from="coming"
+        title="Phim sắp chiếu"
       />
       <Paginator
         curPage={curPage}

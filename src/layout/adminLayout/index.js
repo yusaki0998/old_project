@@ -9,12 +9,10 @@ import AdminHeader from "../../components/shared/AdminHeader";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import NotFound from "../../pages/global/NotFound";
 
-const Users = lazy(() => import("../../pages/admin/Users"));
 const CreateAccount = lazy(() => import("../../pages/admin/CreateAccount"));
 const ManagerList = lazy(() => import("../../pages/admin/ManagerList"));
 const StaffList = lazy(() => import("../../pages/admin/StaffList"));
 const EditAccountInfo = lazy(() => import("../../pages/admin/EditAccount"));
-const Dashboard = lazy(() => import("../../pages/admin/Dashboard.js"));
 
 const AdminLayout = ({ children }) => {
   const { loginData, isAuthenticated } = useSelector((state) => state.auth);
@@ -38,12 +36,7 @@ const AdminLayout = ({ children }) => {
       <Switch>
         <Route exact path={`${router.path}/`}>
           <Suspense fallback={<LoadingSpinner />}>
-            <Dashboard />
-          </Suspense>
-        </Route>
-        <Route exact path={`${router.path}/users`}>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Users />
+            <CreateAccount />
           </Suspense>
         </Route>
         <Route exact path={`${router.path}/create-account`}>

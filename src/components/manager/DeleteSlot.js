@@ -23,6 +23,15 @@ const DeleteSlot = ({ open, close, slotData }) => {
       dispatch(removeSlotFromState(slotData?._id));
       setIsLoading(false);
       close();
+      const newNoti = {
+        id: uuid_v4(),
+        type: "success",
+        message: "Xóa giờ chiếu thành công!",
+      };
+      dispatch(addNotification(newNoti));
+      setTimeout(() => {
+        dispatch(removeNotification(newNoti.id));
+      }, 2000);
     } catch (error) {
       setIsLoading(false);
       close();
@@ -31,7 +40,7 @@ const DeleteSlot = ({ open, close, slotData }) => {
         type: "error",
         message:
           error?.response?.data?.message ||
-          "Xóa phòng chiếu thất bại. Vui lòng thử lại!",
+          "Xóa giờ chiếu thất bại. Vui lòng thử lại!",
       };
       dispatch(addNotification(newNoti));
       setTimeout(() => {

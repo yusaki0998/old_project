@@ -26,8 +26,10 @@ const NewScheduleForm = ({
 }) => {
   const [showFilmList, setShowFilmList] = useState(false);
   const [filmId, setFilm] = useState("");
+  const [filmError, setFilmError] = useState("");
   const [showRoomList, setShowRoomList] = useState(false);
   const [roomId, setRoomId] = useState("");
+  const [roomError, setRoomError] = useState("");
   const [isLoading, setIsLoading] = useState();
   const dispatch = useDispatch();
 
@@ -36,6 +38,14 @@ const NewScheduleForm = ({
   }, [scheduleData]);
 
   const onValid = async () => {
+    if (!filmId) {
+      setFilmError("Đây là mục bắt buộc");
+      return;
+    }
+    if (!roomId) {
+      setRoomError("Đây là mục bắt buộc");
+      return;
+    }
     setIsLoading(true);
     try {
       const { data: dataRes } = await createScheduleRequest({
@@ -122,7 +132,13 @@ const NewScheduleForm = ({
                       }`}
                     >
                       {allFilm?.map((film) => (
-                        <li key={film._id} onClick={() => setFilm(film._id)}>
+                        <li
+                          key={film._id}
+                          onClick={() => {
+                            setFilm(film._id);
+                            setFilmError("");
+                          }}
+                        >
                           {film.movieName}
                         </li>
                       ))}
@@ -136,6 +152,7 @@ const NewScheduleForm = ({
                     </button>
                   </div>
                 </OutsideHandler>
+                {filmError && <p className="input-required">{filmError}</p>}
               </div>
             </div>
           </div>
@@ -164,7 +181,13 @@ const NewScheduleForm = ({
                       }`}
                     >
                       {listRoom?.map((room) => (
-                        <li key={room._id} onClick={() => setRoomId(room._id)}>
+                        <li
+                          key={room._id}
+                          onClick={() => {
+                            setRoomId(room._id);
+                            setRoomError("");
+                          }}
+                        >
                           {room.roomName}
                         </li>
                       ))}
@@ -177,6 +200,7 @@ const NewScheduleForm = ({
                       ></i>
                     </button>
                   </div>
+                  {roomError && <p className="input-required">{roomError}</p>}
                 </OutsideHandler>
               </div>
             </div>

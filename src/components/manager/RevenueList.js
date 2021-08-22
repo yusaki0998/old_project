@@ -6,10 +6,17 @@ import { formatter } from "../../pages/customer/OrderHistory";
 import RevenueListSkeleton from "../../skeleton/RevenueListSkeleton";
 
 const RevenueList = ({ list, isLoading }) => {
+  if (list.length === 0) {
+    return (
+      <div className="admin__manager-list__wrapper">
+        <p className="text-white text-center">Chưa có dữ liệu hiển thị</p>
+      </div>
+    );
+  }
   return (
     <div className="admin__manager-list__wrapper">
       <div className="main__table-wrap">
-        <table className="main__table">
+        <table className="main__table revenue__table">
           <thead>
             <tr>
               <th>STT</th>

@@ -189,7 +189,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case UPDATE_FILM_INFO_START:
       return {
         ...state,
-        updateAccount: {
+        updateFilm: {
           isLoading: true,
         },
       };
@@ -197,7 +197,7 @@ const reducer = (state = initialState, { type, payload }) => {
     case UPDATE_FILM_INFO_FAILED:
       return {
         ...state,
-        updateAccount: {
+        updateFilm: {
           isLoading: false,
         },
       };

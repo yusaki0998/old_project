@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import MovieItem from "./MovieItem";
 import Slider from "react-slick";

@@ -45,6 +45,17 @@ const CustomerTicketInfo = () => {
     setIsLoading(true);
     updateCustomerTicketInfoRequest(ticketId)
       .then(() => {
+        setCustomerInfo((prevState) => ({
+          ...prevState,
+          ticket: prevState.ticket.map((item) =>
+            item._id === ticketId
+              ? {
+                  ...item,
+                  status: 1,
+                }
+              : item
+          ),
+        }));
         fetchCustomerInfo();
         const newNoti = {
           id: uuid_v4(),

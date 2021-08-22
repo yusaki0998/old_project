@@ -5,7 +5,13 @@ import { useHistory } from "react-router";
 import FilmListSkeleton from "../../skeleton/FilmListSkeleton";
 import DeleteFilm from "./DeleteFilm";
 
-const FilmList = ({ list, isLoading, from }) => {
+const increaseDate = (dateStr) => {
+  const dateObj = new Date();
+  dateObj.setDate(new Date(dateStr).getDate() + 6);
+  return dateObj.toLocaleDateString();
+};
+
+const FilmList = ({ list, isLoading, from, title }) => {
   const history = useHistory();
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState({});
@@ -29,9 +35,11 @@ const FilmList = ({ list, isLoading, from }) => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tên phim</th>
+              <th> {title} </th>
               <th>Đạo diễn</th>
               <th>Thể loại</th>
+              <th>Ngày công chiếu</th>
+              <th>Ngày kết thúc</th>
               <th>Sửa / Xóa</th>
             </tr>
           </thead>
@@ -51,6 +59,16 @@ const FilmList = ({ list, isLoading, from }) => {
                   </td>
                   <td>
                     <div className="main__table-text">{film.genre}</div>
+                  </td>
+                  <td>
+                    <div className="main__table-text">
+                      {new Date(film.showtimes).toLocaleDateString()}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="main__table-text">
+                      {increaseDate(film.showtimes)}
+                    </div>
                   </td>
                   <td>
                     <div className="main__table-btns">

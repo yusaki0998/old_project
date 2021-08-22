@@ -24,18 +24,20 @@ const EditFilm = () => {
   const { updateFilm: updateFilmData } = useSelector((state) => state.manager);
   const dispatch = useDispatch();
   const imgRef = useRef();
-  const [imgError, setImgError] = useState("");
   const { search } = useLocation();
   const history = useHistory();
   const query = new URLSearchParams(search);
   const filmIdField = query.get("filmId");
   const [isLoading, setIsLoading] = useState(false);
   const [filmDetailData, setFilmDetailData] = useState({});
+  const [fileInput, setFileInput] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm();
 
   useEffect(() => {
@@ -59,20 +61,29 @@ const EditFilm = () => {
   }, [history, filmIdField]);
 
   const onValid = (data) => {
-    if (!imgRef || !imgRef.current || !imgRef.current.files) {
-      setImgError("Đây là mục bắt buộc");
-    } else {
-      const formdata = new FormData();
-      for (const property in data) {
-        formdata.append(property, data[property]);
-      }
-      formdata.append("coverImage", imgRef.current.files[0]);
-      formdata.append("status", status);
-      formdata.append("ageRating", ageRating);
-      formdata.append("showtimes", showtimes);
-      dispatch(updateFilmInfo(filmIdField, formdata));
+    if (!status) {
+      setError("status", { type: "manual", message: "Đây là mục bắt buộc" });
+      return;
     }
+    if (!ageRating) {
+      setError("ageRating", { type: "manual", message: "Đây là mục bắt buộc" });
+      return;
+    }
+
+    const formdata = new FormData();
+    for (const property in data) {
+      formdata.append(property, data[property]);
+    }
+    if (imgRef.current.files[0]) {
+      formdata.append("coverImage", imgRef.current.files[0]);
+    }
+    formdata.append("status", status);
+    formdata.append("ageRating", ageRating);
+    formdata.append("showtimes", showtimes);
+    dispatch(updateFilmInfo(filmIdField, formdata));
   };
+
+  console.log(fileInput);
 
   return (
     <main className="pb-4">
@@ -253,6 +264,7 @@ const EditFilm = () => {
                         message: "Đây là mục bắt buộc",
                       },
                     })}
+                    min={0}
                   />
                   {errors.amountOfTime && (
                     <p className="input-required">
@@ -301,7 +313,10 @@ const EditFilm = () => {
                       {AGE_THRESHOLD.map((item) => (
                         <li
                           key={item.key}
-                          onClick={() => setAgeRating(item.key)}
+                          onClick={() => {
+                            setAgeRating(item.key);
+                            clearErrors("ageRating");
+                          }}
                         >
                           {item?.label}
                         </li>
@@ -316,6 +331,9 @@ const EditFilm = () => {
                     </button>
                   </div>
                 </OutsideHandler>
+                {errors.ageRating && (
+                  <p className="input-required">{errors.ageRating.message}</p>
+                )}
               </div>
             </div>
             <div className="row align-items-center">
@@ -323,13 +341,27 @@ const EditFilm = () => {
                 <p>Ảnh Cover</p>
               </div>
               <div className="col-md-9">
-                <div className="sign__group">
-                  <input
-                    ref={imgRef}
-                    type="file"
-                    className="sign__input pt-1 cursor-pointer"
-                  />
-                  {imgError && <p className="input-required">{imgError}</p>}
+                <div className="img__wrapper-input">
+                  <div className="sign__group mr-3">
+                    <input
+                      ref={imgRef}
+                      type="file"
+                      className="sign__input pt-1 cursor-pointer"
+                      onChange={(e) => {
+                        setFileInput(e.target.files[0]);
+                      }}
+                    />
+                  </div>
+                  <div className="img__preview">
+                    <img
+                      src={
+                        fileInput
+                          ? URL.createObjectURL(fileInput)
+                          : filmDetailData?.coverImage
+                      }
+                      alt=""
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -384,8 +416,22 @@ const EditFilm = () => {
                         height: 95,
                       }}
                     >
-                      <li onClick={() => setStatus("1")}>Phim đang chiếu</li>
-                      <li onClick={() => setStatus("0")}>Phim sắp chiếu</li>
+                      <li
+                        onClick={() => {
+                          setStatus("1");
+                          clearErrors("status");
+                        }}
+                      >
+                        Phim đang chiếu
+                      </li>
+                      <li
+                        onClick={() => {
+                          setStatus("0");
+                          clearErrors("status");
+                        }}
+                      >
+                        Phim sắp chiếu
+                      </li>
                     </ul>
                     <button className="sign__select-icon">
                       <i
@@ -396,6 +442,9 @@ const EditFilm = () => {
                     </button>
                   </div>
                 </OutsideHandler>
+                {errors.status && (
+                  <p className="input-required">{errors.status.message}</p>
+                )}
               </div>
             </div>
             <button

@@ -8,7 +8,7 @@ import {
   getListSlot,
 } from "../../store/actions/managerActions";
 import { getListStaff } from "../../store/actions/adminActions";
-import Paginator from "../../components/shared/Paginator";
+// import Paginator from "../../components/shared/Paginator";
 import { Helmet } from "react-helmet";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -44,7 +44,7 @@ const Revenue = () => {
   } = useSelector((state) => state.manager);
   const { staffs } = useSelector((state) => state.admin);
   const [filteredList, setFilteredList] = useState([]);
-  const [curPage, setCurPage] = useState(0);
+  // const [curPage, setCurPage] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [showFilmList, setShowFilmList] = useState(false);
@@ -325,14 +325,14 @@ const Revenue = () => {
               </div>
             </div>
           )}
-          <div className="room__paginator">
+          {/* <div className="room__paginator">
             <Paginator
               curPage={curPage}
               maxPage={Math.ceil(filteredList.length / MAX_ITEMS_PER_PAGE)}
               setCurPage={setCurPage}
               totalItems={filteredList.length}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

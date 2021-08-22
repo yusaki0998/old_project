@@ -76,6 +76,7 @@ const CurrentFilm = () => {
           (curPage + 1) * MAX_ITEMS_PER_PAGE
         )}
         from="current"
+        title="Phim đang chiếu"
       />
       <Paginator
         curPage={curPage}
