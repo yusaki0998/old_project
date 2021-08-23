@@ -116,7 +116,7 @@ const register = async (req, res) => {
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
-            text: `To confirm your email, click here: ${url}`
+            text: `To confirm your email, copy this token: ${token}`
         });
 
         return res.status(201).json({
@@ -136,7 +136,7 @@ const verify = async (req, res) => {
     try {
         const token = req.query.token;
 
-        if(!token) {
+        if (!token) {
             return res.status(404).json({
                 message: "Missing token required to verify account"
             })
@@ -211,7 +211,7 @@ const recoverPassword = async (req, res) => {
             to: email,
             subject: 'Password reset',
             text: `Hi, ${user.fullname}. It seem that you want to change your password.
-            Please make sure that it's you. Here is your password recovery link: ${url}`
+            Please make sure that it's you. Here is your password recovery token, copy this: ${token}`
         });
 
         return res.status(200).json({
@@ -231,7 +231,7 @@ const resetPassword = async (req, res) => {
     try {
         const token = req.query.token;
 
-        if(!token) {
+        if (!token) {
             return res.status(404).json({
                 message: "Missing token required to reset password"
             })
@@ -251,7 +251,7 @@ const resetPassword = async (req, res) => {
             });
         }
 
-        if(newPassword !== retypePassword) {
+        if (newPassword !== retypePassword) {
             return res.status(400).json({
                 message: "Password not match"
             })
@@ -960,7 +960,8 @@ const search = async (req, res) => {
                                 { role: 'manager' }
                             ]
                         },
-                        { $text: { $search: input, $caseSensitive: false } }
+                        //{ $text: { $search: input, $caseSensitive: false } }
+                        { fullname: { $regex: '.*' + input + '.*', $options: 'i' } }
                     ]
                 }
             ).exec();
@@ -969,7 +970,8 @@ const search = async (req, res) => {
             findUsers = await User.find({
                 $and: [
                     { role: 'customer' },
-                    { $text: { $search: input, $caseSensitive: false } },
+                    { fullname: { $regex: '.*' + input + '.*', $options: 'i' } },
+                    //{ $text: { $search: input, $caseSensitive: false } },
                     {
                         _id: { $ne: req.userData._id.toString() }
                     }

@@ -40,6 +40,15 @@ let currentTime = `${hour}` + `${min}`;
 console.log(currentTime);
 
 const deleteTicket = async () => {
+
+    if(moment().isSame(moment(findSchedule.showDate))) {
+        if(parseInt(moment().format('HHmm')) > findSchedule.slot.startTime) {
+            return res.status().json({
+                message: ""
+            });
+        }
+    }
+
     const tickets = await Ticket
         .find({
             status: 0
@@ -56,8 +65,6 @@ const deleteTicket = async () => {
             }]
         })
         .exec();
-
-    
 
         console.log(tickets);
 }
