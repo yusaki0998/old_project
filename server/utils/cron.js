@@ -26,29 +26,7 @@ mongoose
 
 // });
 
-//get current date time
-let now = moment();
-
-console.log(now);
-
-let hour = now.hour();
-console.log(hour);
-let min = now.minute();
-console.log(min);
-
-let currentTime = `${hour}` + `${min}`;
-console.log(currentTime);
-
 const deleteTicket = async () => {
-
-    if(moment().isSame(moment(findSchedule.showDate))) {
-        if(parseInt(moment().format('HHmm')) > findSchedule.slot.startTime) {
-            return res.status().json({
-                message: ""
-            });
-        }
-    }
-
     const tickets = await Ticket
         .find({
             status: 0
@@ -66,7 +44,18 @@ const deleteTicket = async () => {
         })
         .exec();
 
-        console.log(tickets);
+    ticketsToDelete = []
+    tickets.forEach(ticket => {
+        if (moment().isSame(moment(ticket.schedule.showDate), 'day')) {
+            if (parseInt(moment().format('HHmm')) - ticket.schedule.slot.startTime === 30) {
+                ticketsToDelete.push(ticket._id);
+            }
+        }
+    })
+
+    await Ticket.deleteMany();
+
+    console.log(tickets);
 }
 
 console.log(deleteTicket());
