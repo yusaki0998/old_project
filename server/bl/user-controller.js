@@ -943,7 +943,7 @@ const getCustomer = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.query.input;
+        const input = req.body.input;
 
         const currentUser = req.userData._id;
 
@@ -961,7 +961,13 @@ const search = async (req, res) => {
                             ]
                         },
                         //{ $text: { $search: input, $caseSensitive: false } }
-                        { fullname: { $regex: '.*' + input + '.*', $options: 'i' } }
+                        {
+                            $or: [
+                                { fullname: { $regex: '.*' + input + '.*', $options: 'i' } },
+                                { email: { $regex: '.*' + input + '.*', $options: 'i' } },
+                                { phone: { $regex: '.*' + input + '.*', $options: 'i' } }
+                            ]
+                        }
                     ]
                 }
             ).exec();
@@ -970,7 +976,13 @@ const search = async (req, res) => {
             findUsers = await User.find({
                 $and: [
                     { role: 'customer' },
-                    { fullname: { $regex: '.*' + input + '.*', $options: 'i' } },
+                    {
+                        $or: [
+                            { fullname: { $regex: '.*' + input + '.*', $options: 'i' } },
+                            { email: { $regex: '.*' + input + '.*', $options: 'i' } },
+                            { phone: { $regex: '.*' + input + '.*', $options: 'i' } }
+                        ]
+                    },
                     //{ $text: { $search: input, $caseSensitive: false } },
                     {
                         _id: { $ne: req.userData._id.toString() }

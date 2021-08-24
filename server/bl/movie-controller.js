@@ -307,7 +307,13 @@ const search = async (req, res) => {
         const input = req.body.input;
 
         const findMovies = await Movie.find(
-            { movieName: { $regex: '.*' + input + '.*', $options: 'i' } }
+            {
+                $or: [
+                    { movieName: { $regex: '.*' + input + '.*', $options: 'i' } },
+                    { director: { $regex: '.*' + input + '.*', $options: 'i' } },
+                    { actor: { $regex: '.*' + input + '.*', $options: 'i' } }
+                ]
+            }
             //$text: { $search: input, $caseSensitive: false }
         ).exec();
 
