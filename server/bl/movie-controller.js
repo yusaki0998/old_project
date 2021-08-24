@@ -311,7 +311,6 @@ const search = async (req, res) => {
                 $or: [
                     { movieName: { $regex: '.*' + input + '.*', $options: 'i' } },
                     { director: { $regex: '.*' + input + '.*', $options: 'i' } },
-                    { actor: { $regex: '.*' + input + '.*', $options: 'i' } }
                 ]
             }
             //$text: { $search: input, $caseSensitive: false }
