@@ -304,7 +304,7 @@ const deleteMovie = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.query.input;
+        const input = req.body.input;
 
         const findMovies = await Movie.find(
             { movieName: { $regex: '.*' + input + '.*', $options: 'i' } }
