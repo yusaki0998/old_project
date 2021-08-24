@@ -43,7 +43,8 @@ const ManagerList = () => {
     setFilteredList(managers.list);
   }, [managers.list]);
 
-  const onSearchUser = () => {
+  const onSearchUser = (e) => {
+    e.preventDefault();
     if (isTouched && searchInput.trim()) {
       getUserBySearchInputRequest(searchInput.trim().toLowerCase())
         .then(({ data }) => {
@@ -87,7 +88,7 @@ const ManagerList = () => {
                   />
                   <button
                     className="table__search-button"
-                    type="button"
+                    type="submit"
                     onClick={onSearchUser}
                   >
                     <i className="icon ion-ios-search"></i>

@@ -111,7 +111,7 @@ function* updateFilmInfoWorker(action) {
   yield put(updateFilmInfoStart());
   try {
     const { data } = yield updateFilmInfoRequest(action.filmId, action.data);
-    yield put(updateFilmInfoSuccess(data));
+    yield put(updateFilmInfoSuccess(data?.data || {}));
     const newNoti = {
       id: uuid_v4(),
       type: "success",

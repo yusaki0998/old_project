@@ -91,9 +91,9 @@ const getScheduleSeats = async (req, res) => {
             });
         }
 
-        if(moment().isSame(moment(findSchedule.showDate))) {
+        if(moment().isSame(moment(findSchedule.showDate), 'day')) {
             if(parseInt(moment().format('HHmm')) > findSchedule.slot.startTime) {
-                return res.status().json({
+                return res.status(410).json({
                     message: "This movie schedule already closed"
                 });
             }

@@ -76,8 +76,8 @@ const getOngoingMovies = async (req, res) => {
         const findMovies = await Movie.find({
             status: 1
         })
-        .sort({ showtimes: 1})
-        .exec();
+            .sort({ showtimes: 1 })
+            .exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
@@ -104,8 +104,8 @@ const getComingSoonMovies = async (req, res) => {
         const findMovies = await Movie.find({
             status: 0
         })
-        .sort({ showtimes: 1})
-        .exec();
+            .sort({ showtimes: 1 })
+            .exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.status(404).json({
@@ -274,7 +274,7 @@ const deleteMovie = async (req, res) => {
             movie: id
         }).exec();
 
-        if(checkMovieSchedule.length !== 0) {
+        if (checkMovieSchedule.length !== 0) {
             return res.status(409).json({
                 message: "Cannot delete movie ! You must delete all movie schedule before delete this movie"
             });
@@ -304,11 +304,18 @@ const deleteMovie = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.query.input;
+        const input = req.body.input;
 
-        const findMovies = await Movie.find({
-            $text: { $search: input, $caseSensitive: false }
-        }).exec();
+        const findMovies = await Movie.find(
+            {
+                $or: [
+                    { movieName: { $regex: '.*' + input + '.*', $options: 'i' } },
+                    { director: { $regex: '.*' + input + '.*', $options: 'i' } },
+                    { actor: { $regex: '.*' + input + '.*', $options: 'i' } }
+                ]
+            }
+            //$text: { $search: input, $caseSensitive: false }
+        ).exec();
 
         if (!findMovies || findMovies.length === 0) {
             return res.json([]);

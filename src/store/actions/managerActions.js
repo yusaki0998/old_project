@@ -47,6 +47,7 @@ import {
   UPDATE_SLOT_INFO_START,
   UPDATE_SLOT_INFO_SUCCESS,
   UPDATE_SLOT_INFO_FAILED,
+  RESET_UPATE_FILM_INFO_STATE,
 } from "./types";
 
 export const getListCurrentFilm = () => ({
@@ -88,6 +89,10 @@ export const createNewFilmFailed = (payload) => ({
 
 export const resetCreateNewFilmState = () => ({
   type: RESET_CREATE_FILM_STATE,
+});
+
+export const resetUpdateFilmInfoState = () => ({
+  type: RESET_UPATE_FILM_INFO_STATE,
 });
 
 export const getListComingFilm = () => ({

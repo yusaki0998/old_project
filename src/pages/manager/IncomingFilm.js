@@ -24,7 +24,8 @@ const IncomingFilm = () => {
     setFilteredList(comingFilm.list);
   }, [comingFilm.list]);
 
-  const onSearchFilm = () => {
+  const onSearchFilm = (e) => {
+    e.preventDefault();
     if (isTouched && searchInput.trim()) {
       searchFilmRequest(searchInput.trim().toLowerCase())
         .then(({ data }) => {
@@ -60,7 +61,7 @@ const IncomingFilm = () => {
           />
           <button
             className="table__search-button"
-            type="button"
+            type="submit"
             onClick={onSearchFilm}
           >
             <i className="icon ion-ios-search"></i>

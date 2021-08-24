@@ -9,7 +9,7 @@ Nodejs 14.17.0 hoặc Nodejs 14.x
 
 Điền các thông tin sau vào file `.env`
 ```
-MONGO_ATLAS_USER = trungbeo hoặc namto hoặc tu
+MONGO_ATLAS_USER = trungbeo hoặc namto
 MONGO_ATLAS_PW = 123456aA@
 REFRESH_SECRET = huytqse06084
 ```

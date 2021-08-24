@@ -6,7 +6,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { convertStatusToText } from "../../utils/convertGender";
 import { useDispatch, useSelector } from "react-redux";
-import { updateFilmInfo } from "../../store/actions/managerActions";
+import {
+  resetUpdateFilmInfoState,
+  updateFilmInfo,
+} from "../../store/actions/managerActions";
 import { useHistory, useLocation } from "react-router-dom";
 import { getFilmDetailRequest } from "../../store/api/manager";
 import { checkCondition } from "../../utils/helper";
@@ -60,6 +63,20 @@ const EditFilm = () => {
     }
   }, [history, filmIdField]);
 
+  useEffect(() => {
+    if (updateFilmData?.success) {
+      setTimeout(() => {
+        dispatch(resetUpdateFilmInfoState());
+      }, 500);
+      if (updateFilmData?.data?.status === 1) {
+        history.push("/manager/current");
+      }
+      if (updateFilmData?.data?.status === 0) {
+        history.push("/manager/coming");
+      }
+    }
+  }, [updateFilmData?.success, dispatch, history, updateFilmData.data?.status]);
+
   const onValid = (data) => {
     if (!status) {
       setError("status", { type: "manual", message: "Đây là mục bắt buộc" });
@@ -82,8 +99,6 @@ const EditFilm = () => {
     formdata.append("showtimes", showtimes);
     dispatch(updateFilmInfo(filmIdField, formdata));
   };
-
-  console.log(fileInput);
 
   return (
     <main className="pb-4">
