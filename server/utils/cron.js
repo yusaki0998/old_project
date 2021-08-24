@@ -8,20 +8,6 @@ const moment = require('moment');
 // const uri =
 //     "mongodb+srv://huytq:09001210@capstonecluster.e4xd9.mongodb.net/ot-bm?retryWrites=true&w=majority";
 
-// mongoose
-//     .connect(uri, {
-//         useCreateIndex: true,
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//         useFindAndModify: false,
-//     })
-//     .then(() => {
-//         console.log("OK!");
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     });
-
 cron.schedule('* * * * *', () => {
     console.log("Running cron to check and delete tickets");
     deleteTicket();
@@ -48,7 +34,7 @@ const deleteTicket = async () => {
     let ticketsToDelete = []
     tickets.forEach(ticket => {
         if (moment().isSame(moment(ticket.schedule.showDate), 'day')) {
-            if (parseInt(moment().format('HHmm')) - ticket.schedule.slot.startTime === 30) {
+            if (ticket.schedule.slot.startTime - parseInt(moment().format('HHmm')) === 30) {
                 ticketsToDelete.push(ticket._id);
             }
         }
