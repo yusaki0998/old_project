@@ -4,8 +4,8 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
 require("./config/db");
+require("./utils/cron");
 const morgan = require("morgan");
 const path = require("path");
 
