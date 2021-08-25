@@ -31,6 +31,9 @@ const deleteTicket = async () => {
     let ticketsToDelete = []
     tickets.forEach(ticket => {
         const ticketStartTime = ticket.schedule.slot.startTime;
+        console.log(ticketStartTime);
+        console.log("---------------------------------------------------");
+        console.log(parseInt(moment().add(30, 'minutes').format('HHmm')));
         if (moment().isSame(moment(ticket.schedule.showDate), 'day')) {
             if (parseInt(moment().add(30, 'minutes').format('HHmm')) === ticketStartTime) {
                 ticketsToDelete.push(ticket._id);
