@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require("dotenv").config();
-const generateString = require('../utils/randomString');
 const cloudinary = require('../utils/cloudinary');
 
 const transporter = nodemailer.createTransport({
@@ -97,26 +96,17 @@ const register = async (req, res) => {
             email: user.email,
         },
             process.env.EMAIL_SECRET, {
-            expiresIn: "10m"
+            expiresIn: "24h"
         });
 
         user.token = token;
         await user.save();
-        console.log(user.token);
-
-        let url;
-        if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify?token=${token}`
-        }
-        else {
-            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify?token=${token}`;
-        }
 
         transporter.sendMail({
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Welcome to OT-BM cinema, please verify your account',
-            text: `To confirm your email, click here: ${url}`
+            text: `To confirm your email, copy this token: ${token}`
         });
 
         return res.status(201).json({
@@ -136,7 +126,7 @@ const verify = async (req, res) => {
     try {
         const token = req.query.token;
 
-        if(!token) {
+        if (!token) {
             return res.status(404).json({
                 message: "Missing token required to verify account"
             })
@@ -191,27 +181,19 @@ const recoverPassword = async (req, res) => {
             email: user.email,
         },
             process.env.EMAIL_SECRET, {
-            expiresIn: "10m"
+            expiresIn: "24h"
         });
 
         user.token = token;
 
         await user.save();
 
-        let url;
-        if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/reset-password?token=${token}`
-        }
-        else {
-            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/reset-password?token=${token}`;
-        }
-
         transporter.sendMail({
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'Password reset',
             text: `Hi, ${user.fullname}. It seem that you want to change your password.
-            Please make sure that it's you. Here is your password recovery link: ${url}`
+            Please make sure that it's you. Here is your password recovery token, copy this: ${token}`
         });
 
         return res.status(200).json({
@@ -231,7 +213,7 @@ const resetPassword = async (req, res) => {
     try {
         const token = req.query.token;
 
-        if(!token) {
+        if (!token) {
             return res.status(404).json({
                 message: "Missing token required to reset password"
             })
@@ -251,7 +233,7 @@ const resetPassword = async (req, res) => {
             });
         }
 
-        if(newPassword !== retypePassword) {
+        if (newPassword !== retypePassword) {
             return res.status(400).json({
                 message: "Password not match"
             })
@@ -310,12 +292,11 @@ const login = async (req, res) => {
             });
         }
 
-        //Verify ok thi gỡ cái này ra
-        // if (!user.verified) {
-        //     return res.status(403).json({
-        //         message: "Please verify your email first before login"
-        //     });
-        // }
+        if (!user.verified) {
+            return res.status(403).json({
+                message: "Login failed - Your email is not verified"
+            });
+        }
 
         const token = jwt.sign({
             _id: user._id,
@@ -943,7 +924,7 @@ const getCustomer = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const input = req.query.input;
+        const input = req.body.input;
 
         const currentUser = req.userData._id;
 
@@ -960,7 +941,14 @@ const search = async (req, res) => {
                                 { role: 'manager' }
                             ]
                         },
-                        { $text: { $search: input, $caseSensitive: false } }
+                        //{ $text: { $search: input, $caseSensitive: false } }
+                        {
+                            $or: [
+                                { fullname: { $regex: '.*' + input + '.*', $options: 'i' } },
+                                { email: { $regex: '.*' + input + '.*', $options: 'i' } },
+                                { phone: { $regex: '.*' + input + '.*', $options: 'i' } }
+                            ]
+                        }
                     ]
                 }
             ).exec();
@@ -969,7 +957,14 @@ const search = async (req, res) => {
             findUsers = await User.find({
                 $and: [
                     { role: 'customer' },
-                    { $text: { $search: input, $caseSensitive: false } },
+                    {
+                        $or: [
+                            { fullname: { $regex: '.*' + input + '.*', $options: 'i' } },
+                            { email: { $regex: '.*' + input + '.*', $options: 'i' } },
+                            { phone: { $regex: '.*' + input + '.*', $options: 'i' } }
+                        ]
+                    },
+                    //{ $text: { $search: input, $caseSensitive: false } },
                     {
                         _id: { $ne: req.userData._id.toString() }
                     }
