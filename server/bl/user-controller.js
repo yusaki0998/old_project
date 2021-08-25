@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require("dotenv").config();
-const generateString = require('../utils/randomString');
 const cloudinary = require('../utils/cloudinary');
 
 const transporter = nodemailer.createTransport({
@@ -97,20 +96,11 @@ const register = async (req, res) => {
             email: user.email,
         },
             process.env.EMAIL_SECRET, {
-            expiresIn: "10m"
+            expiresIn: "24h"
         });
 
         user.token = token;
         await user.save();
-        console.log(user.token);
-
-        let url;
-        if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/verify?token=${token}`
-        }
-        else {
-            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/verify?token=${token}`;
-        }
 
         transporter.sendMail({
             from: process.env.EMAIL_USERNAME,
@@ -191,20 +181,12 @@ const recoverPassword = async (req, res) => {
             email: user.email,
         },
             process.env.EMAIL_SECRET, {
-            expiresIn: "10m"
+            expiresIn: "24h"
         });
 
         user.token = token;
 
         await user.save();
-
-        let url;
-        if (process.env.NODE_ENV === 'production') {
-            url = `${process.env.PROTOCOL}s://${process.env.DEPLOY_NAME}/api/v1/users/reset-password?token=${token}`
-        }
-        else {
-            url = `${process.env.PROTOCOL}://${process.env.LOCAL_NAME}:${process.env.PORT}/api/v1/users/reset-password?token=${token}`;
-        }
 
         transporter.sendMail({
             from: process.env.EMAIL_USERNAME,
@@ -310,12 +292,11 @@ const login = async (req, res) => {
             });
         }
 
-        //Verify ok thi gỡ cái này ra
-        // if (!user.verified) {
-        //     return res.status(403).json({
-        //         message: "Please verify your email first before login"
-        //     });
-        // }
+        if (!user.verified) {
+            return res.status(403).json({
+                message: "Login failed - Your email is not verified"
+            });
+        }
 
         const token = jwt.sign({
             _id: user._id,
