@@ -15,3 +15,4 @@ REFRESH_SECRET = huytqse06084
 ```
 
 Mở terminal, chạy lệnh `cd server`, sau đó chạy lệnh `npm start` hoặc chạy lệnh `npm run dev` nếu muốn check log từ server
+Okay
