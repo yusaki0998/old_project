@@ -1,12 +1,9 @@
-//const mongoose = require('mongoose');
 const cron = require('node-cron');
+// require('../config/db');
 const Ticket = require('../dbaccess/ticket-model');
 require('../dbaccess/schedule-model');
 require('../dbaccess/slot-model');
 const moment = require('moment');
-
-// const uri =
-//     "mongodb+srv://huytq:09001210@capstonecluster.e4xd9.mongodb.net/ot-bm?retryWrites=true&w=majority";
 
 cron.schedule('* * * * *', () => {
     console.log("Running cron to check and delete tickets");
@@ -33,15 +30,20 @@ const deleteTicket = async () => {
 
     let ticketsToDelete = []
     tickets.forEach(ticket => {
+        const ticketStartTime = ticket.schedule.slot.startTime;
         if (moment().isSame(moment(ticket.schedule.showDate), 'day')) {
-            if (ticket.schedule.slot.startTime - parseInt(moment().format('HHmm')) === 30) {
+            if (parseInt(moment().add(30, 'minutes').format('HHmm')) === ticketStartTime) {
                 ticketsToDelete.push(ticket._id);
             }
         }
     });
 
-    await Ticket.deleteMany(
+    console.log(ticketsToDelete);
+
+    const check = await Ticket.deleteMany(
         { _id: { $in: ticketsToDelete } }
     ).exec();
+
+    console.log(check);
 }
 
