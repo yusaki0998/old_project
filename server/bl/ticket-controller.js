@@ -33,7 +33,7 @@ const getMovieSchedule = async (req, res) => {
         const findSchedule = await Schedule.find({
             movie: id,
             showDate: {
-                $gte: date
+                $gt: date
             }
         })
             .sort({ showDate: 1 })
@@ -446,6 +446,12 @@ const deleteTicket = async (req, res) => {
         const currentUser = req.userData._id;
 
         const checkUser = await User.findById(currentUser).exec();
+
+        if(checkUser.role === 'manager' || checkUser.role === 'admin') {
+            return res.status(403).json({
+                message: `You don't have permission to delete tickets`
+            });
+        }
 
         session.startTransaction();
 
