@@ -526,7 +526,8 @@ const addAccount = async (req, res) => {
             phone: phone,
             password: hashedPassword,
             dob: dob,
-            role: role
+            role: role,
+            verified: true,
         });
 
         await user.save();
