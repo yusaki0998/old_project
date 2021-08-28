@@ -33,7 +33,7 @@ const getMovieSchedule = async (req, res) => {
         const findSchedule = await Schedule.find({
             movie: id,
             showDate: {
-                $gt: date
+                $gte: date
             }
         })
             .sort({ showDate: 1 })
