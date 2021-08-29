@@ -447,6 +447,12 @@ const deleteTicket = async (req, res) => {
 
         const checkUser = await User.findById(currentUser).exec();
 
+        if(checkUser.role === 'manager' || checkUser.role === 'admin') {
+            return res.status(403).json({
+                message: `You don't have permission to delete tickets`
+            });
+        }
+
         session.startTransaction();
 
         const id = req.query.id;

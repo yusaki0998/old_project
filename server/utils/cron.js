@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 const mongoose = require('mongoose');
 const cron = require('node-cron');
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
+=======
+//const mongoose = require('mongoose');
+const cron = require('node-cron');
+const Ticket = require('../dbaccess/ticket-model');
+const Schedule = require('../dbaccess/schedule-model');
+require('../dbaccess/slot-model');
+>>>>>>> origin/back-end-dev
 const moment = require('moment');
 const Slot = require('../dbaccess/slot-model');
 
@@ -46,16 +54,36 @@ const deleteTicket = async () => {
 
     ticketsToDelete = []
     tickets.forEach(ticket => {
+        const ticketStartTime = ticket.schedule.slot.startTime;
+        console.log(ticketStartTime);
+        console.log("---------------------------------------------------");
+        console.log(parseInt(moment().add(10, 'minutes').format('HHmm')));
         if (moment().isSame(moment(ticket.schedule.showDate), 'day')) {
-            if (parseInt(moment().format('HHmm')) - ticket.schedule.slot.startTime === 30) {
+            if (parseInt(moment().add(10, 'minutes').format('HHmm')) === ticketStartTime) {
+                Schedule.updateOne(
+                    {
+                        _id: ticket.schedule,
+                        'roomSeats.seatNo': ticket.seat.seatNo
+                    },
+                    { $set: { 'roomSeats.$.status': "empty" } },
+                ).exec();
                 ticketsToDelete.push(ticket._id);
             }
         }
     })
 
+<<<<<<< HEAD
     await Ticket.deleteMany();
 
     console.log(tickets);
+=======
+    const check = await Ticket.deleteMany(
+        { _id: { $in: ticketsToDelete } },
+    ).exec();
+
+    console.log(check);
+
+>>>>>>> origin/back-end-dev
 }
 
 console.log(deleteTicket());

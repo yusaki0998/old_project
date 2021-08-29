@@ -5,7 +5,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 require("./config/db");
-require("./utils/cron");
+if (process.env.NODE_ENV !== 'test') {
+  require("./utils/cron");
+}
 const morgan = require("morgan");
 const path = require("path");
 
@@ -20,7 +22,9 @@ const ticketRoutes = require("./routes/ticket-route");
 const reportRoutes = require("./routes/report-route");
 
 //middleware section
-app.use(morgan("dev"));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan("dev"));
+}
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
