@@ -7,8 +7,38 @@ import DeleteFilm from "./DeleteFilm";
 
 const increaseDate = (dateStr) => {
   const dateObj = new Date();
+  const month = new Date(dateStr).getMonth();
   dateObj.setDate(new Date(dateStr).getDate() + 6);
-  return dateObj.toLocaleDateString();
+  dateObj.setMonth(month);
+  if (
+    (month + 1 === 4 ||
+      month + 1 === 6 ||
+      month + 1 === 9 ||
+      month + 1 === 11) &&
+    new Date(dateStr).getDate() + 6 > 30
+  ) {
+    dateObj.setMonth(month + 1);
+  }
+  if (
+    (month + 1 === 1 ||
+      month + 1 === 3 ||
+      month + 1 === 5 ||
+      month + 1 === 7 ||
+      month + 1 === 8 ||
+      month + 1 === 10 ||
+      month + 1 === 12) &&
+    new Date(dateStr).getDate() + 6 > 31
+  ) {
+    dateObj.setMonth(month + 1);
+  }
+  if (month + 1 === 2 && new Date(dateStr).getDate() + 6 > 28) {
+    dateObj.setMonth(month + 1);
+  }
+  return `${dateObj.getFullYear()}-${
+    dateObj.getMonth() + 1 > 9
+      ? dateObj.getMonth() + 1
+      : `0${dateObj.getMonth() + 1}`
+  }-${dateObj.getDate() > 9 ? dateObj.getDate() : `0${dateObj.getDate()}`}`;
 };
 
 const FilmList = ({ list, isLoading, from, title }) => {
@@ -62,7 +92,7 @@ const FilmList = ({ list, isLoading, from, title }) => {
                   </td>
                   <td>
                     <div className="main__table-text">
-                      {new Date(film.showtimes).toLocaleDateString()}
+                      {film.showtimes.substr(0, 10)}
                     </div>
                   </td>
                   <td>

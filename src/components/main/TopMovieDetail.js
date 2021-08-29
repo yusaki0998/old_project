@@ -59,6 +59,42 @@ const TopMovieDetail = ({ movieDetail, hideSuggestion }) => {
       .finally(() => setLoadingSchedule(false));
   };
 
+  const slotItemClassName = (startTime, date) => {
+    const showDate = new Date(date);
+    const currentDate = new Date();
+    if (showDate.getFullYear() > currentDate.getFullYear()) {
+      return "";
+    }
+    if (showDate.getFullYear() < currentDate.getFullYear()) {
+      return "divDisable";
+    }
+    if (showDate.getMonth() > currentDate.getMonth()) {
+      return "";
+    }
+    if (showDate.getMonth() < currentDate.getMonth()) {
+      return "divDisable";
+    }
+    if (showDate.getDate() > currentDate.getDate()) {
+      return "";
+    }
+    if (showDate.getDate() < currentDate.getDate()) {
+      return "divDisable";
+    }
+    const slotTime = convertTime(startTime);
+    const slotHours = parseInt(slotTime.split("h")?.[0]);
+    const slotMinutes = parseInt(slotTime.split("h")?.[1]);
+    if (currentDate.getHours() > slotHours) {
+      return "divDisable";
+    }
+    if (
+      currentDate.getHours() === slotHours &&
+      currentDate.getMinutes() > slotMinutes
+    ) {
+      return "divDisable";
+    }
+    return " ";
+  };
+
   return (
     <>
       <h1 className="section__title section__title--mb">Nội dung phim</h1>
@@ -203,7 +239,10 @@ const TopMovieDetail = ({ movieDetail, hideSuggestion }) => {
                     )
                     ?.map((item) => (
                       <div
-                        className={`slot__item`}
+                        className={`slot__item ${slotItemClassName(
+                          item?.slot?.startTime,
+                          ticketDate
+                        )}`}
                         key={item._id}
                         onClick={() =>
                           history.push(

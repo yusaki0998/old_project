@@ -422,6 +422,9 @@ code {
 .slot__list-row .slot__item:hover .slot__text {
   color: #f9ab00;
 }
+.slot__list-row .slot__item.divDisable {
+  background-color: transparent !important;
+}
 .week__picker-container {
   position: relative;
 }

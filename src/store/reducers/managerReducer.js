@@ -37,6 +37,7 @@ import {
   UPDATE_SLOT_INFO_SUCCESS,
   UPDATE_SLOT_INFO_FAILED,
   REMOVE_SLOT_FROM_STATE,
+  RESET_UPATE_FILM_INFO_STATE,
 } from "../actions/types";
 
 const initialState = {
@@ -58,6 +59,8 @@ const initialState = {
   },
   updateFilm: {
     isLoading: false,
+    success: false,
+    data: {},
   },
   room: {
     isLoading: false,
@@ -159,6 +162,16 @@ const reducer = (state = initialState, { type, payload }) => {
           data: {},
         },
       };
+    case RESET_UPATE_FILM_INFO_STATE:
+      return {
+        ...state,
+        updateFilm: {
+          isLoading: false,
+          error: null,
+          success: false,
+          data: {},
+        },
+      };
     case GET_LIST_COMING_FILM_START:
       return {
         ...state,
@@ -194,6 +207,14 @@ const reducer = (state = initialState, { type, payload }) => {
         },
       };
     case UPDATE_FILM_INFO_SUCCESS:
+      return {
+        ...state,
+        updateFilm: {
+          isLoading: false,
+          success: true,
+          data: payload,
+        },
+      };
     case UPDATE_FILM_INFO_FAILED:
       return {
         ...state,

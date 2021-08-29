@@ -31,7 +31,8 @@ const CustomerTable = () => {
     fetchListCustomer();
   }, []);
 
-  const onSearchCustomer = () => {
+  const onSearchCustomer = (e) => {
+    e.preventDefault();
     if (isTouched && searchInput.trim()) {
       setIsLoading(true);
       getUserBySearchInputRequest(searchInput.trim().toLowerCase())
@@ -70,7 +71,7 @@ const CustomerTable = () => {
           />
           <button
             className="table__search-button"
-            type="button"
+            type="submit"
             onClick={onSearchCustomer}
           >
             <i className="icon ion-ios-search"></i>

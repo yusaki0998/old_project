@@ -23,7 +23,8 @@ const BookingListFilm = () => {
     dispatch(globalGetListCurrentFilm());
   }, [dispatch]);
 
-  const onSearchFilm = () => {
+  const onSearchFilm = (e) => {
+    e.preventDefault();
     if (isTouched && searchInput.trim()) {
       setIsSearchingMovies(true);
       searchFilmRequest(searchInput.trim().toLowerCase())
@@ -63,7 +64,7 @@ const BookingListFilm = () => {
           />
           <button
             className="table__search-button"
-            type="button"
+            type="submit"
             onClick={onSearchFilm}
           >
             <i className="icon ion-ios-search"></i>

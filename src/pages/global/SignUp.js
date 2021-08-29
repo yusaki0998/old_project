@@ -232,9 +232,9 @@ const SignUp = () => {
                           {gender ? gender : "Vui lòng chọn"}
                         </li>
                         <ul className={`${showGender ? "show" : ""}`}>
-                          <li onClick={() => setGender("male")}>Male</li>
-                          <li onClick={() => setGender("female")}>Female</li>
-                          <li onClick={() => setGender("other")}>Other</li>
+                          <li onClick={() => setGender("male")}>Nam</li>
+                          <li onClick={() => setGender("female")}>Nữ</li>
+                          <li onClick={() => setGender("other")}>Khác</li>
                         </ul>
                         <button className="sign__select-icon">
                           <i
