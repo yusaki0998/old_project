@@ -16,7 +16,9 @@ const connection = mongoose
         useFindAndModify: false,
     })
     .then(() => {
-        console.log("OK!");
+        if (process.env.NODE_ENV !== 'test') {
+            console.log("DB connect OK!");
+        }
     })
     .catch((err) => {
         console.log(err);
