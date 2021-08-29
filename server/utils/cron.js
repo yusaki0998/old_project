@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-const mongoose = require('mongoose');
-const cron = require('node-cron');
-const Ticket = require('../dbaccess/ticket-model');
-const Schedule = require('../dbaccess/schedule-model');
-=======
 //const mongoose = require('mongoose');
 const cron = require('node-cron');
 const Ticket = require('../dbaccess/ticket-model');
 const Schedule = require('../dbaccess/schedule-model');
 require('../dbaccess/slot-model');
->>>>>>> origin/back-end-dev
 const moment = require('moment');
 const Slot = require('../dbaccess/slot-model');
 
@@ -72,18 +65,12 @@ const deleteTicket = async () => {
         }
     })
 
-<<<<<<< HEAD
-    await Ticket.deleteMany();
-
-    console.log(tickets);
-=======
     const check = await Ticket.deleteMany(
         { _id: { $in: ticketsToDelete } },
     ).exec();
 
     console.log(check);
 
->>>>>>> origin/back-end-dev
 }
 
 console.log(deleteTicket());
